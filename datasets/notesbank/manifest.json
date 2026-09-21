@@ -1,0 +1,282 @@
+{
+  "dataset": "NoTeS-Bank/ICDAR_2025_Handwritten_Notes_Understanding_Challenge",
+  "source": "https://huggingface.co/datasets/NoTeS-Bank/ICDAR_2025_Handwritten_Notes_Understanding_Challenge",
+  "license": "Apache-2.0",
+  "note": "Curated science subset of a public handwritten-notes benchmark. Ground-truth `title` is the dataset's own class label, so a model's reading of each page can be checked against it.",
+  "count": 39,
+  "items": [
+    {
+      "id": "biology_26_0",
+      "file": "biology_26_0.jpg",
+      "label": 26,
+      "subject": "biology",
+      "title": "Biology, chapter 1"
+    },
+    {
+      "id": "biology_26_1",
+      "file": "biology_26_1.jpg",
+      "label": 26,
+      "subject": "biology",
+      "title": "Biology, chapter 1"
+    },
+    {
+      "id": "biology_26_2",
+      "file": "biology_26_2.jpg",
+      "label": 26,
+      "subject": "biology",
+      "title": "Biology, chapter 1"
+    },
+    {
+      "id": "biology_02_0",
+      "file": "biology_02_0.jpg",
+      "label": 2,
+      "subject": "biology",
+      "title": "Biology, chapter 5"
+    },
+    {
+      "id": "biology_02_1",
+      "file": "biology_02_1.jpg",
+      "label": 2,
+      "subject": "biology",
+      "title": "Biology, chapter 5"
+    },
+    {
+      "id": "biology_02_2",
+      "file": "biology_02_2.jpg",
+      "label": 2,
+      "subject": "biology",
+      "title": "Biology, chapter 5"
+    },
+    {
+      "id": "biology_03_0",
+      "file": "biology_03_0.jpg",
+      "label": 3,
+      "subject": "biology",
+      "title": "Biotechnology"
+    },
+    {
+      "id": "biology_03_1",
+      "file": "biology_03_1.jpg",
+      "label": 3,
+      "subject": "biology",
+      "title": "Biotechnology"
+    },
+    {
+      "id": "biology_03_2",
+      "file": "biology_03_2.jpg",
+      "label": 3,
+      "subject": "biology",
+      "title": "Biotechnology"
+    },
+    {
+      "id": "biology_21_0",
+      "file": "biology_21_0.jpg",
+      "label": 21,
+      "subject": "biology",
+      "title": "Microbes in human welfare"
+    },
+    {
+      "id": "biology_21_1",
+      "file": "biology_21_1.jpg",
+      "label": 21,
+      "subject": "biology",
+      "title": "Microbes in human welfare"
+    },
+    {
+      "id": "biology_21_2",
+      "file": "biology_21_2.jpg",
+      "label": 21,
+      "subject": "biology",
+      "title": "Microbes in human welfare"
+    },
+    {
+      "id": "biology_24_0",
+      "file": "biology_24_0.jpg",
+      "label": 24,
+      "subject": "biology",
+      "title": "Sexual reproduction in flowering plants"
+    },
+    {
+      "id": "biology_24_1",
+      "file": "biology_24_1.jpg",
+      "label": 24,
+      "subject": "biology",
+      "title": "Sexual reproduction in flowering plants"
+    },
+    {
+      "id": "biology_24_2",
+      "file": "biology_24_2.jpg",
+      "label": 24,
+      "subject": "biology",
+      "title": "Sexual reproduction in flowering plants"
+    },
+    {
+      "id": "chemistry_00_0",
+      "file": "chemistry_00_0.jpg",
+      "label": 0,
+      "subject": "chemistry",
+      "title": "Acid-base chemistry"
+    },
+    {
+      "id": "chemistry_00_1",
+      "file": "chemistry_00_1.jpg",
+      "label": 0,
+      "subject": "chemistry",
+      "title": "Acid-base chemistry"
+    },
+    {
+      "id": "chemistry_00_2",
+      "file": "chemistry_00_2.jpg",
+      "label": 0,
+      "subject": "chemistry",
+      "title": "Acid-base chemistry"
+    },
+    {
+      "id": "math_13_0",
+      "file": "math_13_0.jpg",
+      "label": 13,
+      "subject": "math",
+      "title": "Differential equations"
+    },
+    {
+      "id": "math_13_1",
+      "file": "math_13_1.jpg",
+      "label": 13,
+      "subject": "math",
+      "title": "Differential equations"
+    },
+    {
+      "id": "math_13_2",
+      "file": "math_13_2.jpg",
+      "label": 13,
+      "subject": "math",
+      "title": "Differential equations"
+    },
+    {
+      "id": "math_27_0",
+      "file": "math_27_0.jpg",
+      "label": 27,
+      "subject": "math",
+      "title": "Differential geometry"
+    },
+    {
+      "id": "math_27_1",
+      "file": "math_27_1.jpg",
+      "label": 27,
+      "subject": "math",
+      "title": "Differential geometry"
+    },
+    {
+      "id": "math_27_2",
+      "file": "math_27_2.jpg",
+      "label": 27,
+      "subject": "math",
+      "title": "Differential geometry"
+    },
+    {
+      "id": "math_19_0",
+      "file": "math_19_0.jpg",
+      "label": 19,
+      "subject": "math",
+      "title": "Group theory"
+    },
+    {
+      "id": "math_19_1",
+      "file": "math_19_1.jpg",
+      "label": 19,
+      "subject": "math",
+      "title": "Group theory"
+    },
+    {
+      "id": "math_19_2",
+      "file": "math_19_2.jpg",
+      "label": 19,
+      "subject": "math",
+      "title": "Group theory"
+    },
+    {
+      "id": "physics_16_0",
+      "file": "physics_16_0.jpg",
+      "label": 16,
+      "subject": "physics",
+      "title": "Electromagnetic theory"
+    },
+    {
+      "id": "physics_16_1",
+      "file": "physics_16_1.jpg",
+      "label": 16,
+      "subject": "physics",
+      "title": "Electromagnetic theory"
+    },
+    {
+      "id": "physics_16_2",
+      "file": "physics_16_2.jpg",
+      "label": 16,
+      "subject": "physics",
+      "title": "Electromagnetic theory"
+    },
+    {
+      "id": "physics_17_0",
+      "file": "physics_17_0.jpg",
+      "label": 17,
+      "subject": "physics",
+      "title": "Fluid mechanics"
+    },
+    {
+      "id": "physics_17_1",
+      "file": "physics_17_1.jpg",
+      "label": 17,
+      "subject": "physics",
+      "title": "Fluid mechanics"
+    },
+    {
+      "id": "physics_17_2",
+      "file": "physics_17_2.jpg",
+      "label": 17,
+      "subject": "physics",
+      "title": "Fluid mechanics"
+    },
+    {
+      "id": "physics_18_0",
+      "file": "physics_18_0.jpg",
+      "label": 18,
+      "subject": "physics",
+      "title": "Friction"
+    },
+    {
+      "id": "physics_18_1",
+      "file": "physics_18_1.jpg",
+      "label": 18,
+      "subject": "physics",
+      "title": "Friction"
+    },
+    {
+      "id": "physics_18_2",
+      "file": "physics_18_2.jpg",
+      "label": 18,
+      "subject": "physics",
+      "title": "Friction"
+    },
+    {
+      "id": "physics_06_0",
+      "file": "physics_06_0.jpg",
+      "label": 6,
+      "subject": "physics",
+      "title": "Rotational motion"
+    },
+    {
+      "id": "physics_06_1",
+      "file": "physics_06_1.jpg",
+      "label": 6,
+      "subject": "physics",
+      "title": "Rotational motion"
+    },
+    {
+      "id": "physics_06_2",
+      "file": "physics_06_2.jpg",
+      "label": 6,
+      "subject": "physics",
+      "title": "Rotational motion"
+    }
+  ]
+}
