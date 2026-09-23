@@ -114,9 +114,18 @@ Rules for "say":
 """
 
 
+def strip_reasoning(text: str) -> str:
+    """Drop a thinking model's reasoning and keep its answer. Handles <think>...</think>,
+    a lone </think> (when the chat template opened the block), and <answer>...</answer>."""
+    if "</think>" in text:
+        text = text.split("</think>")[-1]
+    m = re.search(r"<answer>(.*?)(</answer>|$)", text, flags=re.S)
+    return (m.group(1) if m else text).strip()
+
+
 def parse_assessment(text: str) -> Assessment:
-    """Pull the JSON object out of a model reply (tolerates code fences and <think> blocks)."""
-    text = re.sub(r"<think>.*?</think>", "", text, flags=re.S)
+    """Pull the JSON object out of a model reply (tolerates code fences and reasoning)."""
+    text = strip_reasoning(text)
     start, end = text.find("{"), text.rfind("}")
     if start < 0 or end <= start:
         raise ValueError(f"no JSON object in reply: {text[:200]!r}")
@@ -151,24 +160,30 @@ def to_jpeg_b64(img: np.ndarray, max_side: int = 1600) -> str:
 class Brain:
     """A vision model behind an OpenAI-compatible /chat/completions endpoint."""
 
-    def __init__(self, base_url: str, model: str, api_key: str = "", timeout_s: float = 60):
+    def __init__(self, base_url: str, model: str, api_key: str = "", timeout_s: float = 120,
+                 max_tokens: int = 4096):
         self.url = base_url.rstrip("/") + "/chat/completions"
         self.model = model
         self.headers = {"Authorization": f"Bearer {api_key}"} if api_key else {}
         self.timeout_s = timeout_s
+        self.max_tokens = max_tokens  # thinking models reason for hundreds of tokens before answering
 
     @classmethod
     def from_env(cls) -> Optional["Brain"]:
         url = os.environ.get("SENSEI_LLM_URL")
         if not url:
             return None
-        return cls(url, os.environ.get("SENSEI_LLM_MODEL", ""), os.environ.get("SENSEI_LLM_KEY", ""))
+        return cls(url, os.environ.get("SENSEI_LLM_MODEL", ""), os.environ.get("SENSEI_LLM_KEY", ""),
+                   timeout_s=float(os.environ.get("SENSEI_LLM_TIMEOUT", 120)),
+                   max_tokens=int(os.environ.get("SENSEI_LLM_MAX_TOKENS", 4096)))
 
     def _chat(self, messages: list, max_tokens: int) -> str:
         res = httpx.post(self.url, headers=self.headers, timeout=self.timeout_s, json={
             "model": self.model, "messages": messages, "max_tokens": max_tokens, "temperature": 0.2})
         res.raise_for_status()
-        return res.json()["choices"][0]["message"]["content"] or ""
+        # With a reasoning parser (e.g. vLLM --reasoning-parser qwen3) the thinking arrives in
+        # "reasoning_content" and "content" is just the answer; without one, both are in content.
+        return res.json()["choices"][0]["message"].get("content") or ""
 
     def assess(self, img: np.ndarray, instructions: str) -> Assessment:
         reply = self._chat([
@@ -177,7 +192,7 @@ class Brain:
                 {"type": "text", "text": instructions},
                 {"type": "image_url", "image_url": {"url": f"data:image/jpeg;base64,{to_jpeg_b64(img)}"}},
             ]},
-        ], max_tokens=700)
+        ], max_tokens=self.max_tokens)
         return parse_assessment(reply)
 
     def wrap_up(self, notes: str) -> str:
@@ -186,8 +201,8 @@ class Brain:
             {"role": "user", "content": "The tutoring session is over. In two or three short spoken sentences, "
                                         "tell the student what they worked on, what they fixed, and one thing to "
                                         f"remember next time. Session notes:\n{notes}"},
-        ], max_tokens=200)
-        return re.sub(r"<think>.*?</think>", "", reply, flags=re.S).strip()
+        ], max_tokens=self.max_tokens)
+        return strip_reasoning(reply)
 
 
 # --- The session ---------------------------------------------------------------------------
@@ -200,6 +215,7 @@ ONE_MINUTE = "About one minute left. Let's finish the step you're on."
 NO_BRAIN = "My thinking part isn't connected right now, so I can only watch. Please tell your teacher."
 BRAIN_ERROR = "Sorry, I lost my train of thought for a moment. Keep going, and I'll look again."
 GOODBYE = "That's our time. Nice work today. See you next time!"
+LOOKING = {"hint": "Let me look at your work.", "check": "Okay, let me check your work."}
 
 Speak = Callable[[str, str], Awaitable[None]]    # (text, why) -> spoken on the phone
 Notify = Callable[[dict], Awaitable[None]]        # state update for the phone
@@ -334,6 +350,9 @@ class Tutor:
                 await self.speak(NO_PAGE, "no_page")
             elif not self.thinking:
                 self.watcher.mark_judged()
+                if self.brain is not None:
+                    # A thinking model takes a while: answer the tap right away.
+                    await self.speak(LOOKING[what], "ack")
                 await self._judge(img, request=what)
 
     # -- deciding what to say ------------------------------------------------------------

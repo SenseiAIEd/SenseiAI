@@ -122,7 +122,7 @@ def test_hint_button_forces_a_look_and_answers():
     h = Harness(brain)
     h.run(h.tutor.start())
     h.run(h.tutor.request("hint", PAGE))
-    assert h.whys()[-1] == "hint" and "tapped Hint" in brain.instructions[-1]
+    assert h.whys()[-2:] == ["ack", "hint"] and "tapped Hint" in brain.instructions[-1]
     h.run(h.tutor.request("repeat", None))
     assert h.said[-1] == ("repeat", "What could you do with the brackets first?")
 
@@ -183,6 +183,10 @@ def test_idle_check_in():
     '{"page": "work", "steps": ["a"], "first_error": null, "say": null}',
     '```json\n{"page": "work", "steps": ["a"], "first_error": null, "say": null}\n```',
     '<think>let me look</think>Here you go: {"page": "work", "steps": ["a"], "first_error": "null", "say": ""}',
+    # template opened <think>; the reasoning itself contains braces
+    'Line 1 is {fine}, so {"x": 1} is not it.</think>{"page": "work", "steps": ["a"], "first_error": null, "say": null}',
+    # Cosmos-Reason2 style
+    '<think>check {each} line</think>\n<answer>{"page": "work", "steps": ["a"], "first_error": null, "say": null}</answer>',
 ])
 def test_parse_assessment_tolerates_model_formatting(reply):
     a = parse_assessment(reply)

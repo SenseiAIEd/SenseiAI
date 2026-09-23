@@ -77,6 +77,30 @@ Find it: `curl http://localhost:<port>/v1/models -H "Authorization: Bearer <key>
 the model. Without `SENSEI_LLM_URL` the session still runs, but Sensei says its thinking part
 isn't connected.
 
+### Which model
+
+Use a **thinking** (reasoning) vision model. Finding the first wrong line means checking every
+line against the one above it; in our earlier 14-model benchmark the same Qwen3-VL weights
+found 2/8 planted mistakes as *instruct* and 8/8 as *thinking*.
+
+| Candidate on the Spark | Earlier benchmark (via OpenRouter) | Notes |
+|---|---|---|
+| `qwen3-vl-30b-a3b-thinking` | 8/8 mistakes, 0 false alarms, ~22 s | the default pick |
+| `cosmos-reason2-8b` / `-32b` | not tested | Qwen3-VL-Instruct post-trained by NVIDIA for long chain-of-thought (physical/video reasoning); could be the fast reasoner, untested on algebra |
+| `glm-4.6v-awq-4bit` | 7/8, ~55 s | best at pointing to the exact line; slow |
+| `qwen3-vl-30b-a3b-gguf` (instruct) | 2/8 | fast but misses most mistakes: don't use for tutoring |
+
+Thinking models reason before answering, so replies need room: `SENSEI_LLM_MAX_TOKENS`
+(default 4096) and `SENSEI_LLM_TIMEOUT` (default 120 s). Reasoning in `<think>` tags, a
+`reasoning_content` field (vLLM `--reasoning-parser`), or Cosmos's `<answer>` tags are all
+handled. While the model thinks, Sensei answers Hint/Check taps with "Let me look at your work."
+
+Race candidates on the sample pages (the router's model swap is excluded from the timing):
+
+```sh
+python eval_brain.py --models qwen3-vl-30b-a3b-thinking,cosmos-reason2-8b,cosmos-reason2-32b
+```
+
 ### Score the model first
 
 ```sh
