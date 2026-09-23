@@ -42,6 +42,62 @@ Each call is recorded to `sessions/<start time>/`:
 - `log.jsonl`: every event, timed in seconds from the start of the recording
   (`say`, `phone:spoken`, `connection`, ...), so instructions can be lined up with the video.
 
+## The tutor (Sensei leads the session)
+
+When the student taps **Start** in the app (5, 10 or 15 minutes), `tutor.py` runs the session:
+
+1. Greets the student and asks them to put the notebook under the camera.
+2. Watches the page. When it has settled (hand lifted) and has new writing, it sends that
+   frame to the vision model, which returns JSON: the problem, the steps, the first wrong
+   step, and a spoken sentence.
+3. The code decides whether to speak (the model never decides on its own):
+   - new mistake: hint level 1 (point at the line); the same mistake still there later: level 2
+     (name the idea), then 3 (very specific, never the answer); at most one unprompted remark every 8 s
+   - mistake fixed: short acknowledgement; finished and correct: praise, and ask them to explain
+   - correct so far: stays quiet
+4. The student's buttons: **Hint** and **Check my work** make it look now; **Repeat**; **End**.
+5. One-minute warning, idle check-in after 90 s without writing, and at the end a short
+   spoken summary (from the model) plus stats on the phone.
+
+Every decision is logged to the session's `log.jsonl` (`tutor_assessment` with the model's
+full reading and latency, `tutor_say` with why it spoke), next to the video.
+
+### Point it at the Spark's vision model
+
+Any OpenAI-compatible `/v1/chat/completions` endpoint that accepts images works (vLLM,
+llama.cpp server, Ollama, LiteLLM, your router). Add to `sensei.env` (or export):
+
+```sh
+SENSEI_LLM_URL=http://localhost:<port>/v1       # the model server on the Spark, not Open WebUI
+SENSEI_LLM_MODEL=qwen3-vl-30b-a3b-gguf           # as listed by <url>/models
+SENSEI_LLM_KEY=<key, if the server wants one>
+```
+
+Find it: `curl http://localhost:<port>/v1/models -H "Authorization: Bearer <key>"` should list
+the model. Without `SENSEI_LLM_URL` the session still runs, but Sensei says its thinking part
+isn't connected.
+
+### Score the model first
+
+```sh
+set -a; source sensei.env; set +a
+python eval_brain.py --limit 6          # quick look
+python eval_brain.py                    # all sample solutions
+```
+
+For each sample page: did it catch the one planted mistake in `bad_N`, did it leave the
+correct `good_N` alone, and how long it took. Compare the flagged line with the answer key in
+`datasets/samples/<subject>/README.md`. Aim for most mistakes caught, no false alarms on good
+work, and a few seconds per page. If a model is slow or wrong, try another from the router.
+
+### Try a session without the phone
+
+```sh
+python fake_phone.py --tutor 5 --seconds 120      # streams a sample page and taps Start
+```
+
+Or use the **Start / Hint / Check / End** buttons in the console while any phone is connected.
+
 ## Networking
 
 Three ways for the phone to reach the gateway:
@@ -122,6 +178,7 @@ pytest                                                             # end-to-end 
 |---|---|---|
 | POST | `/offer` | Phone's WebRTC offer in, answer out; starts a session (replaces any old one) |
 | POST | `/say` | `{"text": "..."}` -> spoken on the phone (409 if no phone) |
+| POST | `/tutor` | `{"action": "start" \| "hint" \| "check" \| "repeat" \| "end", "minutes": 10}`, like the phone's buttons |
 | POST | `/hush` | Stop the phone speaking |
 | POST | `/hangup` | End the session and finalize the recording |
 | GET | `/config` | ICE servers for the phone: the TURN relay with short-lived credentials, or `[]` |

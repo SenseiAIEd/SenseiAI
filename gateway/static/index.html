@@ -34,10 +34,19 @@
   <h1><span id="dot" class="dot"></span> Sensei Desk console <span id="state" class="stats" style="margin:0"></span></h1>
   <div>
     <div class="video"><img id="preview" alt="Waiting for the phone to connect"></div>
-    <div id="stats" class="stats">Waiting for the phone. Open Sensei Cam, enter this Spark's address and tap Connect.</div>
+    <div id="stats" class="stats">Waiting for the phone. Open Sensei Cam, enter this Spark's address and tap Start.</div>
+    <div id="tutor" class="stats"></div>
   </div>
   <section>
-    <label for="text">Say on the phone</label>
+    <label>Tutor session</label>
+    <div class="row">
+      <button class="tutor" data-action="start" data-minutes="5">Start 5 min</button>
+      <button class="tutor" data-action="start" data-minutes="10">Start 10 min</button>
+      <button class="tutor" data-action="hint">Hint</button>
+      <button class="tutor" data-action="check">Check</button>
+      <button class="tutor" data-action="end">End</button>
+    </div>
+    <label for="text">Say on the phone (teacher override)</label>
     <textarea id="text" placeholder="Type an instruction, then press Enter"></textarea>
     <div class="row">
       <button id="send" class="primary">Say it</button>
@@ -82,6 +91,12 @@ $("text").onkeydown = (e) => { if (e.key === "Enter" && !e.shiftKey) { e.prevent
 $("hush").onclick = () => api("/hush", { method: "POST" });
 $("hangup").onclick = () => api("/hangup", { method: "POST" });
 document.querySelectorAll(".quick button").forEach((b) => (b.onclick = () => say(b.textContent)));
+document.querySelectorAll("button.tutor").forEach((b) => (b.onclick = async () => {
+  $("err").textContent = "";
+  const res = await api("/tutor", { method: "POST", headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ action: b.dataset.action, minutes: Number(b.dataset.minutes || 10) }) });
+  if (!res.ok) $("err").textContent = (await res.json()).detail || res.statusText;
+}));
 
 async function poll() {
   try {
@@ -91,6 +106,12 @@ async function poll() {
     $("dot").className = "dot" + (s.connected ? " live" : s.state ? " lost" : "");
     $("state").textContent = s.connected ? "live" : s.state || "no phone";
     for (const id of ["send", "hush"]) $(id).disabled = !(s.connected && s.channel === "open");
+    document.querySelectorAll("button.tutor").forEach((b) => (b.disabled = !(s.connected && s.channel === "open")));
+    const t = s.tutor;
+    $("tutor").textContent = !s.brain ? "Tutor brain: not configured (set SENSEI_LLM_URL on the Spark)"
+      : !t ? `Tutor brain: ${s.brain} · no session yet`
+      : `Tutor: ${t.phase}${t.thinking ? " · thinking…" : ""} · ${Math.floor(t.remaining_s / 60)}:${String(t.remaining_s % 60).padStart(2, "0")} left`
+        + ` · hint level ${t.hint_level} · hints ${t.hints_given}` + (t.problem ? ` · problem: ${t.problem}` : "");
     if (s.connected && !wasConnected) $("preview").src = `/preview.mjpg?key=${encodeURIComponent(KEY)}&t=${Date.now()}`;
     wasConnected = s.connected;
     if (s.state) {

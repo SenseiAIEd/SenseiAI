@@ -181,3 +181,44 @@ def test_config_hands_out_coturn_rest_credentials(gateway, monkeypatch):
     assert time.time() + server.TURN_TTL_S - 60 < expiry <= time.time() + server.TURN_TTL_S + 1
     expected = hmac.new(b"turn-secret", ice["username"].encode(), hashlib.sha1).digest()
     assert base64.b64decode(ice["credential"]) == expected
+
+
+def test_student_starts_a_session_and_gets_a_hint(gateway, monkeypatch):
+    """Phone taps Start over the data channel; the tutor greets, looks at the streamed page
+    and speaks its hint through the same channel."""
+    from tutor import Assessment
+    base, _ = gateway
+
+    class Brain:
+        model = "scripted"
+        calls = 0
+
+        def assess(self, img, instructions):
+            Brain.calls += 1
+            assert img.shape[0] > 100  # a real decoded camera frame
+            return Assessment(page="work", problem="5 - (2x - 4) = 11", steps=["5 - 2x - 4 = 11"],
+                              first_error=1, error_kind="sign",
+                              say="Look at your first line: what happens to the minus four?")
+
+    monkeypatch.setattr(server, "BRAIN", Brain())
+
+    async def run():
+        phone = FakePhone(base)
+        await phone.connect()
+        phone.send({"type": "start", "minutes": 5})
+        for _ in range(100):  # the page is still -> judged after ~1.5 s
+            if any(m.get("why") == "hint_1" for m in phone.messages):
+                break
+            await asyncio.sleep(0.1)
+        phone.send({"type": "request", "what": "end"})
+        await asyncio.sleep(0.5)
+        await phone.close()
+        return phone.messages
+
+    messages = asyncio.run(run())
+    whys = [m.get("why") for m in messages if m["type"] == "say"]
+    assert whys[:2] == ["greeting", "hint_1"] and "wrap_up" in whys
+    states = [m for m in messages if m["type"] == "tutor"]
+    assert states and states[0]["phase"] == "watching" and 0 < states[0]["remaining_s"] <= 300
+    assert messages[-1]["type"] == "session_ended"
+    assert Brain.calls == 1  # the same still page is judged once

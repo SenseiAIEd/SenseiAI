@@ -38,6 +38,8 @@ from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import FileResponse, JSONResponse, Response, StreamingResponse
 from pydantic import BaseModel
 
+from tutor import Brain, Tutor
+
 RECORD_DIR = Path(os.environ.get("SENSEI_RECORD_DIR", "sessions"))
 PREVIEW_FPS = 8  # JPEGs for the browser preview; the recording keeps the full frame rate
 # No STUN: phone and Spark reach each other directly (same LAN or tailnet). aiortc's default
@@ -57,6 +59,11 @@ ACCESS_KEY = os.environ.get("SENSEI_KEY", "")
 TURN_URLS = [u.strip() for u in os.environ.get("SENSEI_TURN_URLS", "").split(",") if u.strip()]
 TURN_SECRET = os.environ.get("SENSEI_TURN_SECRET", "")
 TURN_TTL_S = int(os.environ.get("SENSEI_TURN_TTL", 6 * 3600))
+
+# The tutor's vision model: an OpenAI-compatible endpoint on the Spark, e.g.
+# SENSEI_LLM_URL=http://localhost:8000/v1  SENSEI_LLM_MODEL=qwen3-vl-30b-a3b-gguf  SENSEI_LLM_KEY=...
+BRAIN = Brain.from_env()
+FRAME_EVERY_S = 0.5  # how often the tutor looks at the latest frame
 
 log = logging.getLogger("sensei")
 app = FastAPI()
@@ -180,6 +187,7 @@ class Session:
         self.tasks: list[asyncio.Task] = []
         self.closed = False
         self._closing: asyncio.Future | None = None
+        self.tutor: Tutor | None = None
 
     def route(self) -> str | None:
         """How media reaches us: the phone's side of the chosen ICE pair, e.g. "relay 192.0.2.2:49160"
@@ -225,6 +233,44 @@ class Session:
                 if ok:
                     self.latest_jpeg = jpg.tobytes()
 
+    async def start_tutor(self, minutes: float):
+        """Begin an interactive session (replacing any running one)."""
+        if self.tutor is not None and self.tutor.phase == "watching":
+            await self.tutor.end("restarted")
+
+        async def speak(text: str, why: str):
+            self.send({"type": "say", "text": text, "why": why})
+
+        async def notify(state: dict):
+            self.send(state)
+
+        self.tutor = Tutor(BRAIN, speak, notify, minutes=minutes, log_event=self.log)
+        await self.tutor.start()
+        if not any(getattr(t, "sensei_role", "") == "tutor" for t in self.tasks):
+            task = asyncio.ensure_future(self.run_tutor())
+            task.sensei_role = "tutor"
+            self.tasks.append(task)
+
+    async def run_tutor(self):
+        """Feed the tutor frames and timer ticks. Model calls run as their own tasks."""
+        last_tick = 0.0
+        while True:
+            await asyncio.sleep(FRAME_EVERY_S)
+            t = self.tutor
+            if t is None or t.phase != "watching":
+                continue
+            if self.latest_frame is not None and not t.thinking:
+                asyncio.ensure_future(t.on_frame(self.latest_frame))
+            if time.monotonic() - last_tick >= 1.0:
+                last_tick = time.monotonic()
+                await t.tick()
+
+    async def tutor_request(self, what: str, minutes: float = 10):
+        if what == "start":
+            await self.start_tutor(minutes)
+        elif self.tutor is not None:
+            await self.tutor.request(what, self.latest_frame)
+
     async def close(self):
         """Stop recording and hang up. Every caller waits until session.mp4 is finalized."""
         self.closed = True
@@ -251,6 +297,11 @@ class Offer(BaseModel):
 
 class Say(BaseModel):
     text: str
+
+
+class TutorAction(BaseModel):
+    action: str  # start | hint | check | repeat | end
+    minutes: float = 10
 
 
 @app.get("/config")
@@ -282,9 +333,15 @@ async def offer(body: Offer):
                 msg = json.loads(message)
             except (TypeError, ValueError):
                 return
-            if msg.get("type") == "spoken":
+            kind = msg.get("type")
+            if kind == "spoken":
                 s.last_spoken = msg.get("text")
-            s.log(f"phone:{msg.get('type')}", **{k: v for k, v in msg.items() if k != "type"})
+            s.log(f"phone:{kind}", **{k: v for k, v in msg.items() if k != "type"})
+            # The student's buttons: start / hint / check / repeat / end.
+            if kind == "start":
+                asyncio.ensure_future(s.tutor_request("start", float(msg.get("minutes") or 10)))
+            elif kind == "request" and msg.get("what") in ("hint", "check", "repeat", "end"):
+                asyncio.ensure_future(s.tutor_request(msg["what"]))
 
     @pc.on("track")
     def on_track(track):
@@ -334,6 +391,17 @@ async def say(body: Say):
     return {"ok": True, "t": session.elapsed()}
 
 
+@app.post("/tutor")
+async def tutor_action(body: TutorAction):
+    """Drive the tutor from the console (same as the phone's buttons)."""
+    if body.action not in ("start", "hint", "check", "repeat", "end"):
+        raise HTTPException(400, "unknown action")
+    if session is None or session.closed:
+        raise HTTPException(409, "phone not connected")
+    await session.tutor_request(body.action, body.minutes)
+    return {"ok": True, "tutor": session.tutor.state() if session.tutor else None}
+
+
 @app.post("/hush")
 async def hush():
     if session is None or not session.send({"type": "hush"}):
@@ -364,6 +432,8 @@ async def status():
         "recording": str(session.folder / "session.mp4"),
         "last_spoken": session.last_spoken,
         "route": session.route(),
+        "tutor": session.tutor.state() if session.tutor else None,
+        "brain": BRAIN.model if BRAIN else None,
     }
 
 

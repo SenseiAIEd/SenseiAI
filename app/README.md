@@ -35,12 +35,14 @@ native package.
 ## Use it
 
 1. Start the gateway on the Spark (see `../gateway/README.md`).
-2. Open Sensei Cam, enter the server and access key, tap **Connect**, allow camera and microphone.
-   Both are remembered (the key in the Android keystore).
+2. First time: open **Settings** on the start screen and enter the server and access key
+   (remembered; the key in the Android keystore). Allow camera and microphone when asked.
    - From anywhere, through Tailscale Funnel (default): `https://spark-e257.tail803c7f.ts.net:8443`
      plus the key from the Spark's `sensei.env`. The phone needs no Tailscale app.
    - Same Wi-Fi or hotspot, no internet: `http://<spark-LAN-ip>:8787` (key only if the gateway has one).
-3. Point the camera at the notebook. Instructions typed in the gateway console are spoken by the phone.
+3. Choose 5, 10 or 15 minutes and tap **Start with Sensei**. Point the camera at the notebook.
+   Sensei greets, watches, and asks questions out loud. Buttons: **Hint**, **Check my work**,
+   **Repeat**, **End session**. At the end it speaks a short summary and shows the stats.
 
 ## How it talks to the gateway
 
