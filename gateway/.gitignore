@@ -2,3 +2,5 @@ sessions/
 .venv/
 __pycache__/
 .pytest_cache/
+sensei.env
+turnserver.conf

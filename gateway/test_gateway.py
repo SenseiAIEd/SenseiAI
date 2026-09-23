@@ -151,3 +151,33 @@ def test_recording_keeps_portrait_orientation(tmp_path):
         return rec
 
     assert asyncio.run(record()).size == (720, 1280)
+
+
+def test_access_key_protects_everything_but_the_page(gateway, monkeypatch):
+    base, _ = gateway
+    monkeypatch.setattr(server, "ACCESS_KEY", "s3cret")
+    assert httpx.get(f"{base}/").status_code == 200  # the console page holds no data
+    for path in ("/status", "/config", "/snapshot.jpg"):
+        assert httpx.get(f"{base}{path}").status_code == 401
+    assert httpx.post(f"{base}/offer", json={"sdp": "", "type": "offer"}).status_code == 401
+    assert httpx.get(f"{base}/status", headers={"X-Sensei-Key": "wrong"}).status_code == 401
+    assert httpx.get(f"{base}/status", headers={"X-Sensei-Key": "s3cret"}).status_code == 200
+    assert httpx.get(f"{base}/status?key=s3cret").status_code == 200  # console's preview image
+    assert httpx.get(f"{base}/status", headers={"Authorization": "Bearer s3cret"}).status_code == 200
+
+
+def test_config_hands_out_coturn_rest_credentials(gateway, monkeypatch):
+    import base64, hashlib, hmac
+    base, _ = gateway
+    assert httpx.get(f"{base}/config").json() == {"iceServers": []}  # no relay configured
+
+    monkeypatch.setattr(server, "TURN_URLS", ["turns:spark.example.ts.net:10000?transport=tcp"])
+    monkeypatch.setattr(server, "TURN_SECRET", "turn-secret")
+    [ice] = httpx.get(f"{base}/config").json()["iceServers"]
+    assert ice["urls"] == ["turns:spark.example.ts.net:10000?transport=tcp"]
+    # coturn (use-auth-secret) accepts: username "<expiry unix time>:<anything>",
+    # password base64(HMAC-SHA1(secret, username)).
+    expiry = int(ice["username"].split(":")[0])
+    assert time.time() + server.TURN_TTL_S - 60 < expiry <= time.time() + server.TURN_TTL_S + 1
+    expected = hmac.new(b"turn-secret", ice["username"].encode(), hashlib.sha1).digest()
+    assert base64.b64decode(ice["credential"]) == expected

@@ -4,8 +4,9 @@ Sensei gateway: runs on the DGX Spark and receives the live call from the Sensei
   Phone  --WebRTC video + mic audio-->  gateway  --> sessions/<time>/session.mp4 (recording)
          <--data channel "say" text---           --> http://localhost:8787 (live preview + controls)
 
-The phone reaches the Spark on the same Wi-Fi (LAN IP) or over Tailscale (the Spark's
-MagicDNS name). On a LAN no internet is needed. The vision model will run on the same box.
+The phone reaches the Spark either directly (same Wi-Fi, or the Tailscale app) or from
+anywhere through Tailscale Funnel, with the media relayed by coturn (see README.md).
+The vision model will run on the same box.
 
 Setup:
   uv venv && source .venv/bin/activate
@@ -16,6 +17,9 @@ Open http://<spark-address>:8787 in any browser to watch the stream and send spo
 In the phone app, set the server to the same http://<spark-address>:8787.
 """
 import asyncio
+import base64
+import hashlib
+import hmac
 import json
 import logging
 import os
@@ -30,8 +34,8 @@ import cv2
 from aiortc import MediaStreamTrack, RTCConfiguration, RTCPeerConnection, RTCSessionDescription
 from aiortc.contrib.media import MediaRelay
 from aiortc.mediastreams import MediaStreamError
-from fastapi import FastAPI, HTTPException
-from fastapi.responses import FileResponse, Response, StreamingResponse
+from fastapi import FastAPI, HTTPException, Request
+from fastapi.responses import FileResponse, JSONResponse, Response, StreamingResponse
 from pydantic import BaseModel
 
 RECORD_DIR = Path(os.environ.get("SENSEI_RECORD_DIR", "sessions"))
@@ -41,9 +45,39 @@ PREVIEW_FPS = 8  # JPEGs for the browser preview; the recording keeps the full f
 RTC_CONFIG = RTCConfiguration(iceServers=[])
 RECORD_LONG_SIDE = 1280
 
+# Access key. Required whenever the gateway is reachable from the internet (Funnel):
+# otherwise anyone with the URL could watch the camera. Sent as the X-Sensei-Key header,
+# "Authorization: Bearer <key>", or ?key= for the console page and its preview image.
+# Unset = open (LAN only).
+ACCESS_KEY = os.environ.get("SENSEI_KEY", "")
+
+# TURN relay for phones that can't reach the Spark directly (e.g. through Funnel).
+# URLS: comma-separated, e.g. "turns:spark-e257.tail803c7f.ts.net:10000?transport=tcp".
+# SECRET: coturn's static-auth-secret; the gateway hands out short-lived passwords from it.
+TURN_URLS = [u.strip() for u in os.environ.get("SENSEI_TURN_URLS", "").split(",") if u.strip()]
+TURN_SECRET = os.environ.get("SENSEI_TURN_SECRET", "")
+TURN_TTL_S = int(os.environ.get("SENSEI_TURN_TTL", 6 * 3600))
+
 log = logging.getLogger("sensei")
 app = FastAPI()
 relay = MediaRelay()
+
+
+@app.middleware("http")
+async def require_key(request: Request, call_next):
+    if ACCESS_KEY and request.url.path != "/":  # the console page itself holds no data
+        bearer = request.headers.get("authorization", "").removeprefix("Bearer ").strip()
+        given = request.headers.get("x-sensei-key") or bearer or request.query_params.get("key") or ""
+        if not hmac.compare_digest(given.encode(), ACCESS_KEY.encode()):
+            return JSONResponse({"detail": "missing or wrong access key"}, status_code=401)
+    return await call_next(request)
+
+
+def turn_credentials(now: float | None = None) -> dict:
+    """coturn "use-auth-secret" credentials: valid until the expiry in the username."""
+    username = f"{int((now or time.time()) + TURN_TTL_S)}:sensei"
+    digest = hmac.new(TURN_SECRET.encode(), username.encode(), hashlib.sha1).digest()
+    return {"username": username, "credential": base64.b64encode(digest).decode()}
 
 
 class SessionRecorder:
@@ -147,6 +181,16 @@ class Session:
         self.closed = False
         self._closing: asyncio.Future | None = None
 
+    def route(self) -> str | None:
+        """How media reaches us: the phone's side of the chosen ICE pair, e.g. "relay 192.0.2.2:49160"
+        (through TURN) or "host 192.168.1.23:40000" (direct). Uses aioice internals; diagnostics only."""
+        try:
+            pair = self.pc.sctp.transport.transport._connection._nominated.get(1)
+            c = pair.remote_candidate if pair else None
+            return f"{c.type} {c.host}:{c.port}" if c else None
+        except AttributeError:
+            return None
+
     def elapsed(self) -> float:
         return round(time.time() - self.started, 2)
 
@@ -209,6 +253,14 @@ class Say(BaseModel):
     text: str
 
 
+@app.get("/config")
+async def config():
+    """What the phone needs before calling: the TURN relay, if one is configured."""
+    if not (TURN_URLS and TURN_SECRET):
+        return {"iceServers": []}
+    return {"iceServers": [{"urls": TURN_URLS, **turn_credentials()}]}
+
+
 @app.post("/offer")
 async def offer(body: Offer):
     """The phone calls in: answer its WebRTC offer and start recording."""
@@ -254,8 +306,20 @@ async def offer(body: Offer):
     if s.closed:  # hung up while we were answering
         raise HTTPException(409, "session ended before it started")
     s.log("started", tracks=s.tracks)
+    asyncio.ensure_future(log_route(s))
     log.info("session %s started with %s", s.folder.name, s.tracks)
     return {"sdp": pc.localDescription.sdp, "type": pc.localDescription.type}
+
+
+async def log_route(s: Session):
+    """Record how the phone connected (direct or relayed) once ICE has settled."""
+    for _ in range(100):
+        if s.closed:
+            return
+        if s.pc.connectionState == "connected" and (route := s.route()):
+            s.log("route", route=route)
+            return
+        await asyncio.sleep(0.1)
 
 
 @app.post("/say")
@@ -299,6 +363,7 @@ async def status():
         "fps": session.fps,
         "recording": str(session.folder / "session.mp4"),
         "last_spoken": session.last_spoken,
+        "route": session.route(),
     }
 
 

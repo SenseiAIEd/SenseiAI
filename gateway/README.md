@@ -44,12 +44,67 @@ Each call is recorded to `sessions/<start time>/`:
 
 ## Networking
 
-- **Same Wi-Fi or hotspot** (the demo setup, works with no internet): the phone uses the Spark's LAN IP.
-- **Tailscale** (convenient for testing from anywhere): install Tailscale on the phone, join
-  the same tailnet, and use the Spark's MagicDNS name. WebRTC media flows over the tailnet
-  directly. Tailscale Funnel only carries HTTPS, not WebRTC media, so the phone must be on
-  the tailnet, not just able to open the public URL.
-- Open port 8787 (TCP) and allow UDP between phone and Spark if a firewall is on.
+Three ways for the phone to reach the gateway:
+
+| Mode | Phone needs | App server field | Internet |
+|---|---|---|---|
+| Same Wi-Fi / hotspot (the Friday demo) | nothing | `http://<spark-LAN-ip>:8787` | not needed |
+| Tailscale app on the phone | Tailscale, same tailnet | `http://spark-e257.tail803c7f.ts.net:8787` | needed |
+| **Funnel + TURN relay** (from anywhere) | nothing | `https://spark-e257.tail803c7f.ts.net:8443` + access key | needed |
+
+### From anywhere: Funnel + TURN relay
+
+Funnel only carries TCP, but WebRTC media is UDP straight between phone and Spark. So the
+gateway also runs a TURN relay (coturn): the phone sends its media to the relay over TLS
+through Funnel, and the relay hands it to the gateway on the Spark.
+
+```
+phone --HTTPS :8443--> Funnel --> gateway :8787          (call setup, /config, console)
+phone --TLS   :10000-> Funnel --> coturn  :3478 --UDP--> gateway   (video + audio)
+```
+
+On the Spark, once:
+
+```sh
+sudo apt install coturn
+sudo systemctl disable --now coturn   # we run coturn ourselves with our config, not the stock service
+cd gateway
+./setup_funnel.sh spark-e257.tail803c7f.ts.net
+# or reuse an existing key:  SENSEI_KEY=<your key> ./setup_funnel.sh spark-e257.tail803c7f.ts.net
+sudo tailscale funnel --bg --https=8443 http://localhost:8787
+sudo tailscale funnel --bg --tls-terminated-tcp=10000 tcp://localhost:3478
+tailscale funnel status
+```
+
+`setup_funnel.sh` writes `sensei.env` (access key, TURN secret, TURN address) and
+`turnserver.conf`, both gitignored, and prints the phone settings. Then run, each in its own
+tmux window:
+
+```sh
+turnserver -c turnserver.conf
+set -a; source sensei.env; set +a; uvicorn server:app --host 0.0.0.0 --port 8787
+```
+
+- **Access key**: with `SENSEI_KEY` set, every request needs it (`X-Sensei-Key` header,
+  `Authorization: Bearer`, or `?key=`), because the gateway is on the public internet.
+  Open the console at `https://spark-e257.tail803c7f.ts.net:8443/?key=<key>`.
+- **Relay lock-down**: coturn listens only on 127.0.0.1 (reachable only via Funnel), accepts
+  only short-lived passwords the gateway issues (`/config`, valid 6 h), and relays only to
+  the Spark's own LAN address, so it can't be used as an open relay.
+- **Check the path**: the console and `/status` show `route`: `relay <ip>:<port 49160-49200>`
+  means through coturn; `host ...` means direct.
+- Trade-offs: every frame goes via Tailscale's Funnel servers (more delay), and TCP
+  retransmits lost packets (video can stutter on bad networks). Use the LAN mode for the demo.
+
+Test it without the phone, from a machine outside the Spark's network (on the Spark itself
+the call would just go direct): `python fake_phone.py --server https://spark-e257.tail803c7f.ts.net:8443 --key <key>`,
+then check that the console shows `via relay ...`.
+
+### Firewall
+
+If `ufw` is on: allow TCP 8787 from the LAN/tailnet for the direct modes, and UDP between
+the phone and the Spark. The relay mode needs nothing extra (coturn and the gateway talk
+on the Spark itself).
 
 ## Test without the phone
 
@@ -69,6 +124,7 @@ pytest                                                             # end-to-end 
 | POST | `/say` | `{"text": "..."}` -> spoken on the phone (409 if no phone) |
 | POST | `/hush` | Stop the phone speaking |
 | POST | `/hangup` | End the session and finalize the recording |
-| GET | `/status` | Connection state, tracks, fps, recording path, last spoken line |
+| GET | `/config` | ICE servers for the phone: the TURN relay with short-lived credentials, or `[]` |
+| GET | `/status` | Connection state, route (direct or relay), tracks, fps, recording path, last spoken line |
 | GET | `/snapshot.jpg` | Latest camera frame |
 | GET | `/preview.mjpg` | Live MJPEG preview (about 8 fps) |
