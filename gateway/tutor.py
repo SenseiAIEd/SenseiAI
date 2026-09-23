@@ -70,7 +70,7 @@ class PageWatcher:
 # --- Reading the page ----------------------------------------------------------------------
 @dataclass
 class Assessment:
-    page: str = "none"                  # "none" | "unreadable" | "work"
+    page: str = "none"                  # "none" | "unreadable" | "work" | "other" (anything else it can see)
     problem: Optional[str] = None       # the problem being solved, as written
     steps: list[str] = field(default_factory=list)
     first_error: Optional[int] = None   # 1-based index into steps, or None
@@ -86,21 +86,28 @@ class Assessment:
         return self.first_error, re.sub(r"\s+", "", self.steps[self.first_error - 1]).lower()
 
 
-SYSTEM_PROMPT = """You are Sensei, a warm, patient Socratic tutor for school students (math,
-physics, chemistry). You see the student's work through a camera: usually handwriting on
-paper, but it may also be a printed page, a whiteboard or a screen. Any readable problem or
-working counts as "work".
+SYSTEM_PROMPT = """You are Sensei, a warm, patient, curious Socratic tutor for school students
+(math, physics, chemistry and beyond). You see what the student shows you through a camera:
+usually their written work, but it may be a printed page, a whiteboard, a screen, a book or
+an object. Always try to understand what is in view; never refuse just because it isn't homework.
 
-Read the page and reply with ONE JSON object and nothing else:
+Look carefully and reply with ONE JSON object and nothing else:
 {
-  "page": "none" | "unreadable" | "work",
+  "page": "work" | "other" | "unreadable" | "none",
+     work: a problem, exercise or someone's working (any subject, handwritten or printed)
+     other: anything else you can make out (a screen of code or text, a diagram, a book, an object, a scene)
+     unreadable: something is there but too blurry, dark or covered to read
+     none: nothing meaningful in view
   "problem": "the problem being solved, or null",
-  "steps": ["each line of the student's working, in order, as written"],
+  "steps": ["each line of the working (or of the readable text you see), in order, as written"],
   "first_error": <1-based index of the FIRST incorrect step, or null if all correct so far>,
   "error_kind": "sign" | "arithmetic" | "rule" | "concept" | "copying" | null,
   "finished": <true if the student reached a final answer>,
   "say": "what you say to the student now (spoken aloud), or null"
 }
+
+For "other": in "say", tell the student in one short sentence what you see, then ask one
+curious, open question about it that gets them thinking. Leave first_error null.
 
 Rules for "say":
 - NEVER give the answer, the corrected line, or the next line. Ask; don't tell.
@@ -187,13 +194,13 @@ class Brain:
         # "reasoning_content" and "content" is just the answer; without one, both are in content.
         return res.json()["choices"][0]["message"].get("content") or ""
 
-    def assess(self, img: np.ndarray, instructions: str) -> Assessment:
+    def assess(self, img: Optional[np.ndarray], instructions: str) -> Assessment:
+        content = [{"type": "text", "text": instructions}]
+        if img is not None:
+            content.append({"type": "image_url", "image_url": {"url": f"data:image/jpeg;base64,{to_jpeg_b64(img)}"}})
         reply = self._chat([
             {"role": "system", "content": SYSTEM_PROMPT},
-            {"role": "user", "content": [
-                {"type": "text", "text": instructions},
-                {"type": "image_url", "image_url": {"url": f"data:image/jpeg;base64,{to_jpeg_b64(img)}"}},
-            ]},
+            {"role": "user", "content": content},
         ], max_tokens=self.max_tokens)
         return parse_assessment(reply)
 
@@ -214,10 +221,12 @@ NO_PAGE = "I can't see your page yet. Please put your notebook under the camera.
 UNREADABLE = "I can't read that clearly. Could you move your hand, or write a little larger?"
 IDLE_NUDGE = "How is it going? If you're stuck, tap Hint, or tell me which step you're on."
 ONE_MINUTE = "About one minute left. Let's finish the step you're on."
+SAY_AGAIN = "Sorry, I didn't catch that. Could you say it again?"
 NO_BRAIN = "My thinking part isn't connected right now, so I can only watch. Please tell your teacher."
 BRAIN_ERROR = "Sorry, I lost my train of thought for a moment. Keep going, and I'll look again."
 GOODBYE = "That's our time. Nice work today. See you next time!"
-LOOKING = {"hint": "Let me look at your work.", "check": "Okay, let me check your work."}
+LOOKING = {"hint": "Let me look at your work.", "check": "Okay, let me check your work.", "look": "Let me look."}
+STILL_LOOKING = "Still looking at your work, one moment."
 
 Speak = Callable[[str, str], Awaitable[None]]    # (text, why) -> spoken on the phone
 Notify = Callable[[dict], Awaitable[None]]        # state update for the phone
@@ -285,6 +294,12 @@ class Tutor:
         await self.speak(GREETING if self.brain else f"{GREETING} {NO_BRAIN}", "greeting")
         await self.notify()
 
+    def stop(self):
+        """The call is gone: end without speaking; a reply still on its way is dropped."""
+        if self.phase != "ended":
+            self.phase = "ended"
+            self.log_event("tutor_end", reason="disconnected")
+
     async def end(self, reason: str = "ended"):
         if self.phase == "ended":
             return
@@ -342,25 +357,50 @@ class Tutor:
             await self._judge(img, request=None)
 
     async def request(self, what: str, img: Optional[np.ndarray]):
-        """A button on the phone: "hint", "check", "repeat" or "end"."""
+        """A button on the phone: "hint", "check", "look" (what do you see?), "repeat" or "end"."""
         self.log_event("tutor_request", what=what)
         if what == "end":
             await self.end("student")
         elif what == "repeat":
             if self.last_said:
                 await self.speak(self.last_said, "repeat")
-        elif what in ("hint", "check") and self.phase == "watching":
+        elif what in ("hint", "check", "look") and self.phase == "watching":
             if img is None:
                 await self.speak(NO_PAGE, "no_page")
-            elif not self.thinking:
+            elif self.thinking:
+                # Already looking: say so (not on every tap) instead of ignoring the student.
+                if self.clock() - self.last_spoke_at > self.MIN_GAP_S:
+                    await self.speak(STILL_LOOKING, "busy")
+            else:
                 self.watcher.mark_judged()
                 if self.brain is not None:
                     # A thinking model takes a while: answer the tap right away.
                     await self.speak(LOOKING[what], "ack")
                 await self._judge(img, request=what)
 
+    async def hear(self, text: str, img: Optional[np.ndarray]):
+        """The student said something (voice mode): answer it, looking at the page too."""
+        self.log_event("student_said", text=text)
+        if self.phase != "watching":
+            return
+        if self.brain is None:
+            await self.speak(NO_BRAIN, "no_brain")
+        elif self.thinking:
+            if self.clock() - self.last_spoke_at > self.MIN_GAP_S:
+                await self.speak(STILL_LOOKING, "busy")
+        else:
+            self.last_activity = self.clock()
+            await self._judge(img, request="talk", said=text)
+
     # -- deciding what to say ------------------------------------------------------------
-    def _instructions(self, request: Optional[str]) -> str:
+    def _instructions(self, request: Optional[str], said: Optional[str] = None) -> str:
+        if request == "talk":
+            return (f"The student just said out loud: \"{said}\". Answer them as Sensei in \"say\": one to three "
+                    "short spoken sentences, using what you see in the image if it helps. If they asked what you "
+                    "see, describe it. If they answered your question or explained a step, tell them honestly "
+                    "whether it's on the right track, without giving away the final answer. If it's small talk, "
+                    "reply warmly and steer back to their work."
+                    + (f" Earlier you asked about step {self.mistake[0]} of their work." if self.mistake else ""))
         parts = []
         if self.problem:
             parts.append(f"The student is working on: {self.problem}.")
@@ -371,6 +411,10 @@ class Tutor:
                          "encourage them to continue. If there is a different first mistake, use level 1.")
         else:
             parts.append("If there is a mistake, use hint level 1.")
+        if request == "look":
+            return ("The student asked: what do you see? In \"say\", describe what is in view right now "
+                    "in one or two short spoken sentences, reading out any important text. Do not look for "
+                    "mistakes; set first_error to null.")
         if request == "hint":
             parts.append("The student tapped Hint and wants help now. If there is no mistake, ask one "
                          "question that helps them take the next step, without doing it for them.")
@@ -378,31 +422,35 @@ class Tutor:
             parts.append("The student asked you to check their work. Tell them in one sentence whether it "
                          "looks right so far; if not, ask your guiding question.")
         else:
-            parts.append("If every step so far is correct and unfinished, set \"say\" to null. If they "
+            parts.append("If this is work and every step so far is correct and unfinished, set \"say\" to null. If they "
                          "finished correctly, congratulate them and ask them to explain why their key step works.")
         return " ".join(parts)
 
-    async def _judge(self, img: np.ndarray, request: Optional[str]):
+    async def _judge(self, img: Optional[np.ndarray], request: Optional[str], said: Optional[str] = None):
         if self.brain is None:
             if request:
                 await self.speak(NO_BRAIN, "no_brain")
             return
         self.thinking = True
         await self.notify()
-        frame_file = self.save_frame(img)
+        frame_file = self.save_frame(img) if img is not None else None
+        frame_size = [img.shape[1], img.shape[0]] if img is not None else None
         t0 = self.clock()
         try:
-            a = await asyncio.to_thread(self.brain.assess, img, self._instructions(request))
+            a = await asyncio.to_thread(self.brain.assess, img, self._instructions(request, said))
         except Exception as e:
             log.warning("assessment failed: %s", e)
-            self.log_event("tutor_error", error=str(e)[:300], frame=frame_file, frame_size=[img.shape[1], img.shape[0]])
+            self.log_event("tutor_error", error=str(e)[:300], frame=frame_file, frame_size=frame_size)
             if request:
                 await self.speak(BRAIN_ERROR, "error")
             return
         finally:
             self.thinking = False
+        if self.phase != "watching":  # the session ended (or the call dropped) while we thought
+            self.log_event("tutor_late_reply", latency_s=round(self.clock() - t0, 2), request=request)
+            return
         self.log_event("tutor_assessment", latency_s=round(self.clock() - t0, 2), request=request,
-                       frame=frame_file, frame_size=[img.shape[1], img.shape[0]],
+                       frame=frame_file, frame_size=frame_size,
                        page=a.page, problem=a.problem, steps=a.steps, first_error=a.first_error,
                        error_kind=a.error_kind, finished=a.finished, say=a.say)
         await self._react(a, request)
@@ -410,10 +458,23 @@ class Tutor:
 
     async def _react(self, a: Assessment, request: Optional[str]):
         now = self.clock()
+        if request == "talk":  # the student spoke: answer them
+            await self.speak(a.say or SAY_AGAIN, "reply")
+            return
+        if request == "look":  # "What do you see?": just describe it
+            await self.speak(a.say or (UNREADABLE if a.page == "unreadable" else NO_PAGE), "look")
+            return
+        if a.page == "other":
+            # Not study work, but something Sensei can talk about: say what it sees, ask about it.
+            if a.say and (request or now - self.last_spoke_at > self.MIN_GAP_S):
+                await self.speak(a.say, "other")
+            return
         if a.page != "work":
             if request or now - self.last_no_page_at > self.NO_PAGE_REPEAT_S:
                 self.last_no_page_at = now
-                await self.speak(UNREADABLE if a.page == "unreadable" else NO_PAGE, a.page)
+                # The model's own words say what it actually sees ("This isn't a math problem...");
+                # the fixed lines are only for when it gives none.
+                await self.speak(a.say or (UNREADABLE if a.page == "unreadable" else NO_PAGE), a.page)
             return
         if a.problem:
             if self.problem and a.problem != self.problem and self._finished_problem == self.problem:

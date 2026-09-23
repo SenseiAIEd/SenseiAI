@@ -227,3 +227,51 @@ def test_student_starts_a_session_and_gets_a_hint(gateway, monkeypatch):
     judged = [json.loads(l) for l in (folder / "log.jsonl").read_text().splitlines()
               if '"tutor_assessment"' in l]
     assert judged[0]["frame"] == "judged_001.jpg" and judged[0]["frame_size"][0] > 0
+    # ...and the console can show it: the frame and what the model made of it
+    look = server.session.last_look
+    assert look["frame"] == "judged_001.jpg" and look["say"].startswith("Look at your first line")
+
+
+@pytest.mark.skipif(__import__("shutil").which("espeak-ng") is None, reason="needs espeak-ng for a test voice")
+def test_student_asks_out_loud_and_sensei_answers(gateway, monkeypatch, tmp_path):
+    """Voice mode end to end: the phone's mic carries a spoken question over WebRTC, the
+    Spark transcribes it, and the tutor answers it looking at the streamed page."""
+    import subprocess
+    from tutor import Assessment
+    base, _ = gateway
+    wav = tmp_path / "question.wav"
+    subprocess.run(["espeak-ng", "-v", "en-us", "-s", "150", "-w", str(wav), "is my first line right"], check=True)
+    subprocess.run(["sox", str(wav), str(tmp_path / "q.wav"), "pad", "1", "2"], check=False)
+    padded = tmp_path / "q.wav"
+    wav = padded if padded.exists() else wav
+
+    asked = []
+
+    class Brain:
+        model = "scripted"
+
+        def assess(self, img, instructions):
+            asked.append((img is not None, instructions))
+            return Assessment(page="work", steps=["5 - 2x - 4 = 11"], say="Almost. Look at the minus four.")
+
+    monkeypatch.setattr(server, "BRAIN", Brain())
+
+    async def run():
+        phone = FakePhone(base, audio_file=str(wav))
+        await phone.connect()
+        phone.send({"type": "start", "minutes": 5})
+        phone.send({"type": "voice", "on": True})
+        for _ in range(600):  # generous: speech-to-text runs on the CPU
+            if any(m.get("why") == "reply" for m in phone.messages):
+                break
+            await asyncio.sleep(0.1)
+        await phone.close()
+        return phone.messages
+
+    messages = asyncio.run(run())
+    heard = [m["text"] for m in messages if m["type"] == "heard"]
+    assert heard and "first line" in heard[0].lower()
+    replies = [m["text"] for m in messages if m.get("why") == "reply"]
+    assert replies == ["Almost. Look at the minus four."]
+    talk = [i for has_img, i in asked if "said out loud" in i]
+    assert talk and "first line" in talk[0].lower()

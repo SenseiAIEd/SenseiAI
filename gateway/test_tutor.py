@@ -191,3 +191,65 @@ def test_idle_check_in():
 def test_parse_assessment_tolerates_model_formatting(reply):
     a = parse_assessment(reply)
     assert a.page == "work" and a.steps == ["a"] and a.first_error is None and a.say is None and a.mistake is None
+
+
+def test_not_work_uses_the_models_own_words():
+    h = Harness(ScriptedBrain(Assessment(page="unreadable", say="This isn't a math problem. Can you show your math work?"),
+                              Assessment(page="none")))
+    h.run(h.tutor.start())
+    h.run(h.tutor.request("check", PAGE))
+    assert h.said[-1] == ("unreadable", "This isn't a math problem. Can you show your math work?")
+    h.run(h.tutor.request("check", PAGE))
+    assert h.said[-1] == ("none", tutor.NO_PAGE)  # no words from the model: fixed fallback
+
+
+def test_extra_taps_while_thinking_get_an_answer_not_silence():
+    h = Harness(ScriptedBrain())
+    h.run(h.tutor.start())
+    h.tutor.thinking = True  # a look is already in progress
+    h.now += 20
+    h.run(h.tutor.request("hint", PAGE))
+    h.run(h.tutor.request("hint", PAGE))  # right after: not repeated
+    assert h.whys()[1:] == ["busy"]
+
+
+def test_reply_after_the_call_ended_is_dropped():
+    class SlowBrain(ScriptedBrain):
+        def assess(self, img, instructions):
+            h.tutor.stop()  # the call drops while the model is thinking
+            return MISTAKE
+
+    h = Harness(SlowBrain())
+    h.run(h.tutor.start())
+    h.run(h.tutor.request("hint", PAGE))
+    assert h.whys() == ["greeting", "ack"] and "tutor_late_reply" in h.events
+
+
+def test_anything_else_in_view_gets_talked_about():
+    h = Harness(ScriptedBrain(Assessment(page="other", steps=["$ uvicorn server:app"],
+                                         say="I see a computer terminal running a server. What do you think it's doing?")))
+    h.run(h.tutor.start())
+    h.now += 20
+    h.settle(page_with("a"))  # unprompted look: talks about it
+    assert h.said[-1] == ("other", "I see a computer terminal running a server. What do you think it's doing?")
+    assert h.tutor.mistake is None and h.tutor.hints_given == 0
+    assert "never refuse just because it isn't homework" in tutor.SYSTEM_PROMPT
+
+
+def test_what_do_you_see_describes_the_view():
+    brain = ScriptedBrain(Assessment(page="other", say="I see a laptop screen showing a terminal with Python commands."))
+    h = Harness(brain)
+    h.run(h.tutor.start())
+    h.run(h.tutor.request("look", PAGE))
+    assert h.whys()[-2:] == ["ack", "look"] and "what do you see" in brain.instructions[-1]
+    assert h.said[-1][1].startswith("I see a laptop screen")
+
+
+def test_student_speaks_and_sensei_answers_about_what_it_sees():
+    brain = ScriptedBrain(Assessment(page="work", steps=STEPS[:1],
+                                     say="Almost! Check what happens to the minus four inside the brackets."))
+    h = Harness(brain)
+    h.run(h.tutor.start())
+    h.run(h.tutor.hear("is my first line right?", PAGE))
+    assert h.said[-1] == ("reply", "Almost! Check what happens to the minus four inside the brackets.")
+    assert '"is my first line right?"' in brain.instructions[-1] and "student_said" in h.events

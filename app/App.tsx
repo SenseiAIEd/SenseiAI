@@ -13,8 +13,10 @@
 //                     {"type": "hush"}                   stop speaking
 //                     {"type": "tutor", "phase", "remaining_s", "thinking", ...}
 //                     {"type": "session_ended", "summary", "hints_given", "mistakes_fixed", ...}
+//                     {"type": "heard", "text"}          what Sensei understood the student said
 //   phone -> gateway  {"type": "hello", "app"}  {"type": "start", "minutes"}
-//                     {"type": "request", "what": "hint" | "check" | "repeat" | "end"}
+//                     {"type": "request", "what": "hint" | "check" | "look" | "repeat" | "end"}
+//                     {"type": "voice", "on"}            voice mode (the mic is muted when off)
 //                     {"type": "spoken", "text"}         finished speaking this
 //
 // Needs a custom build (not Expo Go): see README.md.
@@ -27,7 +29,7 @@ import { StatusBar } from "expo-status-bar";
 import * as SecureStore from "expo-secure-store";
 import { SafeAreaProvider, useSafeAreaInsets } from "react-native-safe-area-context";
 
-const APP_ID = "sensei-cam/0.3.1";
+const APP_ID = "sensei-cam/0.4.0";
 const DEFAULT_SERVER = "https://spark-e257.tail803c7f.ts.net:8443";
 const LENGTHS = [5, 10, 15];
 const REQUEST_TIMEOUT_MS = 10000;
@@ -37,7 +39,7 @@ const TUTOR_ANSWER_MS = 8000; // after Start, the Spark's tutor should greet wit
 const NO_TUTOR = "Sensei's brain on the Spark isn't answering. Ask your teacher to update and restart the Sensei gateway.";
 
 type Screen = "home" | "connecting" | "session" | "summary";
-type Request = "hint" | "check" | "repeat" | "end";
+type Request = "hint" | "check" | "look" | "repeat" | "end";
 type IceServer = { urls: string | string[]; username?: string; credential?: string };
 type TutorState = { phase: string; remaining_s: number; thinking: boolean };
 type Summary = { summary: string; hints_given: number; mistakes_fixed: number; problems_finished: number; minutes: number };
@@ -45,7 +47,8 @@ type GatewayMessage =
   | { type: "say"; text: string; why?: string }
   | { type: "hush" }
   | ({ type: "tutor" } & TutorState)
-  | ({ type: "session_ended" } & Summary);
+  | ({ type: "session_ended" } & Summary)
+  | { type: "heard"; text: string };
 
 async function askPermissions() {
   if (Platform.OS !== "android") return true;
@@ -151,12 +154,40 @@ function SenseiApp() {
   const pcRef = useRef<RTCPeerConnection | null>(null);
   const channelRef = useRef<ReturnType<RTCPeerConnection["createDataChannel"]> | null>(null);
   const tutorAnswered = useRef(false);
+  const micRef = useRef<ReturnType<MediaStream["getAudioTracks"]>[number] | null>(null);
+  const [voice, setVoice] = useState(false); // voice mode: the mic only carries sound when on
+  const voiceRef = useRef(false);
+  const [heard, setHeard] = useState<string | null>(null);
   const watchdog = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // The mic sends sound only in voice mode, and never while Sensei is talking
+  // (so Sensei doesn't hear and answer itself).
+  function setMic(open: boolean) {
+    if (micRef.current) micRef.current.enabled = open;
+  }
 
   function speak(text: string, onDone?: () => void) {
     setSaid(text);
     Speech.stop();
-    Speech.speak(text, { rate: 0.95, onDone });
+    setMic(false);
+    const after = () => setMic(voiceRef.current);
+    Speech.speak(text, {
+      rate: 0.95,
+      onDone: () => {
+        after();
+        onDone?.();
+      },
+      onStopped: after,
+      onError: after,
+    });
+  }
+
+  function toggleVoice() {
+    const on = !voiceRef.current;
+    voiceRef.current = on;
+    setVoice(on);
+    setMic(on);
+    send({ type: "voice", on });
   }
 
   useEffect(() => {
@@ -199,6 +230,8 @@ function SenseiApp() {
     } else if (msg.type === "tutor") {
       tutorAnswered.current = true;
       setTutor({ phase: msg.phase, remaining_s: msg.remaining_s, thinking: msg.thinking });
+    } else if (msg.type === "heard") {
+      setHeard(msg.text);
     } else if (msg.type === "session_ended") {
       setSummary(msg);
       setScreen("summary");
@@ -236,6 +269,12 @@ function SenseiApp() {
         video: { facingMode: "environment", width: 1280, height: 720, frameRate: 15 },
       });
       setStream(local);
+      // Start with the mic muted: the student turns voice mode on when they want to talk.
+      micRef.current = local.getAudioTracks()[0] ?? null;
+      voiceRef.current = false;
+      setVoice(false);
+      setHeard(null);
+      setMic(false);
 
       // No STUN: direct on a LAN, otherwise through the gateway's TURN relay.
       const pc = new RTCPeerConnection({ iceServers });
@@ -349,14 +388,32 @@ function SenseiApp() {
         {camera}
         <View style={styles.panel}>
           <Text style={styles.said}>{said ?? "Hi! Getting ready…"}</Text>
+          {!!heard && <Text style={styles.heard}>You said: “{heard}”</Text>}
+          <View style={styles.recRow}>
+            <Text style={styles.rec}>● REC</Text>
+            <Text style={styles.recText}>camera{voice ? " + your voice" : " only · mic off"}</Text>
+          </View>
           <View style={styles.statusRow}>
             <View style={[styles.dot, !lost && screen === "session" && styles.dotLive, lost && styles.dotLost]} />
             <Text style={styles.status}>{line}</Text>
             {tutor && <Text style={styles.timer}>{clock(tutor.remaining_s)}</Text>}
           </View>
+          <Pressable
+            style={[styles.voice, voice && styles.voiceOn, screen !== "session" && styles.disabled]}
+            onPress={toggleVoice}
+            disabled={screen !== "session"}
+          >
+            <Text style={[styles.voiceText, voice && styles.voiceTextOn]}>
+              {voice ? "🎤 Voice on: talk to Sensei (tap to turn off)" : "🎤 Voice off: tap to talk to Sensei"}
+            </Text>
+          </Pressable>
           <View style={styles.buttons}>
-            <Button label="Hint" onPress={() => press("hint")} disabled={screen !== "session"} />
-            <Button label="Check my work" onPress={() => press("check")} disabled={screen !== "session"} />
+            {/* Greyed out while Sensei is looking, so it's clear the tap was heard. */}
+            <Button label="Hint" onPress={() => press("hint")} disabled={screen !== "session" || !!thinking} />
+            <Button label="Check my work" onPress={() => press("check")} disabled={screen !== "session" || !!thinking} />
+          </View>
+          <View style={styles.buttons}>
+            <Button label="What do you see?" onPress={() => press("look")} disabled={screen !== "session" || !!thinking} />
             <Button label="Repeat" onPress={() => press("repeat")} disabled={!said} />
           </View>
           <Pressable style={styles.secondary} onPress={() => (screen === "session" ? press("end") : leave())}>
@@ -462,6 +519,14 @@ const styles = StyleSheet.create({
   dotLost: { backgroundColor: RED },
   status: { color: MUTED, fontSize: 14, flex: 1 },
   timer: { color: CHALK, fontSize: 16, fontVariant: ["tabular-nums"] },
+  heard: { color: MUTED, fontSize: 16, fontStyle: "italic" },
+  recRow: { flexDirection: "row", alignItems: "center", gap: 8 },
+  rec: { color: RED, fontSize: 13, fontWeight: "700" },
+  recText: { color: MUTED, fontSize: 13 },
+  voice: { borderColor: LINE, borderWidth: 1, borderRadius: 8, paddingVertical: 12, alignItems: "center" },
+  voiceOn: { borderColor: RED, backgroundColor: "#3A2320" },
+  voiceText: { color: CHALK, fontSize: 15, fontWeight: "600" },
+  voiceTextOn: { color: "#F4B6A8" },
   muted: { color: MUTED, fontSize: 14, textAlign: "center" },
   error: { color: RED, fontSize: 14 },
   link: { color: MUTED, fontSize: 14, textDecorationLine: "underline" },

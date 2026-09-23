@@ -43,10 +43,11 @@ class NotebookTrack(VideoStreamTrack):
 
 
 class FakePhone:
-    def __init__(self, server: str, key: str = "", relay_only: bool = False):
+    def __init__(self, server: str, key: str = "", relay_only: bool = False, audio_file: str = ""):
         self.server = server.rstrip("/")
         self.headers = {"X-Sensei-Key": key} if key else {}
         self.relay_only = relay_only
+        self.audio_file = audio_file  # play this as the microphone (e.g. a recorded answer)
         self.pc: RTCPeerConnection | None = None
         self.heard: list[str] = []
         self.messages: list[dict] = []  # everything the gateway sent on the data channel
@@ -71,7 +72,11 @@ class FakePhone:
         self.pc = RTCPeerConnection(RTCConfiguration(iceServers=servers))  # like the app: TURN only if offered
 
         self.pc.addTrack(NotebookTrack())
-        self.pc.addTrack(AudioStreamTrack())
+        if self.audio_file:
+            from aiortc.contrib.media import MediaPlayer
+            self.pc.addTrack(MediaPlayer(self.audio_file).audio)
+        else:
+            self.pc.addTrack(AudioStreamTrack())
         channel = self.pc.createDataChannel("sensei")
         self.channel = channel
 
@@ -84,6 +89,8 @@ class FakePhone:
         def on_message(message):
             msg = json.loads(message)
             self.messages.append(msg)
+            if msg.get("type") == "heard":
+                print(f"sensei heard: {msg['text']}")
             if msg.get("type") == "session_ended":
                 print(f"session ended: {msg.get('summary')}")
             if msg.get("type") == "say":
@@ -124,13 +131,16 @@ async def main():
     ap.add_argument("--key", default="", help="the gateway's SENSEI_KEY, if it has one")
     ap.add_argument("--relay-only", action="store_true", help="send media only through the TURN relay")
     ap.add_argument("--tutor", type=float, metavar="MINUTES", help="start a tutoring session of this length")
+    ap.add_argument("--say", metavar="WAV", help="speak this audio file as the student (turns voice mode on)")
     args = ap.parse_args()
-    phone = FakePhone(args.server, key=args.key, relay_only=args.relay_only)
+    phone = FakePhone(args.server, key=args.key, relay_only=args.relay_only, audio_file=args.say or "")
     await phone.connect()
     print(f"connected to {args.server} via {', '.join(sorted(phone.candidate_types()))} candidates; "
           f"streaming for {args.seconds:.0f} s")
     if args.tutor:
         phone.send({"type": "start", "minutes": args.tutor})
+    if args.say:
+        phone.send({"type": "voice", "on": True})
     try:
         await asyncio.sleep(args.seconds)
     finally:

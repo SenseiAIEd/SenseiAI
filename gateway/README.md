@@ -62,6 +62,22 @@ When the student taps **Start** in the app (5, 10 or 15 minutes), `tutor.py` run
 Every decision is logged to the session's `log.jsonl` (`tutor_assessment` with the model's
 full reading and latency, `tutor_say` with why it spoke), next to the video.
 
+### Eyes, ears, mouth
+
+- **Eyes**: the student taps **What do you see?** and Sensei describes what's in view. The
+  console's *Sensei's eyes* panel shows the exact frame the model last looked at
+  (`judged_NNN.jpg` in the session folder) next to what it read and said, and how long it took.
+  Anything in view counts, not just homework.
+- **Ears**: the phone's mic is muted until the student turns on **voice mode**, and it mutes
+  itself while Sensei talks. In voice mode the Spark detects each utterance, transcribes it
+  (`ears.py`: faster-whisper `small.en` on the CPU, about 1 s per answer; it got 6/6 short
+  math answers right where `base.en` got 2/6), shows "You said: ..." on the phone, and
+  answers using the current camera frame too. `SENSEI_STT_MODEL`, `SENSEI_STT_LANGUAGE`
+  (e.g. `bn`), or `SENSEI_STT_URL` for a GPU Whisper server; `SENSEI_STT=off` disables it.
+- **Mouth**: the phone speaks whatever Sensei says (Android text-to-speech, offline).
+
+Test the ears without a phone: `python fake_phone.py --tutor 5 --say question.wav`.
+
 ### Point it at the Spark's vision model
 
 Any OpenAI-compatible `/v1/chat/completions` endpoint that accepts images works (vLLM,

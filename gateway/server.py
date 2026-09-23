@@ -24,6 +24,7 @@ import json
 import logging
 import os
 import queue
+import re
 import threading
 import time
 from datetime import datetime
@@ -38,6 +39,7 @@ from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import FileResponse, JSONResponse, Response, StreamingResponse
 from pydantic import BaseModel
 
+from ears import Ears, Transcriber
 from tutor import Brain, Tutor
 
 RECORD_DIR = Path(os.environ.get("SENSEI_RECORD_DIR", "sessions"))
@@ -64,6 +66,9 @@ TURN_TTL_S = int(os.environ.get("SENSEI_TURN_TTL", 6 * 3600))
 # SENSEI_LLM_URL=http://localhost:8000/v1  SENSEI_LLM_MODEL=qwen3-vl-30b-a3b-gguf  SENSEI_LLM_KEY=...
 BRAIN = Brain.from_env()
 FRAME_EVERY_S = 0.5  # how often the tutor looks at the latest frame
+
+# The tutor's ears: speech-to-text for voice mode (see ears.py). SENSEI_STT=off disables it.
+TRANSCRIBER = Transcriber() if os.environ.get("SENSEI_STT", "on") != "off" else None
 
 log = logging.getLogger("sensei")
 app = FastAPI()
@@ -189,6 +194,9 @@ class Session:
         self._closing: asyncio.Future | None = None
         self.tutor: Tutor | None = None
         self.judged = 0
+        self.voice = False  # the student's voice mode: the phone mutes its mic unless this is on
+        self.last_look: dict | None = None  # the latest frame the model judged, and what it made of it
+        self.last_heard: str | None = None  # the latest thing the student said (voice mode)
 
     def route(self) -> str | None:
         """How media reaches us: the phone's side of the chosen ICE pair, e.g. "relay 192.0.2.2:49160"
@@ -205,6 +213,8 @@ class Session:
 
     def log(self, event: str, **fields):
         """Append to log.jsonl; `t` is seconds since the recording started."""
+        if event == "tutor_assessment":
+            self.last_look = {"t": self.elapsed(), **fields}
         with open(self.folder / "log.jsonl", "a") as f:
             f.write(json.dumps({"t": self.elapsed(), "event": event, **fields}) + "\n")
 
@@ -274,6 +284,16 @@ class Session:
                 last_tick = time.monotonic()
                 await t.tick()
 
+    async def heard(self, text: str, info: dict):
+        """The student said something in voice mode."""
+        self.send({"type": "heard", "text": text})
+        self.last_heard = text
+        if self.tutor is not None:
+            self.log("heard", text=text, **info)
+            await self.tutor.hear(text, self.latest_frame)
+        else:
+            self.log("student_said", text=text, **info)
+
     async def tutor_request(self, what: str, minutes: float = 10):
         if what == "start":
             await self.start_tutor(minutes)
@@ -288,6 +308,8 @@ class Session:
         await asyncio.shield(self._closing)
 
     async def _close(self):
+        if self.tutor is not None:
+            self.tutor.stop()
         for t in self.tasks:
             t.cancel()
         await self.recorder.stop()
@@ -309,7 +331,7 @@ class Say(BaseModel):
 
 
 class TutorAction(BaseModel):
-    action: str  # start | hint | check | repeat | end
+    action: str  # start | hint | check | look | repeat | end
     minutes: float = 10
 
 
@@ -345,11 +367,13 @@ async def offer(body: Offer):
             kind = msg.get("type")
             if kind == "spoken":
                 s.last_spoken = msg.get("text")
+            elif kind == "voice":
+                s.voice = bool(msg.get("on"))
             s.log(f"phone:{kind}", **{k: v for k, v in msg.items() if k != "type"})
             # The student's buttons: start / hint / check / repeat / end.
             if kind == "start":
                 asyncio.ensure_future(s.tutor_request("start", float(msg.get("minutes") or 10)))
-            elif kind == "request" and msg.get("what") in ("hint", "check", "repeat", "end"):
+            elif kind == "request" and msg.get("what") in ("hint", "check", "look", "repeat", "end"):
                 asyncio.ensure_future(s.tutor_request(msg["what"]))
 
     @pc.on("track")
@@ -358,6 +382,9 @@ async def offer(body: Offer):
         s.media[track.kind] = relay.subscribe(track)
         if track.kind == "video":
             s.tasks.append(asyncio.ensure_future(s.watch_video(relay.subscribe(track))))
+        elif track.kind == "audio" and TRANSCRIBER is not None:
+            ears = Ears(TRANSCRIBER, s.heard, listening=lambda: s.voice and not s.closed)
+            s.tasks.append(asyncio.ensure_future(ears.run(relay.subscribe(track))))
 
     @pc.on("connectionstatechange")
     async def on_state():
@@ -403,7 +430,7 @@ async def say(body: Say):
 @app.post("/tutor")
 async def tutor_action(body: TutorAction):
     """Drive the tutor from the console (same as the phone's buttons)."""
-    if body.action not in ("start", "hint", "check", "repeat", "end"):
+    if body.action not in ("start", "hint", "check", "look", "repeat", "end"):
         raise HTTPException(400, "unknown action")
     if session is None or session.closed:
         raise HTTPException(409, "phone not connected")
@@ -441,9 +468,29 @@ async def status():
         "recording": str(session.folder / "session.mp4"),
         "last_spoken": session.last_spoken,
         "route": session.route(),
+        "voice": session.voice,
+        "heard": session.last_heard,
         "tutor": session.tutor.state() if session.tutor else None,
         "brain": BRAIN.model if BRAIN else None,
+        "ears": TRANSCRIBER.name if TRANSCRIBER else None,
     }
+
+
+@app.get("/last_look")
+async def last_look():
+    """What Sensei last looked at: the frame file, what the model read and said, and how long it took."""
+    return {"look": session.last_look if session is not None else None}
+
+
+@app.get("/judged/{name}")
+async def judged_frame(name: str):
+    """A frame the model judged in the current session (judged_NNN.jpg)."""
+    if session is None or not re.fullmatch(r"judged_\d{3}\.jpg", name):
+        raise HTTPException(404, "no such frame")
+    path = session.folder / name
+    if not path.exists():
+        raise HTTPException(404, "no such frame")
+    return FileResponse(path, media_type="image/jpeg")
 
 
 @app.get("/snapshot.jpg")
@@ -470,6 +517,19 @@ async def preview():
 @app.get("/")
 async def index():
     return FileResponse(Path(__file__).parent / "static" / "index.html")
+
+
+@app.on_event("startup")
+async def warm_up_ears():
+    """Load the speech model in the background so the first answer isn't slow."""
+    if TRANSCRIBER is not None:
+        async def load():
+            try:
+                await asyncio.to_thread(TRANSCRIBER.load)
+                log.info("ears ready: %s", TRANSCRIBER.name)
+            except Exception as e:
+                log.warning("speech-to-text unavailable (%s); voice mode will not understand speech", e)
+        asyncio.ensure_future(load())
 
 
 @app.on_event("shutdown")

@@ -27,6 +27,12 @@
   ol { margin: 0; padding-left: 20px; color: var(--muted); font-size: 13px; max-height: 220px; overflow: auto; }
   ol li b { color: var(--chalk); font-weight: 500; }
   .err { color: var(--red); font-size: 13px; min-height: 1em; }
+  .eyes { margin-top: 16px; background: var(--panel); border-radius: 10px; padding: 14px; display: grid; gap: 12px; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  @media (max-width: 800px) { .eyes { grid-template-columns: 1fr; } }
+  .eyes img { width: 100%; border-radius: 6px; background: #0E181B; min-height: 60px; }
+  .eyes h3 { margin: 0 0 6px; font-size: 14px; color: var(--pencil); }
+  .eyes pre { white-space: pre-wrap; margin: 0; font: 13px/1.4 ui-monospace, Menlo, monospace; color: var(--muted); max-height: 220px; overflow: auto; }
+  .eyes .said { color: var(--chalk); font-size: 15px; margin: 6px 0; }
 </style>
 </head>
 <body>
@@ -36,6 +42,17 @@
     <div class="video"><img id="preview" alt="Waiting for the phone to connect"></div>
     <div id="stats" class="stats">Waiting for the phone. Open Sensei Cam, enter this Spark's address and tap Start.</div>
     <div id="tutor" class="stats"></div>
+    <div class="eyes">
+      <div><h3>Sensei's eyes: the last frame the model looked at</h3><img id="eyesImg" alt="nothing looked at yet"></div>
+      <div>
+        <h3>What it made of it</h3>
+        <div id="eyesMeta" class="stats" style="margin:0"></div>
+        <div id="eyesSaid" class="said"></div>
+        <pre id="eyesRead"></pre>
+        <h3 style="margin-top:10px">Sensei's ears: last heard</h3>
+        <div id="ears" class="said"></div>
+      </div>
+    </div>
   </div>
   <section>
     <label>Tutor session</label>
@@ -44,6 +61,7 @@
       <button class="tutor" data-action="start" data-minutes="10">Start 10 min</button>
       <button class="tutor" data-action="hint">Hint</button>
       <button class="tutor" data-action="check">Check</button>
+      <button class="tutor" data-action="look">What do you see?</button>
       <button class="tutor" data-action="end">End</button>
     </div>
     <label for="text">Say on the phone (teacher override)</label>
@@ -107,6 +125,7 @@ async function poll() {
     $("state").textContent = s.connected ? "live" : s.state || "no phone";
     for (const id of ["send", "hush"]) $(id).disabled = !(s.connected && s.channel === "open");
     document.querySelectorAll("button.tutor").forEach((b) => (b.disabled = !(s.connected && s.channel === "open")));
+    $("ears").textContent = s.heard ? `“${s.heard}”` : (s.voice ? "listening…" : "voice mode is off on the phone");
     const t = s.tutor;
     $("tutor").textContent = !s.brain ? "Tutor brain: not configured (set SENSEI_LLM_URL on the Spark)"
       : !t ? `Tutor brain: ${s.brain} · no session yet`
@@ -118,9 +137,25 @@ async function poll() {
       $("stats").textContent = `${s.tracks.join(" + ")} · ${s.fps} fps · ${s.seconds.toFixed(0)} s` + (s.route ? ` · via ${s.route}` : "") + ` · recording to ${s.recording}` +
         (s.last_spoken ? ` · phone finished saying: "${s.last_spoken}"` : "");
     }
+    await pollEyes();
   } catch { $("state").textContent = "gateway not responding"; }
   setTimeout(poll, 1000);
 }
+let lastFrame = null;
+async function pollEyes() {
+  const { look } = await (await api("/last_look")).json();
+  if (!look) return;
+  if (look.frame && look.frame !== lastFrame) {
+    lastFrame = look.frame;
+    $("eyesImg").src = `/judged/${look.frame}?key=${encodeURIComponent(KEY)}`;
+  }
+  $("eyesMeta").textContent = `${look.frame || "no image"} · ${look.frame_size ? look.frame_size.join("×") : ""} · ` +
+    `asked: ${look.request || "auto"} · page: ${look.page} · answered in ${look.latency_s}s`;
+  $("eyesSaid").textContent = look.say ? `“${look.say}”` : "(stayed quiet)";
+  $("eyesRead").textContent = (look.problem ? `problem: ${look.problem}\n` : "") +
+    (look.steps || []).map((l, i) => `${i + 1}. ${l}` + (look.first_error === i + 1 ? "   <- first mistake" : "")).join("\n");
+}
+
 poll();
 </script>
 </body>
