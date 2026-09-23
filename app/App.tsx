@@ -25,13 +25,16 @@ import * as Speech from "expo-speech";
 import { useKeepAwake } from "expo-keep-awake";
 import { StatusBar } from "expo-status-bar";
 import * as SecureStore from "expo-secure-store";
+import { SafeAreaProvider, useSafeAreaInsets } from "react-native-safe-area-context";
 
-const APP_ID = "sensei-cam/0.3";
+const APP_ID = "sensei-cam/0.3.1";
 const DEFAULT_SERVER = "https://spark-e257.tail803c7f.ts.net:8443";
 const LENGTHS = [5, 10, 15];
 const REQUEST_TIMEOUT_MS = 10000;
 const ICE_GATHER_DIRECT_MS = 3000;
 const ICE_GATHER_RELAY_MS = 8000; // a TURN allocation through Funnel crosses the internet
+const TUTOR_ANSWER_MS = 8000; // after Start, the Spark's tutor should greet within this
+const NO_TUTOR = "Sensei's brain on the Spark isn't answering. Ask your teacher to update and restart the Sensei gateway.";
 
 type Screen = "home" | "connecting" | "session" | "summary";
 type Request = "hint" | "check" | "repeat" | "end";
@@ -122,7 +125,18 @@ const saved = {
 const clock = (s: number) => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, "0")}`;
 
 export default function App() {
+  return (
+    <SafeAreaProvider>
+      <SenseiApp />
+    </SafeAreaProvider>
+  );
+}
+
+function SenseiApp() {
   useKeepAwake();
+  const insets = useSafeAreaInsets();
+  // Edge-to-edge: keep content clear of the status bar and the navigation buttons.
+  const rootStyle = [styles.root, { paddingTop: insets.top, paddingBottom: insets.bottom }];
   const [server, setServer] = useState(DEFAULT_SERVER);
   const [key, setKey] = useState("");
   const [minutes, setMinutes] = useState(10);
@@ -136,6 +150,14 @@ export default function App() {
   const [stream, setStream] = useState<MediaStream | null>(null);
   const pcRef = useRef<RTCPeerConnection | null>(null);
   const channelRef = useRef<ReturnType<RTCPeerConnection["createDataChannel"]> | null>(null);
+  const tutorAnswered = useRef(false);
+  const watchdog = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  function speak(text: string, onDone?: () => void) {
+    setSaid(text);
+    Speech.stop();
+    Speech.speak(text, { rate: 0.95, onDone });
+  }
 
   useEffect(() => {
     saved.load().then((v) => {
@@ -148,6 +170,8 @@ export default function App() {
   }, []);
 
   function hangUp() {
+    if (watchdog.current) clearTimeout(watchdog.current);
+    watchdog.current = null;
     channelRef.current = null;
     pcRef.current?.close();
     pcRef.current = null;
@@ -165,18 +189,15 @@ export default function App() {
   function onMessage(msg: GatewayMessage) {
     if (msg.type === "say") {
       const { text, why } = msg;
-      setSaid(text);
-      Speech.stop();
-      Speech.speak(text, {
-        rate: 0.95,
-        onDone: () => {
-          send({ type: "spoken", text });
-          if (why === "wrap_up") hangUp(); // the goodbye was the last thing: stop recording
-        },
+      if (why) tutorAnswered.current = true;
+      speak(text, () => {
+        send({ type: "spoken", text });
+        if (why === "wrap_up") hangUp(); // the goodbye was the last thing: stop recording
       });
     } else if (msg.type === "hush") {
       Speech.stop();
     } else if (msg.type === "tutor") {
+      tutorAnswered.current = true;
       setTutor({ phase: msg.phase, remaining_s: msg.remaining_s, thinking: msg.thinking });
     } else if (msg.type === "session_ended") {
       setSummary(msg);
@@ -198,7 +219,14 @@ export default function App() {
     setStatus("Waking up Sensei…");
     try {
       // Before touching the camera: is the gateway there, and does it offer a relay?
-      const { iceServers } = (await gateway(`${base}/config`, accessKey)) as { iceServers: IceServer[] };
+      const config = (await gateway(`${base}/config`, accessKey)) as {
+        iceServers: IceServer[];
+        tutor?: { brain: string | null };
+      };
+      const iceServers = config.iceServers;
+      if (!config.tutor) {
+        throw new Error("the Sensei gateway on the Spark is an old version without the tutor. Update it (git pull) and restart it.");
+      }
       saved.save(base, accessKey, minutes);
 
       setStatus("Starting the camera…");
@@ -221,6 +249,11 @@ export default function App() {
         channel.send(JSON.stringify({ type: "hello", app: APP_ID }));
         channel.send(JSON.stringify({ type: "start", minutes }));
         setScreen("session");
+        // An old gateway (or one without the tutor) ignores "start": say so instead of staying silent.
+        tutorAnswered.current = false;
+        watchdog.current = setTimeout(() => {
+          if (!tutorAnswered.current && channelRef.current === channel) speak(NO_TUTOR);
+        }, TUTOR_ANSWER_MS);
       };
       channel.onmessage = (e: unknown) => {
         try {
@@ -254,8 +287,7 @@ export default function App() {
   function press(what: Request) {
     if (what === "repeat" && said) {
       // Repeat locally: instant, and works even if the connection hiccups.
-      Speech.stop();
-      Speech.speak(said, { rate: 0.9 });
+      speak(said);
       return;
     }
     send({ type: "request", what });
@@ -284,7 +316,7 @@ export default function App() {
 
   if (screen === "summary" && summary) {
     return (
-      <View style={styles.root}>
+      <View style={rootStyle}>
         <StatusBar style="light" />
         <ScrollView contentContainerStyle={styles.summary}>
           <Text style={styles.heading}>Session complete</Text>
@@ -312,7 +344,7 @@ export default function App() {
       ? "Connection lost. Check the network; Sensei will pick up when it's back."
       : screen === "connecting" ? status : thinking ? "Sensei is looking at your page…" : "Sensei is watching";
     return (
-      <View style={styles.root}>
+      <View style={rootStyle}>
         <StatusBar style="light" />
         {camera}
         <View style={styles.panel}>
@@ -337,7 +369,7 @@ export default function App() {
 
   // home
   return (
-    <View style={styles.root}>
+    <View style={rootStyle}>
       <StatusBar style="light" />
       {camera}
       <View style={styles.panel}>
@@ -353,9 +385,14 @@ export default function App() {
           <Text style={styles.primaryText}>Start with Sensei</Text>
         </Pressable>
         {!!status && <Text style={styles.error}>{status}</Text>}
-        <Pressable onPress={() => setShowSettings((v) => !v)}>
-          <Text style={styles.link}>{showSettings ? "Hide settings" : "Settings"}</Text>
-        </Pressable>
+        <View style={styles.links}>
+          <Pressable onPress={() => setShowSettings((v) => !v)}>
+            <Text style={styles.link}>{showSettings ? "Hide settings" : "Settings"}</Text>
+          </Pressable>
+          <Pressable onPress={() => speak("Hi, I'm Sensei. If you can hear me, your sound is working.")}>
+            <Text style={styles.link}>Test voice</Text>
+          </Pressable>
+        </View>
         {showSettings && (
           <>
             <TextInput
@@ -428,6 +465,7 @@ const styles = StyleSheet.create({
   muted: { color: MUTED, fontSize: 14, textAlign: "center" },
   error: { color: RED, fontSize: 14 },
   link: { color: MUTED, fontSize: 14, textDecorationLine: "underline" },
+  links: { flexDirection: "row", justifyContent: "space-between" },
   buttons: { flexDirection: "row", gap: 10, flexWrap: "wrap" },
   button: { flexGrow: 1, borderColor: LINE, borderWidth: 1, borderRadius: 8, paddingVertical: 12, paddingHorizontal: 10, alignItems: "center", backgroundColor: PANEL },
   buttonText: { color: CHALK, fontSize: 15, fontWeight: "600" },
@@ -444,7 +482,7 @@ const styles = StyleSheet.create({
   primaryText: { color: SLATE, fontSize: 17, fontWeight: "700" },
   secondary: { borderColor: PENCIL, borderWidth: 1, borderRadius: 8, paddingVertical: 14, alignItems: "center" },
   secondaryText: { color: PENCIL, fontSize: 16, fontWeight: "600" },
-  summary: { padding: 24, paddingTop: 64, gap: 18 },
+  summary: { padding: 24, paddingTop: 40, gap: 18 },
   stats: { flexDirection: "row", justifyContent: "space-between" },
   stat: { alignItems: "center", flex: 1 },
   statValue: { color: CHALK, fontSize: 28, fontWeight: "700" },
