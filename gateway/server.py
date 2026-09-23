@@ -306,10 +306,10 @@ class TutorAction(BaseModel):
 
 @app.get("/config")
 async def config():
-    """What the phone needs before calling: the TURN relay, if one is configured."""
-    if not (TURN_URLS and TURN_SECRET):
-        return {"iceServers": []}
-    return {"iceServers": [{"urls": TURN_URLS, **turn_credentials()}]}
+    """What the phone needs before calling: the TURN relay (if configured) and whether the
+    tutor is here and has a model. (Gateways from before the tutor don't send "tutor".)"""
+    ice = [{"urls": TURN_URLS, **turn_credentials()}] if TURN_URLS and TURN_SECRET else []
+    return {"iceServers": ice, "tutor": {"brain": BRAIN.model if BRAIN else None}}
 
 
 @app.post("/offer")
