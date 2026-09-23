@@ -222,3 +222,8 @@ def test_student_starts_a_session_and_gets_a_hint(gateway, monkeypatch):
     assert states and states[0]["phase"] == "watching" and 0 < states[0]["remaining_s"] <= 300
     assert messages[-1]["type"] == "session_ended"
     assert Brain.calls == 1  # the same still page is judged once
+    # the frame the model judged is kept, with its size, next to the recording
+    [folder] = [f for f in server.RECORD_DIR.iterdir() if (f / "judged_001.jpg").exists()]
+    judged = [json.loads(l) for l in (folder / "log.jsonl").read_text().splitlines()
+              if '"tutor_assessment"' in l]
+    assert judged[0]["frame"] == "judged_001.jpg" and judged[0]["frame_size"][0] > 0

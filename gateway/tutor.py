@@ -87,7 +87,9 @@ class Assessment:
 
 
 SYSTEM_PROMPT = """You are Sensei, a warm, patient Socratic tutor for school students (math,
-physics, chemistry). You see the student's paper through a camera.
+physics, chemistry). You see the student's work through a camera: usually handwriting on
+paper, but it may also be a printed page, a whiteboard or a screen. Any readable problem or
+working counts as "work".
 
 Read the page and reply with ONE JSON object and nothing else:
 {
@@ -230,9 +232,11 @@ class Tutor:
     NO_PAGE_REPEAT_S = 30.0  # how often to repeat "I can't see your page"
 
     def __init__(self, brain: Optional[Brain], speak: Speak, notify: Notify, minutes: float = 10,
-                 clock: Callable[[], float] = time.monotonic, log_event: Callable[..., None] = lambda *a, **k: None):
+                 clock: Callable[[], float] = time.monotonic, log_event: Callable[..., None] = lambda *a, **k: None,
+                 save_frame: Callable[[np.ndarray], Optional[str]] = lambda img: None):
         self.brain = brain
         self.speak_cb, self.notify_cb, self.log_event = speak, notify, log_event
+        self.save_frame = save_frame  # keeps each judged frame, so we can see what the model saw
         self.clock = clock
         self.minutes = max(1.0, min(30.0, float(minutes)))
         self.watcher = PageWatcher()
@@ -385,18 +389,20 @@ class Tutor:
             return
         self.thinking = True
         await self.notify()
+        frame_file = self.save_frame(img)
         t0 = self.clock()
         try:
             a = await asyncio.to_thread(self.brain.assess, img, self._instructions(request))
         except Exception as e:
             log.warning("assessment failed: %s", e)
-            self.log_event("tutor_error", error=str(e)[:300])
+            self.log_event("tutor_error", error=str(e)[:300], frame=frame_file, frame_size=[img.shape[1], img.shape[0]])
             if request:
                 await self.speak(BRAIN_ERROR, "error")
             return
         finally:
             self.thinking = False
         self.log_event("tutor_assessment", latency_s=round(self.clock() - t0, 2), request=request,
+                       frame=frame_file, frame_size=[img.shape[1], img.shape[0]],
                        page=a.page, problem=a.problem, steps=a.steps, first_error=a.first_error,
                        error_kind=a.error_kind, finished=a.finished, say=a.say)
         await self._react(a, request)

@@ -188,6 +188,7 @@ class Session:
         self.closed = False
         self._closing: asyncio.Future | None = None
         self.tutor: Tutor | None = None
+        self.judged = 0
 
     def route(self) -> str | None:
         """How media reaches us: the phone's side of the chosen ICE pair, e.g. "relay 192.0.2.2:49160"
@@ -244,12 +245,20 @@ class Session:
         async def notify(state: dict):
             self.send(state)
 
-        self.tutor = Tutor(BRAIN, speak, notify, minutes=minutes, log_event=self.log)
+        self.tutor = Tutor(BRAIN, speak, notify, minutes=minutes, log_event=self.log,
+                           save_frame=self.save_judged_frame)
         await self.tutor.start()
         if not any(getattr(t, "sensei_role", "") == "tutor" for t in self.tasks):
             task = asyncio.ensure_future(self.run_tutor())
             task.sensei_role = "tutor"
             self.tasks.append(task)
+
+    def save_judged_frame(self, img) -> str:
+        """Keep the exact frame the model is about to judge (judged_001.jpg, ...)."""
+        self.judged += 1
+        name = f"judged_{self.judged:03d}.jpg"
+        cv2.imwrite(str(self.folder / name), img, [cv2.IMWRITE_JPEG_QUALITY, 92])
+        return name
 
     async def run_tutor(self):
         """Feed the tutor frames and timer ticks. Model calls run as their own tasks."""
