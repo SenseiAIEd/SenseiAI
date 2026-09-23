@@ -1,8 +1,9 @@
 // Sensei Cam: the phone on the Sensei Desk head.
 //
 // Streams live camera video and microphone audio to the Sensei gateway on the DGX Spark over
-// WebRTC (local network or Tailscale; no internet needed on a LAN), and speaks aloud every instruction the
-// gateway sends back on the "sensei" data channel.
+// WebRTC, and speaks aloud every instruction the gateway sends back on the "sensei" data channel.
+// Reaches the gateway directly on a LAN, or from anywhere through Tailscale Funnel: then the
+// media goes through the TURN relay the gateway lists at /config.
 //
 // Data channel messages (JSON):
 //   gateway -> phone  {"type": "say", "text": "..."}     speak this now
@@ -17,13 +18,17 @@ import { MediaStream, RTCPeerConnection, RTCRtpSender, RTCView, mediaDevices } f
 import * as Speech from "expo-speech";
 import { useKeepAwake } from "expo-keep-awake";
 import { StatusBar } from "expo-status-bar";
+import * as SecureStore from "expo-secure-store";
 
-const APP_ID = "sensei-cam/0.1";
+const APP_ID = "sensei-cam/0.2";
+const DEFAULT_SERVER = "https://spark-e257.tail803c7f.ts.net:8443";
 const REQUEST_TIMEOUT_MS = 10000;
-const ICE_GATHER_TIMEOUT_MS = 3000;
+const ICE_GATHER_DIRECT_MS = 3000;
+const ICE_GATHER_RELAY_MS = 8000; // a TURN allocation through Funnel crosses the internet
 
 type Phase = "idle" | "connecting" | "live" | "lost";
 type GatewayMessage = { type: "say"; text: string } | { type: "hush" };
+type IceServer = { urls: string | string[]; username?: string; credential?: string };
 
 async function askPermissions() {
   if (Platform.OS !== "android") return true;
@@ -36,10 +41,10 @@ async function askPermissions() {
 
 // The gateway gets our offer in one HTTP request (no trickle ICE), so wait until
 // all local candidates are in the SDP. On a LAN this takes well under a second.
-function waitForIceGathering(pc: RTCPeerConnection) {
+function waitForIceGathering(pc: RTCPeerConnection, timeoutMs: number) {
   return new Promise<void>((resolve) => {
     if (pc.iceGatheringState === "complete") return resolve();
-    const timer = setTimeout(resolve, ICE_GATHER_TIMEOUT_MS);
+    const timer = setTimeout(resolve, timeoutMs);
     pc.onicegatheringstatechange = () => {
       if (pc.iceGatheringState === "complete") {
         clearTimeout(timer);
@@ -63,33 +68,55 @@ async function preferSharpVideo(sender: RTCRtpSender | undefined) {
   }
 }
 
-async function postJson(url: string, body: unknown) {
+// JSON request to the gateway, with the access key and a timeout.
+async function gateway(url: string, key: string, body?: unknown) {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
   try {
     const res = await fetch(url, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body),
+      method: body === undefined ? "GET" : "POST",
+      headers: { "Content-Type": "application/json", ...(key ? { "X-Sensei-Key": key } : {}) },
+      body: body === undefined ? undefined : JSON.stringify(body),
       signal: controller.signal,
     });
+    if (res.status === 401) throw new Error("wrong or missing access key");
     if (!res.ok) throw new Error(`${res.status} ${await res.text()}`);
     return await res.json();
+  } catch (e) {
+    if (controller.signal.aborted) throw new Error("no answer (is the gateway running and reachable?)");
+    throw e;
   } finally {
     clearTimeout(timer);
   }
 }
 
+// Server address and access key survive app restarts (the key in the Android keystore).
+const saved = {
+  load: async () => ({
+    server: (await SecureStore.getItemAsync("server")) ?? DEFAULT_SERVER,
+    key: (await SecureStore.getItemAsync("key")) ?? "",
+  }),
+  save: (server: string, key: string) =>
+    Promise.all([SecureStore.setItemAsync("server", server), SecureStore.setItemAsync("key", key)]).catch(() => {}),
+};
+
 export default function App() {
   useKeepAwake();
-  const [server, setServer] = useState("http://spark-e257.tail803c7f.ts.net:8787");
+  const [server, setServer] = useState(DEFAULT_SERVER);
+  const [key, setKey] = useState("");
   const [phase, setPhase] = useState<Phase>("idle");
   const [status, setStatus] = useState("Point the camera at the notebook, then connect.");
   const [said, setSaid] = useState<string | null>(null);
   const [stream, setStream] = useState<MediaStream | null>(null);
   const pcRef = useRef<RTCPeerConnection | null>(null);
 
-  useEffect(() => () => hangUp(), []);
+  useEffect(() => {
+    saved.load().then((v) => {
+      setServer(v.server);
+      setKey(v.key);
+    }).catch(() => {});
+    return () => hangUp();
+  }, []);
 
   function hangUp() {
     pcRef.current?.close();
@@ -103,9 +130,15 @@ export default function App() {
 
   async function connect() {
     const base = server.trim().replace(/\/+$/, "");
+    const accessKey = key.trim();
     setPhase("connecting");
-    setStatus("Starting camera and microphone");
+    setStatus(`Contacting ${base}`);
     try {
+      // Before touching the camera: is the gateway there, and does it offer a relay?
+      const { iceServers } = (await gateway(`${base}/config`, accessKey)) as { iceServers: IceServer[] };
+      saved.save(base, accessKey);
+
+      setStatus("Starting camera and microphone");
       if (!(await askPermissions())) throw new Error("Camera and microphone permission are needed.");
 
       const local = await mediaDevices.getUserMedia({
@@ -114,7 +147,8 @@ export default function App() {
       });
       setStream(local);
 
-      const pc = new RTCPeerConnection({ iceServers: [] }); // LAN only: host candidates are enough
+      // No STUN: direct on a LAN, otherwise through the gateway's TURN relay.
+      const pc = new RTCPeerConnection({ iceServers });
       pcRef.current = pc;
       const senders = local.getTracks().map((t) => pc.addTrack(t, local));
       const videoSender = senders.find((s) => s.track?.kind === "video");
@@ -151,15 +185,16 @@ export default function App() {
           setStatus("Live: Sensei is watching and recording");
         } else if (s === "disconnected" || s === "failed") {
           setPhase("lost");
-          setStatus("Connection lost. Check the Wi-Fi, then reconnect.");
+          setStatus("Connection lost. Check the network, then reconnect.");
         }
       };
 
-      setStatus(`Calling ${base}`);
+      const relayed = iceServers.length > 0;
+      setStatus(relayed ? `Calling ${base} (via relay)` : `Calling ${base}`);
       const offer = await pc.createOffer({});
       await pc.setLocalDescription(offer);
-      await waitForIceGathering(pc);
-      const answer = await postJson(`${base}/offer`, pc.localDescription);
+      await waitForIceGathering(pc, relayed ? ICE_GATHER_RELAY_MS : ICE_GATHER_DIRECT_MS);
+      const answer = await gateway(`${base}/offer`, accessKey, pc.localDescription);
       await pc.setRemoteDescription(answer);
       await preferSharpVideo(videoSender);
     } catch (e) {
@@ -201,7 +236,18 @@ export default function App() {
           autoCapitalize="none"
           autoCorrect={false}
           keyboardType="url"
-          placeholder="http://<spark-address>:8787"
+          placeholder="https://<spark>.ts.net:8443 or http://<spark-ip>:8787"
+          placeholderTextColor="#6F8580"
+        />
+        <TextInput
+          style={styles.input}
+          value={key}
+          onChangeText={setKey}
+          editable={!busy}
+          autoCapitalize="none"
+          autoCorrect={false}
+          secureTextEntry
+          placeholder="Access key (from the Spark's sensei.env)"
           placeholderTextColor="#6F8580"
         />
         <Pressable style={busy ? styles.secondary : styles.primary} onPress={busy ? disconnect : connect}>

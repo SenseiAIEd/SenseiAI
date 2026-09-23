@@ -60,12 +60,15 @@
 <script>
 const $ = (id) => document.getElementById(id);
 let wasConnected = false;
+// Access key from this page's URL (http://<spark>/?key=...), sent with every request.
+const KEY = new URLSearchParams(location.search).get("key") || "";
+const api = (path, init = {}) => fetch(path, { ...init, headers: { ...(init.headers || {}), "X-Sensei-Key": KEY } });
 
 async function say(text) {
   text = text.trim();
   if (!text) return;
   $("err").textContent = "";
-  const res = await fetch("/say", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ text }) });
+  const res = await api("/say", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ text }) });
   if (!res.ok) { $("err").textContent = (await res.json()).detail || res.statusText; return; }
   const { t } = await res.json();
   const li = document.createElement("li");
@@ -76,20 +79,22 @@ async function say(text) {
 
 $("send").onclick = () => { say($("text").value); $("text").value = ""; };
 $("text").onkeydown = (e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); $("send").click(); } };
-$("hush").onclick = () => fetch("/hush", { method: "POST" });
-$("hangup").onclick = () => fetch("/hangup", { method: "POST" });
+$("hush").onclick = () => api("/hush", { method: "POST" });
+$("hangup").onclick = () => api("/hangup", { method: "POST" });
 document.querySelectorAll(".quick button").forEach((b) => (b.onclick = () => say(b.textContent)));
 
 async function poll() {
   try {
-    const s = await (await fetch("/status")).json();
+    const res = await api("/status");
+    if (res.status === 401) { $("state").textContent = "add ?key=<access key> to this page's address"; setTimeout(poll, 3000); return; }
+    const s = await res.json();
     $("dot").className = "dot" + (s.connected ? " live" : s.state ? " lost" : "");
     $("state").textContent = s.connected ? "live" : s.state || "no phone";
     for (const id of ["send", "hush"]) $(id).disabled = !(s.connected && s.channel === "open");
-    if (s.connected && !wasConnected) $("preview").src = "/preview.mjpg?" + Date.now();
+    if (s.connected && !wasConnected) $("preview").src = `/preview.mjpg?key=${encodeURIComponent(KEY)}&t=${Date.now()}`;
     wasConnected = s.connected;
     if (s.state) {
-      $("stats").textContent = `${s.tracks.join(" + ")} · ${s.fps} fps · ${s.seconds.toFixed(0)} s · recording to ${s.recording}` +
+      $("stats").textContent = `${s.tracks.join(" + ")} · ${s.fps} fps · ${s.seconds.toFixed(0)} s` + (s.route ? ` · via ${s.route}` : "") + ` · recording to ${s.recording}` +
         (s.last_spoken ? ` · phone finished saying: "${s.last_spoken}"` : "");
     }
   } catch { $("state").textContent = "gateway not responding"; }
