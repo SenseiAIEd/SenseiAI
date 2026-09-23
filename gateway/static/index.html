@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sensei Desk Console</title>
+<style>
+  :root { --slate: #17252A; --panel: #1F3238; --chalk: #EEF1EC; --muted: #9FB3AE; --pencil: #F2C14E; --red: #E07A5F; --line: #34484E; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--slate); color: var(--chalk); font: 15px/1.45 system-ui, -apple-system, sans-serif; }
+  main { max-width: 1200px; margin: 0 auto; padding: 16px; display: grid; gap: 16px; grid-template-columns: minmax(0, 3fr) minmax(280px, 2fr); }
+  @media (max-width: 800px) { main { grid-template-columns: 1fr; } }
+  h1 { font-size: 18px; margin: 0 0 8px; grid-column: 1 / -1; display: flex; align-items: center; gap: 10px; }
+  .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--muted); }
+  .dot.live { background: var(--pencil); } .dot.lost { background: var(--red); }
+  .video { background: #0E181B; border-radius: 10px; aspect-ratio: 16 / 9; display: grid; place-items: center; overflow: hidden; }
+  .video img { width: 100%; height: 100%; object-fit: contain; }
+  .stats { color: var(--muted); font-size: 13px; margin-top: 8px; word-break: break-all; }
+  section { background: var(--panel); border-radius: 10px; padding: 16px; display: flex; flex-direction: column; gap: 12px; }
+  label { color: var(--muted); font-size: 13px; }
+  textarea { width: 100%; min-height: 80px; resize: vertical; background: var(--slate); color: var(--chalk); border: 1px solid var(--line); border-radius: 8px; padding: 10px; font: inherit; }
+  button { font: inherit; border-radius: 8px; padding: 10px 14px; cursor: pointer; border: 1px solid var(--pencil); background: transparent; color: var(--pencil); }
+  button.primary { background: var(--pencil); color: var(--slate); font-weight: 600; }
+  button:disabled { opacity: .45; cursor: default; }
+  .row { display: flex; gap: 8px; flex-wrap: wrap; }
+  .quick button { border-color: var(--line); color: var(--chalk); text-align: left; }
+  ol { margin: 0; padding-left: 20px; color: var(--muted); font-size: 13px; max-height: 220px; overflow: auto; }
+  ol li b { color: var(--chalk); font-weight: 500; }
+  .err { color: var(--red); font-size: 13px; min-height: 1em; }
+</style>
+</head>
+<body>
+<main>
+  <h1><span id="dot" class="dot"></span> Sensei Desk console <span id="state" class="stats" style="margin:0"></span></h1>
+  <div>
+    <div class="video"><img id="preview" alt="Waiting for the phone to connect"></div>
+    <div id="stats" class="stats">Waiting for the phone. Open Sensei Cam, enter this Spark's address and tap Connect.</div>
+  </div>
+  <section>
+    <label for="text">Say on the phone</label>
+    <textarea id="text" placeholder="Type an instruction, then press Enter"></textarea>
+    <div class="row">
+      <button id="send" class="primary">Say it</button>
+      <button id="hush">Stop speaking</button>
+      <button id="hangup">End session</button>
+    </div>
+    <div id="err" class="err"></div>
+    <label>Quick instructions</label>
+    <div class="row quick">
+      <button>Hi, I'm Sensei. Please place your notebook under the camera.</button>
+      <button>Move the notebook a little closer to the camera.</button>
+      <button>Please lift your hand so I can see the page.</button>
+      <button>Great. Start solving the problem, and talk me through it.</button>
+      <button>Tell me what you're thinking about this step.</button>
+    </div>
+    <label>Said this session</label>
+    <ol id="said"></ol>
+  </section>
+</main>
+<script>
+const $ = (id) => document.getElementById(id);
+let wasConnected = false;
+
+async function say(text) {
+  text = text.trim();
+  if (!text) return;
+  $("err").textContent = "";
+  const res = await fetch("/say", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ text }) });
+  if (!res.ok) { $("err").textContent = (await res.json()).detail || res.statusText; return; }
+  const { t } = await res.json();
+  const li = document.createElement("li");
+  li.innerHTML = `<b></b> at ${t.toFixed(1)} s`;
+  li.querySelector("b").textContent = text;
+  $("said").prepend(li);
+}
+
+$("send").onclick = () => { say($("text").value); $("text").value = ""; };
+$("text").onkeydown = (e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); $("send").click(); } };
+$("hush").onclick = () => fetch("/hush", { method: "POST" });
+$("hangup").onclick = () => fetch("/hangup", { method: "POST" });
+document.querySelectorAll(".quick button").forEach((b) => (b.onclick = () => say(b.textContent)));
+
+async function poll() {
+  try {
+    const s = await (await fetch("/status")).json();
+    $("dot").className = "dot" + (s.connected ? " live" : s.state ? " lost" : "");
+    $("state").textContent = s.connected ? "live" : s.state || "no phone";
+    for (const id of ["send", "hush"]) $(id).disabled = !(s.connected && s.channel === "open");
+    if (s.connected && !wasConnected) $("preview").src = "/preview.mjpg?" + Date.now();
+    wasConnected = s.connected;
+    if (s.state) {
+      $("stats").textContent = `${s.tracks.join(" + ")} · ${s.fps} fps · ${s.seconds.toFixed(0)} s · recording to ${s.recording}` +
+        (s.last_spoken ? ` · phone finished saying: "${s.last_spoken}"` : "");
+    }
+  } catch { $("state").textContent = "gateway not responding"; }
+  setTimeout(poll, 1000);
+}
+poll();
+</script>
+</body>
+</html>

@@ -1,0 +1,38 @@
+{
+  "expo": {
+    "name": "Sensei Cam",
+    "slug": "sensei-cam",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "dark",
+    "backgroundColor": "#17252A",
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "package": "com.senseiaied.senseicam",
+      "adaptiveIcon": {
+        "backgroundColor": "#17252A",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "predictiveBackGestureEnabled": false
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "@config-plugins/react-native-webrtc",
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "usesCleartextTraffic": true
+          }
+        }
+      ]
+    ]
+  }
+}
