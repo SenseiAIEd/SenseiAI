@@ -51,6 +51,8 @@
         <pre id="eyesRead"></pre>
         <h3 style="margin-top:10px">Sensei's ears: last heard</h3>
         <div id="ears" class="said"></div>
+        <h3 style="margin-top:10px">Conversation (what Sensei remembers)</h3>
+        <pre id="convo"></pre>
       </div>
     </div>
   </div>
@@ -62,6 +64,8 @@
       <button class="tutor" data-action="hint">Hint</button>
       <button class="tutor" data-action="check">Check</button>
       <button class="tutor" data-action="look">What do you see?</button>
+      <button class="tutor" data-action="pause">Pause</button>
+      <button class="tutor" data-action="resume">Resume</button>
       <button class="tutor" data-action="end">End</button>
     </div>
     <label for="text">Say on the phone (teacher override)</label>
@@ -126,6 +130,7 @@ async function poll() {
     for (const id of ["send", "hush"]) $(id).disabled = !(s.connected && s.channel === "open");
     document.querySelectorAll("button.tutor").forEach((b) => (b.disabled = !(s.connected && s.channel === "open")));
     $("ears").textContent = s.heard ? `“${s.heard}”` : (s.voice ? "listening…" : "voice mode is off on the phone");
+    $("convo").textContent = (s.conversation || []).map((c) => `${c.t}s  ${c.who === "student" ? "Student" : "Sensei "}: ${c.text}`).join("\n");
     const t = s.tutor;
     $("tutor").textContent = !s.brain ? "Tutor brain: not configured (set SENSEI_LLM_URL on the Spark)"
       : !t ? `Tutor brain: ${s.brain} · no session yet`

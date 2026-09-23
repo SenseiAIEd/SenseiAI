@@ -41,6 +41,9 @@ PREROLL_S = 0.3       # keep the moment just before speech was detected
 MIN_LEVEL = 0.01      # RMS below this is never speech (a muted mic sends zeros)
 
 
+_MODELS: dict = {}  # loaded speech models, shared by every call in this process
+
+
 class Transcriber:
     """Speech (16 kHz mono float32) -> text."""
 
@@ -57,8 +60,10 @@ class Transcriber:
 
     def load(self):
         if not self.url and self._model is None:
-            from faster_whisper import WhisperModel
-            self._model = WhisperModel(self.model_name, device="cpu", compute_type="int8")
+            if self.model_name not in _MODELS:
+                from faster_whisper import WhisperModel
+                _MODELS[self.model_name] = WhisperModel(self.model_name, device="cpu", compute_type="int8")
+            self._model = _MODELS[self.model_name]
 
     def __call__(self, audio: np.ndarray) -> str:
         if self.url:

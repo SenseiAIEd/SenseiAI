@@ -15,7 +15,7 @@
 //                     {"type": "session_ended", "summary", "hints_given", "mistakes_fixed", ...}
 //                     {"type": "heard", "text"}          what Sensei understood the student said
 //   phone -> gateway  {"type": "hello", "app"}  {"type": "start", "minutes"}
-//                     {"type": "request", "what": "hint" | "check" | "look" | "repeat" | "end"}
+//                     {"type": "request", "what": "hint" | "check" | "look" | "repeat" | "pause" | "resume" | "end"}
 //                     {"type": "voice", "on"}            voice mode (the mic is muted when off)
 //                     {"type": "spoken", "text"}         finished speaking this
 //
@@ -29,7 +29,7 @@ import { StatusBar } from "expo-status-bar";
 import * as SecureStore from "expo-secure-store";
 import { SafeAreaProvider, useSafeAreaInsets } from "react-native-safe-area-context";
 
-const APP_ID = "sensei-cam/0.4.0";
+const APP_ID = "sensei-cam/0.5.0";
 const DEFAULT_SERVER = "https://spark-e257.tail803c7f.ts.net:8443";
 const LENGTHS = [5, 10, 15];
 const REQUEST_TIMEOUT_MS = 10000;
@@ -39,7 +39,7 @@ const TUTOR_ANSWER_MS = 8000; // after Start, the Spark's tutor should greet wit
 const NO_TUTOR = "Sensei's brain on the Spark isn't answering. Ask your teacher to update and restart the Sensei gateway.";
 
 type Screen = "home" | "connecting" | "session" | "summary";
-type Request = "hint" | "check" | "look" | "repeat" | "end";
+type Request = "hint" | "check" | "look" | "repeat" | "pause" | "resume" | "end";
 type IceServer = { urls: string | string[]; username?: string; credential?: string };
 type TutorState = { phase: string; remaining_s: number; thinking: boolean };
 type Summary = { summary: string; hints_given: number; mistakes_fixed: number; problems_finished: number; minutes: number };
@@ -158,6 +158,8 @@ function SenseiApp() {
   const [voice, setVoice] = useState(false); // voice mode: the mic only carries sound when on
   const voiceRef = useRef(false);
   const [heard, setHeard] = useState<string | null>(null);
+  const [showControls, setShowControls] = useState(true);
+  const pausedRef = useRef(false);
   const watchdog = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // The mic sends sound only in voice mode, and never while Sensei is talking
@@ -170,7 +172,7 @@ function SenseiApp() {
     setSaid(text);
     Speech.stop();
     setMic(false);
-    const after = () => setMic(voiceRef.current);
+    const after = () => setMic(voiceRef.current && !pausedRef.current);
     Speech.speak(text, {
       rate: 0.95,
       onDone: () => {
@@ -186,7 +188,7 @@ function SenseiApp() {
     const on = !voiceRef.current;
     voiceRef.current = on;
     setVoice(on);
-    setMic(on);
+    setMic(on && !pausedRef.current);
     send({ type: "voice", on });
   }
 
@@ -229,6 +231,8 @@ function SenseiApp() {
       Speech.stop();
     } else if (msg.type === "tutor") {
       tutorAnswered.current = true;
+      if (msg.phase === "paused") setMic(false); // paused: Sensei neither looks nor listens
+      pausedRef.current = msg.phase === "paused";
       setTutor({ phase: msg.phase, remaining_s: msg.remaining_s, thinking: msg.thinking });
     } else if (msg.type === "heard") {
       setHeard(msg.text);
@@ -379,9 +383,12 @@ function SenseiApp() {
 
   if (screen === "session" || screen === "connecting") {
     const thinking = tutor?.thinking;
+    const paused = tutor?.phase === "paused";
+    const live = screen === "session" && !paused;
     const line = lost
       ? "Connection lost. Check the network; Sensei will pick up when it's back."
-      : screen === "connecting" ? status : thinking ? "Sensei is looking at your page…" : "Sensei is watching";
+      : screen === "connecting" ? status : paused ? "Paused: Sensei isn't looking or listening"
+      : thinking ? "Sensei is looking at your page…" : "Sensei is watching";
     return (
       <View style={rootStyle}>
         <StatusBar style="light" />
@@ -390,35 +397,49 @@ function SenseiApp() {
           <Text style={styles.said}>{said ?? "Hi! Getting ready…"}</Text>
           {!!heard && <Text style={styles.heard}>You said: “{heard}”</Text>}
           <View style={styles.recRow}>
-            <Text style={styles.rec}>● REC</Text>
-            <Text style={styles.recText}>camera{voice ? " + your voice" : " only · mic off"}</Text>
+            <Text style={[styles.rec, paused && styles.recPaused]}>{paused ? "❚❚ PAUSED" : "● REC"}</Text>
+            <Text style={styles.recText}>camera{voice && !paused ? " + your voice" : " only · mic off"}</Text>
+            <Pressable onPress={() => setShowControls((v) => !v)} style={styles.toggle}>
+              <Text style={styles.link}>{showControls ? "Hide controls" : "Show controls"}</Text>
+            </Pressable>
           </View>
           <View style={styles.statusRow}>
-            <View style={[styles.dot, !lost && screen === "session" && styles.dotLive, lost && styles.dotLost]} />
+            <View style={[styles.dot, live && !lost && styles.dotLive, lost && styles.dotLost]} />
             <Text style={styles.status}>{line}</Text>
             {tutor && <Text style={styles.timer}>{clock(tutor.remaining_s)}</Text>}
           </View>
-          <Pressable
-            style={[styles.voice, voice && styles.voiceOn, screen !== "session" && styles.disabled]}
-            onPress={toggleVoice}
-            disabled={screen !== "session"}
-          >
-            <Text style={[styles.voiceText, voice && styles.voiceTextOn]}>
-              {voice ? "🎤 Voice on: talk to Sensei (tap to turn off)" : "🎤 Voice off: tap to talk to Sensei"}
-            </Text>
-          </Pressable>
-          <View style={styles.buttons}>
-            {/* Greyed out while Sensei is looking, so it's clear the tap was heard. */}
-            <Button label="Hint" onPress={() => press("hint")} disabled={screen !== "session" || !!thinking} />
-            <Button label="Check my work" onPress={() => press("check")} disabled={screen !== "session" || !!thinking} />
-          </View>
-          <View style={styles.buttons}>
-            <Button label="What do you see?" onPress={() => press("look")} disabled={screen !== "session" || !!thinking} />
-            <Button label="Repeat" onPress={() => press("repeat")} disabled={!said} />
-          </View>
-          <Pressable style={styles.secondary} onPress={() => (screen === "session" ? press("end") : leave())}>
-            <Text style={styles.secondaryText}>{screen === "session" ? "End session" : "Cancel"}</Text>
-          </Pressable>
+          {showControls && (
+            <>
+              <Pressable
+                style={[styles.voice, voice && styles.voiceOn, !live && styles.disabled]}
+                onPress={toggleVoice}
+                disabled={!live}
+              >
+                <Text style={[styles.voiceText, voice && styles.voiceTextOn]}>
+                  {voice ? "🎤 Voice on: talk to Sensei (tap to turn off)" : "🎤 Voice off: tap to talk to Sensei"}
+                </Text>
+              </Pressable>
+              <View style={styles.buttons}>
+                {/* Greyed out while Sensei is looking, so it's clear the tap was heard. */}
+                <Button label="Hint" onPress={() => press("hint")} disabled={!live || !!thinking} />
+                <Button label="Check my work" onPress={() => press("check")} disabled={!live || !!thinking} />
+              </View>
+              <View style={styles.buttons}>
+                <Button label="What do you see?" onPress={() => press("look")} disabled={!live || !!thinking} />
+                <Button label="Repeat" onPress={() => press("repeat")} disabled={!said} />
+              </View>
+              <View style={styles.buttons}>
+                {screen === "session" && (
+                  <Pressable style={[styles.secondary, styles.grow]} onPress={() => press(paused ? "resume" : "pause")}>
+                    <Text style={styles.secondaryText}>{paused ? "Resume" : "Pause"}</Text>
+                  </Pressable>
+                )}
+                <Pressable style={[styles.secondary, styles.grow]} onPress={() => (screen === "session" ? press("end") : leave())}>
+                  <Text style={styles.secondaryText}>{screen === "session" ? "End session" : "Cancel"}</Text>
+                </Pressable>
+              </View>
+            </>
+          )}
         </View>
       </View>
     );
@@ -522,7 +543,10 @@ const styles = StyleSheet.create({
   heard: { color: MUTED, fontSize: 16, fontStyle: "italic" },
   recRow: { flexDirection: "row", alignItems: "center", gap: 8 },
   rec: { color: RED, fontSize: 13, fontWeight: "700" },
-  recText: { color: MUTED, fontSize: 13 },
+  recText: { color: MUTED, fontSize: 13, flex: 1 },
+  recPaused: { color: PENCIL },
+  toggle: { paddingLeft: 8 },
+  grow: { flexGrow: 1, paddingHorizontal: 16 },
   voice: { borderColor: LINE, borderWidth: 1, borderRadius: 8, paddingVertical: 12, alignItems: "center" },
   voiceOn: { borderColor: RED, backgroundColor: "#3A2320" },
   voiceText: { color: CHALK, fontSize: 15, fontWeight: "600" },

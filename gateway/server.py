@@ -331,7 +331,7 @@ class Say(BaseModel):
 
 
 class TutorAction(BaseModel):
-    action: str  # start | hint | check | look | repeat | end
+    action: str  # start | hint | check | look | repeat | pause | resume | end
     minutes: float = 10
 
 
@@ -373,7 +373,7 @@ async def offer(body: Offer):
             # The student's buttons: start / hint / check / repeat / end.
             if kind == "start":
                 asyncio.ensure_future(s.tutor_request("start", float(msg.get("minutes") or 10)))
-            elif kind == "request" and msg.get("what") in ("hint", "check", "look", "repeat", "end"):
+            elif kind == "request" and msg.get("what") in ("hint", "check", "look", "repeat", "pause", "resume", "end"):
                 asyncio.ensure_future(s.tutor_request(msg["what"]))
 
     @pc.on("track")
@@ -430,7 +430,7 @@ async def say(body: Say):
 @app.post("/tutor")
 async def tutor_action(body: TutorAction):
     """Drive the tutor from the console (same as the phone's buttons)."""
-    if body.action not in ("start", "hint", "check", "look", "repeat", "end"):
+    if body.action not in ("start", "hint", "check", "look", "repeat", "pause", "resume", "end"):
         raise HTTPException(400, "unknown action")
     if session is None or session.closed:
         raise HTTPException(409, "phone not connected")
@@ -471,6 +471,7 @@ async def status():
         "voice": session.voice,
         "heard": session.last_heard,
         "tutor": session.tutor.state() if session.tutor else None,
+        "conversation": session.tutor.conversation[-10:] if session.tutor else [],
         "brain": BRAIN.model if BRAIN else None,
         "ears": TRANSCRIBER.name if TRANSCRIBER else None,
     }

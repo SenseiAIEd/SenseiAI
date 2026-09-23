@@ -32,7 +32,9 @@ def listen(audio: np.ndarray, listening=lambda: True):
         heard.append((text, info))
 
     async def run():
-        ears = Ears(Transcriber(), on_text, listening=listening)
+        transcriber = Transcriber()
+        transcriber.load()  # the gateway loads the model at startup; don't time the load
+        ears = Ears(transcriber, on_text, listening=listening)
         silence = np.zeros(int(RATE * 1.5), np.float32)
         await ears.feed(np.concatenate([silence, audio, silence]))
         for _ in range(100):  # transcription runs in a thread

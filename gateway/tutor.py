@@ -224,6 +224,8 @@ ONE_MINUTE = "About one minute left. Let's finish the step you're on."
 SAY_AGAIN = "Sorry, I didn't catch that. Could you say it again?"
 NO_BRAIN = "My thinking part isn't connected right now, so I can only watch. Please tell your teacher."
 BRAIN_ERROR = "Sorry, I lost my train of thought for a moment. Keep going, and I'll look again."
+PAUSED = "Okay, I'll wait. Tap Resume when you're ready."
+RESUMED = "Welcome back. Let's keep going."
 GOODBYE = "That's our time. Nice work today. See you next time!"
 LOOKING = {"hint": "Let me look at your work.", "check": "Okay, let me check your work.", "look": "Let me look."}
 STILL_LOOKING = "Still looking at your work, one moment."
@@ -237,6 +239,7 @@ class Tutor:
     (`request`); it speaks through `speak` and reports its state through `notify`."""
 
     MIN_GAP_S = 8.0          # between unprompted remarks
+    MEMORY_TURNS = 20        # conversation turns kept for context
     IDLE_S = 90.0            # no new writing for this long -> a gentle check-in
     NO_PAGE_REPEAT_S = 30.0  # how often to repeat "I can't see your page"
 
@@ -267,9 +270,16 @@ class Tutor:
         self.problems_finished = 0
         self._finished_problem: Optional[str] = None
         self._task: Optional[asyncio.Task] = None
+        # What was said, in order ({"who": "student" | "sensei", "text", "t"}), and a note of what
+        # Sensei last saw, so spoken follow-ups ("what did I ask?", "why?") have context.
+        self.conversation: list[dict] = []
+        self.last_seen: Optional[str] = None
+        self.paused_at = 0.0
 
     # -- state ---------------------------------------------------------------------------
     def remaining_s(self) -> float:
+        if self.phase == "paused":  # the clock stops while paused
+            return max(0.0, self.ends_at - self.paused_at)
         return max(0.0, self.ends_at - self.clock()) if self.phase == "watching" else 0.0
 
     def state(self) -> dict:
@@ -280,7 +290,17 @@ class Tutor:
     async def notify(self):
         await self.notify_cb(self.state())
 
+    def remember(self, who: str, text: str):
+        self.conversation.append({"who": who, "text": text, "t": round(self.clock() - self.started_at, 1)})
+        del self.conversation[:-self.MEMORY_TURNS]
+
+    def recent_conversation(self, skip_last: int = 0) -> str:
+        turns = self.conversation[:len(self.conversation) - skip_last] if skip_last else self.conversation
+        return "\n".join(f"{'Student' if c['who'] == 'student' else 'Sensei'}: {c['text']}" for c in turns)
+
     async def speak(self, text: str, why: str):
+        if why not in ("ack", "busy"):  # "let me look" fillers aren't part of the conversation
+            self.remember("sensei", text)
         self.last_said, self.last_spoke_at = text, self.clock()
         self.log_event("tutor_say", text=text, why=why)
         await self.speak_cb(text, why)
@@ -357,10 +377,24 @@ class Tutor:
             await self._judge(img, request=None)
 
     async def request(self, what: str, img: Optional[np.ndarray]):
-        """A button on the phone: "hint", "check", "look" (what do you see?), "repeat" or "end"."""
+        """A button on the phone: "hint", "check", "look" (what do you see?), "repeat", "pause",
+        "resume" or "end"."""
         self.log_event("tutor_request", what=what)
         if what == "end":
             await self.end("student")
+        elif what == "pause" and self.phase == "watching":
+            self.phase, self.paused_at = "paused", self.clock()  # stops looking, listening and the clock
+            self.log_event("tutor_pause")
+            await self.speak(PAUSED, "pause")
+            await self.notify()
+        elif what == "resume" and self.phase == "paused":
+            now = self.clock()
+            self.ends_at += now - self.paused_at  # paused time doesn't count
+            self.phase, self.last_activity = "watching", now
+            self.watcher = PageWatcher()  # the page may have changed while paused: look afresh
+            self.log_event("tutor_resume", paused_s=round(now - self.paused_at, 1))
+            await self.speak(RESUMED, "resume")
+            await self.notify()
         elif what == "repeat":
             if self.last_said:
                 await self.speak(self.last_said, "repeat")
@@ -381,6 +415,7 @@ class Tutor:
     async def hear(self, text: str, img: Optional[np.ndarray]):
         """The student said something (voice mode): answer it, looking at the page too."""
         self.log_event("student_said", text=text)
+        self.remember("student", text)
         if self.phase != "watching":
             return
         if self.brain is None:
@@ -395,11 +430,18 @@ class Tutor:
     # -- deciding what to say ------------------------------------------------------------
     def _instructions(self, request: Optional[str], said: Optional[str] = None) -> str:
         if request == "talk":
-            return (f"The student just said out loud: \"{said}\". Answer them as Sensei in \"say\": one to three "
-                    "short spoken sentences, using what you see in the image if it helps. If they asked what you "
-                    "see, describe it. If they answered your question or explained a step, tell them honestly "
-                    "whether it's on the right track, without giving away the final answer. If it's small talk, "
-                    "reply warmly and steer back to their work."
+            history = self.recent_conversation(skip_last=1)  # the last turn is `said` itself
+            return ("You are in a spoken conversation with the student.\n"
+                    + (f"Conversation so far (oldest first):\n{history}\n" if history else "")
+                    + (f"What you last saw in the camera: {self.last_seen}\n" if self.last_seen else "")
+                    + f"The student just said out loud: \"{said}\"\n"
+                    "Answer them as Sensei in \"say\": one to three short spoken sentences. Use the image and the "
+                    "conversation. If they ask what they asked, what you understood or what you said, answer from "
+                    "the conversation, quoting briefly. If they ask what you see, describe it. If they answered "
+                    "your question or explained a step, tell them honestly whether it's on the right track, "
+                    "without giving away the final answer. If what they said is unclear or seems misheard, say "
+                    "what you heard and ask them to repeat. If it's small talk, reply warmly and steer back to "
+                    "their work."
                     + (f" Earlier you asked about step {self.mistake[0]} of their work." if self.mistake else ""))
         parts = []
         if self.problem:
@@ -449,12 +491,20 @@ class Tutor:
         if self.phase != "watching":  # the session ended (or the call dropped) while we thought
             self.log_event("tutor_late_reply", latency_s=round(self.clock() - t0, 2), request=request)
             return
+        self.last_seen = self._describe_seen(a)
         self.log_event("tutor_assessment", latency_s=round(self.clock() - t0, 2), request=request,
                        frame=frame_file, frame_size=frame_size,
                        page=a.page, problem=a.problem, steps=a.steps, first_error=a.first_error,
                        error_kind=a.error_kind, finished=a.finished, say=a.say)
         await self._react(a, request)
         await self.notify()
+
+    @staticmethod
+    def _describe_seen(a: Assessment) -> str:
+        kind = {"work": "student work", "other": "something other than homework",
+                "unreadable": "something too unclear to read", "none": "nothing meaningful"}.get(a.page, a.page)
+        lines = "; ".join(a.steps[:6])
+        return f"{kind}" + (f" ({a.problem})" if a.problem else "") + (f": {lines}" if lines else "")
 
     async def _react(self, a: Assessment, request: Optional[str]):
         now = self.clock()

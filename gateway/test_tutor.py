@@ -253,3 +253,56 @@ def test_student_speaks_and_sensei_answers_about_what_it_sees():
     h.run(h.tutor.hear("is my first line right?", PAGE))
     assert h.said[-1] == ("reply", "Almost! Check what happens to the minus four inside the brackets.")
     assert '"is my first line right?"' in brain.instructions[-1] and "student_said" in h.events
+
+
+def test_spoken_follow_ups_see_the_conversation_so_far():
+    brain = ScriptedBrain(
+        Assessment(page="other", steps=["BOTTLE"], say="That's a blue water bottle."),
+        Assessment(page="other", say="You asked me what the object in your hand is."),
+    )
+    h = Harness(brain)
+    h.run(h.tutor.start())
+    h.run(h.tutor.hear("what is this in my hand?", PAGE))
+    h.now += 5
+    h.run(h.tutor.hear("what did I ask you?", PAGE))
+    second = brain.instructions[-1]
+    # the model gets the earlier question, its own answer and what it saw, but not the new
+    # question twice
+    assert "Student: what is this in my hand?" in second
+    assert "Sensei: That's a blue water bottle." in second
+    assert "What you last saw in the camera: something other than homework: BOTTLE" in second
+    assert second.count("what did I ask you?") == 1
+    assert [c["who"] for c in h.tutor.conversation[-4:]] == ["student", "sensei", "student", "sensei"]
+
+
+def test_fillers_are_not_remembered_and_memory_is_bounded():
+    h = Harness(ScriptedBrain(*[Assessment(page="other", say=f"answer {i}") for i in range(30)]))
+    h.run(h.tutor.start())
+    for i in range(30):
+        h.now += 10
+        h.run(h.tutor.hear(f"question {i}", PAGE))
+    assert len(h.tutor.conversation) == Tutor.MEMORY_TURNS
+    assert h.tutor.conversation[-1]["text"] == "answer 29"
+    assert not any(c["text"] in tutor.LOOKING.values() for c in h.tutor.conversation)
+
+
+def test_pause_stops_looking_listening_and_the_clock():
+    brain = ScriptedBrain(Assessment(page="other", say="I see a notebook."))
+    h = Harness(brain)
+    h.run(h.tutor.start())
+    h.now += 60
+    h.run(h.tutor.request("pause", None))
+    left = h.tutor.remaining_s()
+    assert h.tutor.phase == "paused" and h.whys()[-1] == "pause" and left == 540
+
+    h.now += 300  # a long break
+    h.settle(page_with("a"))
+    h.run(h.tutor.hear("what is this?", PAGE))
+    h.run(h.tutor.tick())
+    assert brain.instructions == [] and h.tutor.remaining_s() == left  # nothing judged, clock stopped
+
+    h.run(h.tutor.request("resume", None))
+    assert h.tutor.phase == "watching" and h.whys()[-1] == "resume"
+    assert abs(h.tutor.remaining_s() - left) < 1
+    h.run(h.tutor.request("end", None))
+    assert h.tutor.phase == "ended"
