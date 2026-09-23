@@ -24,6 +24,6 @@ student work on paper and talks with them.
 
 ## Quick start
 
-1. On the Spark: `cd gateway && pip install -r requirements.txt && uvicorn server:app --host 0.0.0.0 --port 8787`
+1. On the Spark: `cd gateway && uv venv && source .venv/bin/activate && uv pip install -r requirements.txt && uvicorn server:app --host 0.0.0.0 --port 8787`
 2. Build and install the APK on the phone (see `app/README.md`), open it, enter the Spark address, tap **Connect**.
 3. Open `http://<spark-address>:8787` in a browser to watch and type instructions for the phone to speak.

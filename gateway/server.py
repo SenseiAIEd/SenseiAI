@@ -8,8 +8,8 @@ The phone reaches the Spark on the same Wi-Fi (LAN IP) or over Tailscale (the Sp
 MagicDNS name). On a LAN no internet is needed. The vision model will run on the same box.
 
 Setup:
-  python3 -m venv .venv && source .venv/bin/activate
-  pip install -r requirements.txt
+  uv venv && source .venv/bin/activate
+  uv pip install -r requirements.txt
   uvicorn server:app --host 0.0.0.0 --port 8787
 
 Open http://<spark-address>:8787 in any browser to watch the stream and send spoken instructions.

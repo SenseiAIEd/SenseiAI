@@ -15,12 +15,19 @@ and call `/say` themselves instead of a person typing.
 
 ## Run
 
+With [uv](https://docs.astral.sh/uv/) (install it once with `curl -LsSf https://astral.sh/uv/install.sh | sh`):
+
 ```sh
 cd gateway
-python3 -m venv .venv && source .venv/bin/activate
-pip install -r requirements.txt
+uv venv                                  # creates .venv
+source .venv/bin/activate
+uv pip install -r requirements.txt
 uvicorn server:app --host 0.0.0.0 --port 8787
 ```
+
+Or with plain pip: `python3 -m venv .venv && source .venv/bin/activate && pip install -r requirements.txt`.
+
+Keep it running after you close the terminal with `tmux`, or run it in the background.
 
 Open `http://<spark-address>:8787` in a browser on any machine that can reach the Spark
 (for example over Tailscale: `http://spark-e257.tail803c7f.ts.net:8787`). You get:
