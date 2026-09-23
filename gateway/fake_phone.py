@@ -49,6 +49,8 @@ class FakePhone:
         self.relay_only = relay_only
         self.pc: RTCPeerConnection | None = None
         self.heard: list[str] = []
+        self.messages: list[dict] = []  # everything the gateway sent on the data channel
+        self.channel = None
         self.channel_open = asyncio.Event()
 
     def use_relay_only(self):
@@ -71,6 +73,7 @@ class FakePhone:
         self.pc.addTrack(NotebookTrack())
         self.pc.addTrack(AudioStreamTrack())
         channel = self.pc.createDataChannel("sensei")
+        self.channel = channel
 
         @channel.on("open")
         def on_open():
@@ -80,6 +83,9 @@ class FakePhone:
         @channel.on("message")
         def on_message(message):
             msg = json.loads(message)
+            self.messages.append(msg)
+            if msg.get("type") == "session_ended":
+                print(f"session ended: {msg.get('summary')}")
             if msg.get("type") == "say":
                 print(f"phone says: {msg['text']}")
                 self.heard.append(msg["text"])
@@ -97,6 +103,10 @@ class FakePhone:
         await self.pc.setRemoteDescription(RTCSessionDescription(**res.json()))
         await asyncio.wait_for(self.channel_open.wait(), timeout=10)
 
+    def send(self, msg: dict):
+        """Like the app's buttons: {"type": "start", "minutes": 5}, {"type": "request", "what": "hint"}."""
+        self.channel.send(json.dumps(msg))
+
     def candidate_types(self) -> set[str]:
         """Types of the ICE candidates we offered (host, relay, ...)."""
         return {line.split(" typ ")[1].split()[0]
@@ -113,11 +123,14 @@ async def main():
     ap.add_argument("--seconds", type=float, default=60)
     ap.add_argument("--key", default="", help="the gateway's SENSEI_KEY, if it has one")
     ap.add_argument("--relay-only", action="store_true", help="send media only through the TURN relay")
+    ap.add_argument("--tutor", type=float, metavar="MINUTES", help="start a tutoring session of this length")
     args = ap.parse_args()
     phone = FakePhone(args.server, key=args.key, relay_only=args.relay_only)
     await phone.connect()
     print(f"connected to {args.server} via {', '.join(sorted(phone.candidate_types()))} candidates; "
           f"streaming for {args.seconds:.0f} s")
+    if args.tutor:
+        phone.send({"type": "start", "minutes": args.tutor})
     try:
         await asyncio.sleep(args.seconds)
     finally:

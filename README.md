@@ -7,12 +7,13 @@ student work on paper and talks with them.
 
 ## Milestones (working back from the goal)
 
-1. **Pipes** (this milestone): the phone streams live video and the student's voice to the
-   DGX Spark, the Spark records each session, and the Spark can make the phone speak.
-2. **Eyes**: the Spark reads the notebook from the live frames with a vision model.
-3. **Brain**: Sensei decides when to speak and what to ask (the Socratic loop).
-4. **Ears**: speech-to-text on the student's audio, so they can answer out loud.
-5. **Body**: the pan-tilt head chooses where to look.
+1. **Pipes** (done): the phone streams live video and the student's voice to the DGX Spark,
+   the Spark records each session, and the Spark can make the phone speak.
+2. **Eyes + Brain** (this milestone): a 5-15 minute session the student starts from the app.
+   Sensei reads the notebook with a vision model on the Spark, stays quiet while the work is
+   right, asks escalating Socratic questions about the first mistake, and wraps up at the end.
+3. **Ears**: speech-to-text on the student's audio, so they can answer out loud.
+4. **Body**: the pan-tilt head chooses where to look.
 
 ## Layout
 
