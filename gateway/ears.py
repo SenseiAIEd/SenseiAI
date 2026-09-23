@@ -107,6 +107,7 @@ class Ears:
         self.voiced_run = 0
         self.silence_s = 0.0
         self.busy = False               # a transcription is running
+        self._one_at_a_time = asyncio.Lock()  # utterances are transcribed in order, none dropped
 
     async def run(self, track):
         from aiortc.mediastreams import MediaStreamError
@@ -151,7 +152,7 @@ class Ears:
             audio = np.concatenate(self.speech)
             spoken_s = length - self.silence_s
             self._reset()
-            if spoken_s >= MIN_SPEECH_S and not self.busy:
+            if spoken_s >= MIN_SPEECH_S:
                 asyncio.ensure_future(self._transcribe(audio, spoken_s))
 
     async def flush(self):
@@ -166,14 +167,15 @@ class Ears:
         self.speech, self.preroll, self.voiced_run, self.silence_s = [], [], 0, 0.0
 
     async def _transcribe(self, audio: np.ndarray, spoken_s: float):
-        self.busy = True
-        t0 = time.monotonic()
-        try:
-            text = await asyncio.to_thread(self.transcribe, audio)
-        except Exception as e:
-            log.warning("transcription failed: %s", e)
-            return
-        finally:
-            self.busy = False
+        async with self._one_at_a_time:
+            self.busy = True
+            t0 = time.monotonic()
+            try:
+                text = await asyncio.to_thread(self.transcribe, audio)
+            except Exception as e:
+                log.warning("transcription failed: %s", e)
+                return
+            finally:
+                self.busy = False
         if text:
             await self.on_text(text, {"audio_s": round(spoken_s, 2), "stt_s": round(time.monotonic() - t0, 2)})

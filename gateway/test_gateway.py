@@ -169,7 +169,9 @@ def test_access_key_protects_everything_but_the_page(gateway, monkeypatch):
 def test_config_hands_out_coturn_rest_credentials(gateway, monkeypatch):
     import base64, hashlib, hmac
     base, _ = gateway
-    assert httpx.get(f"{base}/config").json() == {"iceServers": [], "tutor": {"brain": None}}  # no relay, no model
+    config = httpx.get(f"{base}/config").json()
+    assert config["iceServers"] == [] and config["tutor"]["brain"] is None  # no relay, no model
+    assert set(config["tutor"]["features"]) >= {"look", "talk", "memory", "pause"}  # the app checks these
 
     monkeypatch.setattr(server, "TURN_URLS", ["turns:spark.example.ts.net:10000?transport=tcp"])
     monkeypatch.setattr(server, "TURN_SECRET", "turn-secret")

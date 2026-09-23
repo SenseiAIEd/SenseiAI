@@ -127,12 +127,14 @@ def test_hint_button_forces_a_look_and_answers():
     assert h.said[-1] == ("repeat", "What could you do with the brackets first?")
 
 
-def test_no_page_is_mentioned_but_not_every_frame():
-    h = Harness(ScriptedBrain(Assessment(page="none"), Assessment(page="none")))
+def test_background_looks_stay_quiet_about_non_work_but_requests_get_answers():
+    h = Harness(ScriptedBrain(Assessment(page="none"), Assessment(page="unreadable"), Assessment(page="none")))
     h.run(h.tutor.start())
     h.settle(page_with("a"))
-    h.settle(page_with("ab"))  # a few seconds later: don't repeat
-    assert h.whys() == ["greeting", "none"]
+    h.settle(page_with("ab"))
+    assert h.whys() == ["greeting"]  # nothing to say about an empty or blurry view unprompted
+    h.run(h.tutor.request("check", PAGE))
+    assert h.said[-1] == ("none", tutor.NO_PAGE)
 
 
 def test_model_failure_is_quiet_unless_the_student_asked():
@@ -225,13 +227,16 @@ def test_reply_after_the_call_ended_is_dropped():
     assert h.whys() == ["greeting", "ack"] and "tutor_late_reply" in h.events
 
 
-def test_anything_else_in_view_gets_talked_about():
-    h = Harness(ScriptedBrain(Assessment(page="other", steps=["$ uvicorn server:app"],
-                                         say="I see a computer terminal running a server. What do you think it's doing?")))
+def test_anything_in_view_is_described_when_asked_not_unprompted():
+    seen = Assessment(page="other", steps=["$ uvicorn server:app"],
+                      say="I see a computer terminal running a server. What do you think it's doing?")
+    h = Harness(ScriptedBrain(seen, seen))
     h.run(h.tutor.start())
     h.now += 20
-    h.settle(page_with("a"))  # unprompted look: talks about it
-    assert h.said[-1] == ("other", "I see a computer terminal running a server. What do you think it's doing?")
+    h.settle(page_with("a"))
+    assert h.whys() == ["greeting"]  # the room isn't narrated unasked
+    h.run(h.tutor.request("look", PAGE))
+    assert h.said[-1] == ("look", "I see a computer terminal running a server. What do you think it's doing?")
     assert h.tutor.mistake is None and h.tutor.hints_given == 0
     assert "never refuse just because it isn't homework" in tutor.SYSTEM_PROMPT
 
@@ -306,3 +311,49 @@ def test_pause_stops_looking_listening_and_the_clock():
     assert abs(h.tutor.remaining_s() - left) < 1
     h.run(h.tutor.request("end", None))
     assert h.tutor.phase == "ended"
+
+
+def test_a_question_asked_while_busy_is_answered_not_dropped():
+    brain = ScriptedBrain(Assessment(page="other", say="(background look)"),
+                          Assessment(page="other", say="That's a red pen."))
+
+    class Harness2(Harness):
+        pass
+
+    h = Harness(brain)
+    h.run(h.tutor.start())
+
+    async def busy_then_ask():
+        # the student speaks while a background look is still running
+        orig = brain.assess
+
+        def slow(img, instructions):
+            if not h.tutor.pending_question and "said out loud" not in instructions:
+                h.tutor.pending_question = ("what colour is my pen?", PAGE)  # as hear() does when busy
+            return orig(img, instructions)
+
+        brain.assess = slow
+        h.tutor.watcher.mark_judged = lambda: None
+        await h.tutor._judge(page_with("a"), request=None)
+
+    h.run(busy_then_ask())
+    # the background result was dropped in favour of the question, which got ack + answer
+    assert "tutor_superseded" in h.events
+    assert h.whys()[-2:] == ["ack", "reply"] and h.said[-1][1] == "That's a red pen."
+    assert h.tutor.pending_question is None
+
+
+def test_hearing_while_thinking_queues_the_question_and_says_so():
+    h = Harness(ScriptedBrain())
+    h.run(h.tutor.start())
+    h.tutor.thinking = True
+    h.run(h.tutor.hear("is my second line right?", PAGE))
+    assert h.tutor.pending_question[0] == "is my second line right?"
+    assert h.said[-1] == ("busy", tutor.HEARD_WHILE_BUSY)
+
+
+def test_every_question_is_acknowledged_before_the_answer():
+    h = Harness(ScriptedBrain(Assessment(page="work", steps=["x = 5"], say="Yes, x equals five checks out.")))
+    h.run(h.tutor.start())
+    h.run(h.tutor.hear("is x five?", PAGE))
+    assert h.whys()[-2:] == ["ack", "reply"] and h.said[-2][1] in tutor.HEARD

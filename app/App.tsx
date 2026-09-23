@@ -20,7 +20,7 @@
 //                     {"type": "spoken", "text"}         finished speaking this
 //
 // Needs a custom build (not Expo Go): see README.md.
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { PermissionsAndroid, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 import { MediaStream, RTCPeerConnection, RTCRtpSender, RTCView, mediaDevices } from "react-native-webrtc";
 import * as Speech from "expo-speech";
@@ -28,14 +28,18 @@ import { useKeepAwake } from "expo-keep-awake";
 import { StatusBar } from "expo-status-bar";
 import * as SecureStore from "expo-secure-store";
 import { SafeAreaProvider, useSafeAreaInsets } from "react-native-safe-area-context";
+import { Ionicons } from "@expo/vector-icons";
 
-const APP_ID = "sensei-cam/0.5.0";
+type IconName = React.ComponentProps<typeof Ionicons>["name"];
+
+const APP_ID = "sensei-cam/0.6.0";
 const DEFAULT_SERVER = "https://spark-e257.tail803c7f.ts.net:8443";
 const LENGTHS = [5, 10, 15];
 const REQUEST_TIMEOUT_MS = 10000;
 const ICE_GATHER_DIRECT_MS = 3000;
 const ICE_GATHER_RELAY_MS = 8000; // a TURN allocation through Funnel crosses the internet
 const TUTOR_ANSWER_MS = 8000; // after Start, the Spark's tutor should greet within this
+const OLD_GATEWAY = "The Sensei gateway on the Spark needs an update for this button. Ask your teacher to update and restart it.";
 const NO_TUTOR = "Sensei's brain on the Spark isn't answering. Ask your teacher to update and restart the Sensei gateway.";
 
 type Screen = "home" | "connecting" | "session" | "summary";
@@ -160,6 +164,8 @@ function SenseiApp() {
   const [heard, setHeard] = useState<string | null>(null);
   const [showControls, setShowControls] = useState(true);
   const pausedRef = useRef(false);
+  const featuresRef = useRef<string[]>([]); // what this gateway supports (from /config)
+  const [showText, setShowText] = useState(true); // Sensei's words over the camera
   const watchdog = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // The mic sends sound only in voice mode, and never while Sensei is talking
@@ -258,8 +264,9 @@ function SenseiApp() {
       // Before touching the camera: is the gateway there, and does it offer a relay?
       const config = (await gateway(`${base}/config`, accessKey)) as {
         iceServers: IceServer[];
-        tutor?: { brain: string | null };
+        tutor?: { brain: string | null; features?: string[] };
       };
+      featuresRef.current = config.tutor?.features ?? [];
       const iceServers = config.iceServers;
       if (!config.tutor) {
         throw new Error("the Sensei gateway on the Spark is an old version without the tutor. Update it (git pull) and restart it.");
@@ -273,10 +280,12 @@ function SenseiApp() {
         video: { facingMode: "environment", width: 1280, height: 720, frameRate: 15 },
       });
       setStream(local);
-      // Start with the mic muted: the student turns voice mode on when they want to talk.
+      // Voice mode starts on: students talk to Sensei. The mic stays muted until the call is up,
+      // and whenever Sensei is speaking. One tap turns it off.
       micRef.current = local.getAudioTracks()[0] ?? null;
-      voiceRef.current = false;
-      setVoice(false);
+      voiceRef.current = true;
+      pausedRef.current = false;
+      setVoice(true);
       setHeard(null);
       setMic(false);
 
@@ -291,6 +300,8 @@ function SenseiApp() {
       channel.onopen = () => {
         channel.send(JSON.stringify({ type: "hello", app: APP_ID }));
         channel.send(JSON.stringify({ type: "start", minutes }));
+        channel.send(JSON.stringify({ type: "voice", on: voiceRef.current }));
+        setMic(voiceRef.current);
         setScreen("session");
         // An old gateway (or one without the tutor) ignores "start": say so instead of staying silent.
         tutorAnswered.current = false;
@@ -328,6 +339,19 @@ function SenseiApp() {
   }
 
   function press(what: Request) {
+    const needs: Partial<Record<Request, string>> = { pause: "pause", resume: "pause", look: "look" };
+    const feature = needs[what];
+    if (feature && !featuresRef.current.includes(feature)) {
+      speak(OLD_GATEWAY);
+      return;
+    }
+    if (what === "pause" || what === "resume") {
+      // Act on the phone at once; the Spark confirms with its next state update.
+      const paused = what === "pause";
+      pausedRef.current = paused;
+      setTutor((t) => (t ? { ...t, phase: paused ? "paused" : "watching" } : t));
+      setMic(!paused && voiceRef.current);
+    }
     if (what === "repeat" && said) {
       // Repeat locally: instant, and works even if the connection hiccups.
       speak(said);
@@ -349,11 +373,12 @@ function SenseiApp() {
 
   // --- screens ---------------------------------------------------------------------------
   const camera = stream ? (
-    <RTCView streamURL={stream.toURL()} style={styles.camera} objectFit="cover" />
+    <RTCView streamURL={stream.toURL()} style={StyleSheet.absoluteFill} objectFit="cover" />
   ) : (
-    <View style={[styles.camera, styles.center]}>
+    <View style={[StyleSheet.absoluteFill, styles.center, styles.cameraOff]}>
+      <Ionicons name="school" size={56} color={PENCIL} />
       <Text style={styles.brand}>Sensei</Text>
-      <Text style={styles.muted}>Your tutor that watches your notebook and asks you questions.</Text>
+      <Text style={styles.muted}>Your tutor that watches your notebook, listens, and asks you questions.</Text>
     </View>
   );
 
@@ -362,15 +387,17 @@ function SenseiApp() {
       <View style={rootStyle}>
         <StatusBar style="light" />
         <ScrollView contentContainerStyle={styles.summary}>
+          <Ionicons name="sparkles" size={40} color={PENCIL} />
           <Text style={styles.heading}>Session complete</Text>
           <Text style={styles.said}>{summary.summary}</Text>
           <View style={styles.stats}>
-            <Stat label="minutes" value={summary.minutes} />
-            <Stat label="hints" value={summary.hints_given} />
-            <Stat label="fixes" value={summary.mistakes_fixed} />
-            <Stat label="solved" value={summary.problems_finished} />
+            <Stat icon="time-outline" label="minutes" value={summary.minutes} />
+            <Stat icon="bulb-outline" label="hints" value={summary.hints_given} />
+            <Stat icon="checkmark-done" label="fixes" value={summary.mistakes_fixed} />
+            <Stat icon="school" label="solved" value={summary.problems_finished} />
           </View>
           <Pressable style={styles.primary} onPress={start}>
+            <Ionicons name="play" size={20} color={SLATE} />
             <Text style={styles.primaryText}>Start again</Text>
           </Pressable>
           <Pressable style={styles.secondary} onPress={leave}>
@@ -382,63 +409,63 @@ function SenseiApp() {
   }
 
   if (screen === "session" || screen === "connecting") {
-    const thinking = tutor?.thinking;
+    const thinking = !!tutor?.thinking;
     const paused = tutor?.phase === "paused";
     const live = screen === "session" && !paused;
     const line = lost
-      ? "Connection lost. Check the network; Sensei will pick up when it's back."
-      : screen === "connecting" ? status : paused ? "Paused: Sensei isn't looking or listening"
-      : thinking ? "Sensei is looking at your page…" : "Sensei is watching";
+      ? "Connection lost. Sensei will pick up when it's back."
+      : screen === "connecting" ? status : paused ? "Paused: not looking or listening"
+      : thinking ? "Looking and thinking…" : voice ? "Watching and listening" : "Watching";
     return (
-      <View style={rootStyle}>
+      <View style={styles.fill}>
         <StatusBar style="light" />
         {camera}
-        <View style={styles.panel}>
-          <Text style={styles.said}>{said ?? "Hi! Getting ready…"}</Text>
-          {!!heard && <Text style={styles.heard}>You said: “{heard}”</Text>}
-          <View style={styles.recRow}>
-            <Text style={[styles.rec, paused && styles.recPaused]}>{paused ? "❚❚ PAUSED" : "● REC"}</Text>
-            <Text style={styles.recText}>camera{voice && !paused ? " + your voice" : " only · mic off"}</Text>
-            <Pressable onPress={() => setShowControls((v) => !v)} style={styles.toggle}>
-              <Text style={styles.link}>{showControls ? "Hide controls" : "Show controls"}</Text>
-            </Pressable>
-          </View>
-          <View style={styles.statusRow}>
-            <View style={[styles.dot, live && !lost && styles.dotLive, lost && styles.dotLost]} />
-            <Text style={styles.status}>{line}</Text>
-            {tutor && <Text style={styles.timer}>{clock(tutor.remaining_s)}</Text>}
-          </View>
+        {/* top: what's being recorded, the clock, and the two hide/show toggles */}
+        <View style={[styles.topBar, { paddingTop: insets.top + 8 }]}>
+          <Pill icon={paused ? "pause" : "ellipse"} color={paused ? PENCIL : RED} text={paused ? "PAUSED" : "REC"} />
+          <Pill icon={voice && !paused ? "mic" : "mic-off"} color={voice && !paused ? CHALK : MUTED}
+                text={voice && !paused ? "listening" : "mic off"} />
+          <View style={styles.grow} />
+          {tutor && <Pill icon="time-outline" color={CHALK} text={clock(tutor.remaining_s)} />}
+          <RoundIcon icon={showText ? "chatbubble-ellipses" : "chatbubble-ellipses-outline"} size={40}
+                     onPress={() => setShowText((v) => !v)} label={showText ? "Hide text" : "Show text"} />
+          <RoundIcon icon={showControls ? "eye" : "eye-off"} size={40}
+                     onPress={() => setShowControls((v) => !v)} label={showControls ? "Hide controls" : "Show controls"} />
+        </View>
+
+        <View style={[styles.bottom, { paddingBottom: insets.bottom + 12 }]}>
+          {showText ? (
+            <View style={styles.caption}>
+              <Text style={styles.captionSensei}>{said ?? "Hi! Getting ready…"}</Text>
+              {!!heard && <Text style={styles.captionYou}>You: “{heard}”</Text>}
+              <View style={styles.statusRow}>
+                <View style={[styles.dot, live && !lost && styles.dotLive, lost && styles.dotLost]} />
+                <Text style={styles.status}>{line}</Text>
+              </View>
+            </View>
+          ) : (
+            (thinking || lost || screen === "connecting") && <Pill icon="ellipsis-horizontal" color={CHALK} text={line} />
+          )}
           {showControls && (
-            <>
-              <Pressable
-                style={[styles.voice, voice && styles.voiceOn, !live && styles.disabled]}
-                onPress={toggleVoice}
-                disabled={!live}
-              >
-                <Text style={[styles.voiceText, voice && styles.voiceTextOn]}>
-                  {voice ? "🎤 Voice on: talk to Sensei (tap to turn off)" : "🎤 Voice off: tap to talk to Sensei"}
-                </Text>
-              </Pressable>
-              <View style={styles.buttons}>
-                {/* Greyed out while Sensei is looking, so it's clear the tap was heard. */}
-                <Button label="Hint" onPress={() => press("hint")} disabled={!live || !!thinking} />
-                <Button label="Check my work" onPress={() => press("check")} disabled={!live || !!thinking} />
+            <View style={styles.controls}>
+              <View style={styles.actionRow}>
+                <Action icon="bulb-outline" label="Hint" onPress={() => press("hint")} disabled={!live || thinking} />
+                <Action icon="checkmark-done" label="Check" onPress={() => press("check")} disabled={!live || thinking} />
+                <Action icon="scan-outline" label="See" onPress={() => press("look")} disabled={!live || thinking} />
+                <Action icon="repeat" label="Repeat" onPress={() => press("repeat")} disabled={!said} />
               </View>
-              <View style={styles.buttons}>
-                <Button label="What do you see?" onPress={() => press("look")} disabled={!live || !!thinking} />
-                <Button label="Repeat" onPress={() => press("repeat")} disabled={!said} />
-              </View>
-              <View style={styles.buttons}>
+              <View style={styles.mainRow}>
+                <RoundIcon icon={voice ? "mic" : "mic-off"} size={60} active={voice && !paused}
+                           onPress={toggleVoice} disabled={!live} label={voice ? "Voice on" : "Voice off"} />
                 {screen === "session" && (
-                  <Pressable style={[styles.secondary, styles.grow]} onPress={() => press(paused ? "resume" : "pause")}>
-                    <Text style={styles.secondaryText}>{paused ? "Resume" : "Pause"}</Text>
-                  </Pressable>
+                  <RoundIcon icon={paused ? "play" : "pause"} size={72} primary
+                             onPress={() => press(paused ? "resume" : "pause")} label={paused ? "Resume" : "Pause"} />
                 )}
-                <Pressable style={[styles.secondary, styles.grow]} onPress={() => (screen === "session" ? press("end") : leave())}>
-                  <Text style={styles.secondaryText}>{screen === "session" ? "End session" : "Cancel"}</Text>
-                </Pressable>
+                <RoundIcon icon="stop" size={60} danger
+                           onPress={() => (screen === "session" ? press("end") : leave())}
+                           label={screen === "session" ? "End" : "Cancel"} />
               </View>
-            </>
+            </View>
           )}
         </View>
       </View>
@@ -449,25 +476,29 @@ function SenseiApp() {
   return (
     <View style={rootStyle}>
       <StatusBar style="light" />
-      {camera}
+      <View style={styles.homeTop}>{camera}</View>
       <View style={styles.panel}>
         <Text style={styles.label}>How long do you want to study?</Text>
-        <View style={styles.buttons}>
+        <View style={styles.chipRow}>
           {LENGTHS.map((m) => (
             <Pressable key={m} style={[styles.chip, minutes === m && styles.chipOn]} onPress={() => setMinutes(m)}>
+              <Ionicons name="hourglass-outline" size={16} color={minutes === m ? SLATE : CHALK} />
               <Text style={[styles.chipText, minutes === m && styles.chipTextOn]}>{m} min</Text>
             </Pressable>
           ))}
         </View>
         <Pressable style={styles.primary} onPress={start}>
+          <Ionicons name="play" size={22} color={SLATE} />
           <Text style={styles.primaryText}>Start with Sensei</Text>
         </Pressable>
         {!!status && <Text style={styles.error}>{status}</Text>}
         <View style={styles.links}>
-          <Pressable onPress={() => setShowSettings((v) => !v)}>
+          <Pressable style={styles.linkRow} onPress={() => setShowSettings((v) => !v)}>
+            <Ionicons name="settings-outline" size={16} color={MUTED} />
             <Text style={styles.link}>{showSettings ? "Hide settings" : "Settings"}</Text>
           </Pressable>
-          <Pressable onPress={() => speak("Hi, I'm Sensei. If you can hear me, your sound is working.")}>
+          <Pressable style={styles.linkRow} onPress={() => speak("Hi, I'm Sensei. If you can hear me, your sound is working.")}>
+            <Ionicons name="volume-high" size={16} color={MUTED} />
             <Text style={styles.link}>Test voice</Text>
           </Pressable>
         </View>
@@ -500,17 +531,45 @@ function SenseiApp() {
   );
 }
 
-function Button({ label, onPress, disabled }: { label: string; onPress: () => void; disabled?: boolean }) {
+function Pill({ icon, color, text }: { icon: IconName; color: string; text: string }) {
   return (
-    <Pressable style={[styles.button, disabled && styles.disabled]} onPress={onPress} disabled={disabled}>
-      <Text style={styles.buttonText}>{label}</Text>
+    <View style={styles.pill}>
+      <Ionicons name={icon} size={icon === "ellipse" ? 10 : 14} color={color} />
+      <Text style={[styles.pillText, { color }]}>{text}</Text>
+    </View>
+  );
+}
+
+function RoundIcon(props: {
+  icon: IconName; size: number; onPress: () => void; label: string;
+  disabled?: boolean; active?: boolean; primary?: boolean; danger?: boolean;
+}) {
+  const { icon, size, onPress, label, disabled, active, primary, danger } = props;
+  const bg = primary ? PENCIL : active ? RED : danger ? "rgba(224,122,95,0.18)" : "rgba(23,37,42,0.72)";
+  const fg = primary ? SLATE : danger ? RED : CHALK;
+  return (
+    <Pressable onPress={onPress} disabled={disabled} accessibilityLabel={label} accessibilityRole="button"
+               style={[styles.round, { width: size, height: size, borderRadius: size / 2, backgroundColor: bg },
+                       danger && styles.roundDanger, disabled && styles.disabled]}>
+      <Ionicons name={icon} size={size * 0.46} color={fg} />
     </Pressable>
   );
 }
 
-function Stat({ label, value }: { label: string; value: number }) {
+function Action({ icon, label, onPress, disabled }: { icon: IconName; label: string; onPress: () => void; disabled?: boolean }) {
+  return (
+    <Pressable onPress={onPress} disabled={disabled} accessibilityLabel={label} accessibilityRole="button"
+               style={[styles.action, disabled && styles.disabled]}>
+      <Ionicons name={icon} size={24} color={CHALK} />
+      <Text style={styles.actionText}>{label}</Text>
+    </Pressable>
+  );
+}
+
+function Stat({ icon, label, value }: { icon: IconName; label: string; value: number }) {
   return (
     <View style={styles.stat}>
+      <Ionicons name={icon} size={20} color={PENCIL} />
       <Text style={styles.statValue}>{value}</Text>
       <Text style={styles.muted}>{label}</Text>
     </View>
@@ -518,48 +577,57 @@ function Stat({ label, value }: { label: string; value: number }) {
 }
 
 const SLATE = "#17252A";
-const PANEL = "#1F3238";
 const CHALK = "#EEF1EC";
 const MUTED = "#9FB3AE";
 const PENCIL = "#F2C14E";
 const RED = "#E07A5F";
 const LINE = "#34484E";
+const GLASS = "rgba(23,37,42,0.78)";
 
 const styles = StyleSheet.create({
   root: { flex: 1, backgroundColor: SLATE },
+  fill: { flex: 1, backgroundColor: "#000" },
   center: { justifyContent: "center", alignItems: "center", padding: 24, gap: 8 },
-  camera: { flex: 1, backgroundColor: "#0E181B" },
+  cameraOff: { backgroundColor: "#0E181B" },
+  homeTop: { flex: 1 },
   brand: { color: PENCIL, fontSize: 40, fontWeight: "700" },
-  panel: { padding: 20, paddingBottom: 32, gap: 14, backgroundColor: SLATE },
+  grow: { flex: 1 },
+  // session overlays
+  topBar: { position: "absolute", top: 0, left: 0, right: 0, paddingHorizontal: 12, flexDirection: "row",
+            alignItems: "center", gap: 8 },
+  pill: { flexDirection: "row", alignItems: "center", gap: 6, backgroundColor: GLASS, borderRadius: 16,
+          paddingHorizontal: 10, paddingVertical: 6, alignSelf: "flex-start" },
+  pillText: { fontSize: 13, fontWeight: "600", fontVariant: ["tabular-nums"] },
+  bottom: { position: "absolute", left: 0, right: 0, bottom: 0, paddingHorizontal: 12, gap: 10 },
+  caption: { backgroundColor: GLASS, borderRadius: 14, padding: 14, gap: 6 },
+  captionSensei: { color: CHALK, fontSize: 20, lineHeight: 27 },
+  captionYou: { color: MUTED, fontSize: 15, fontStyle: "italic" },
+  controls: { backgroundColor: GLASS, borderRadius: 18, paddingVertical: 12, paddingHorizontal: 10, gap: 12 },
+  actionRow: { flexDirection: "row", justifyContent: "space-around" },
+  action: { alignItems: "center", gap: 4, minWidth: 64, paddingVertical: 4 },
+  actionText: { color: CHALK, fontSize: 12 },
+  mainRow: { flexDirection: "row", justifyContent: "space-evenly", alignItems: "center" },
+  round: { alignItems: "center", justifyContent: "center" },
+  roundDanger: { borderWidth: 1.5, borderColor: RED },
+  // shared
+  panel: { padding: 20, paddingBottom: 28, gap: 14, backgroundColor: SLATE },
   said: { color: CHALK, fontSize: 22, lineHeight: 30 },
   heading: { color: PENCIL, fontSize: 26, fontWeight: "700" },
   label: { color: MUTED, fontSize: 15 },
   statusRow: { flexDirection: "row", alignItems: "center", gap: 8 },
-  dot: { width: 10, height: 10, borderRadius: 5, backgroundColor: MUTED },
+  dot: { width: 8, height: 8, borderRadius: 4, backgroundColor: MUTED },
   dotLive: { backgroundColor: PENCIL },
   dotLost: { backgroundColor: RED },
-  status: { color: MUTED, fontSize: 14, flex: 1 },
-  timer: { color: CHALK, fontSize: 16, fontVariant: ["tabular-nums"] },
-  heard: { color: MUTED, fontSize: 16, fontStyle: "italic" },
-  recRow: { flexDirection: "row", alignItems: "center", gap: 8 },
-  rec: { color: RED, fontSize: 13, fontWeight: "700" },
-  recText: { color: MUTED, fontSize: 13, flex: 1 },
-  recPaused: { color: PENCIL },
-  toggle: { paddingLeft: 8 },
-  grow: { flexGrow: 1, paddingHorizontal: 16 },
-  voice: { borderColor: LINE, borderWidth: 1, borderRadius: 8, paddingVertical: 12, alignItems: "center" },
-  voiceOn: { borderColor: RED, backgroundColor: "#3A2320" },
-  voiceText: { color: CHALK, fontSize: 15, fontWeight: "600" },
-  voiceTextOn: { color: "#F4B6A8" },
+  status: { color: MUTED, fontSize: 13, flex: 1 },
   muted: { color: MUTED, fontSize: 14, textAlign: "center" },
   error: { color: RED, fontSize: 14 },
   link: { color: MUTED, fontSize: 14, textDecorationLine: "underline" },
   links: { flexDirection: "row", justifyContent: "space-between" },
-  buttons: { flexDirection: "row", gap: 10, flexWrap: "wrap" },
-  button: { flexGrow: 1, borderColor: LINE, borderWidth: 1, borderRadius: 8, paddingVertical: 12, paddingHorizontal: 10, alignItems: "center", backgroundColor: PANEL },
-  buttonText: { color: CHALK, fontSize: 15, fontWeight: "600" },
-  disabled: { opacity: 0.4 },
-  chip: { flexGrow: 1, borderColor: LINE, borderWidth: 1, borderRadius: 20, paddingVertical: 10, alignItems: "center" },
+  linkRow: { flexDirection: "row", alignItems: "center", gap: 6 },
+  disabled: { opacity: 0.35 },
+  chipRow: { flexDirection: "row", gap: 10 },
+  chip: { flexGrow: 1, flexDirection: "row", justifyContent: "center", gap: 6, borderColor: LINE, borderWidth: 1,
+          borderRadius: 20, paddingVertical: 10, alignItems: "center" },
   chipOn: { borderColor: PENCIL, backgroundColor: PENCIL },
   chipText: { color: CHALK, fontSize: 15 },
   chipTextOn: { color: SLATE, fontWeight: "700" },
@@ -567,12 +635,13 @@ const styles = StyleSheet.create({
     color: CHALK, borderColor: LINE, borderWidth: 1, borderRadius: 8,
     paddingHorizontal: 12, paddingVertical: 10, fontSize: 15,
   },
-  primary: { backgroundColor: PENCIL, borderRadius: 8, paddingVertical: 16, alignItems: "center" },
+  primary: { backgroundColor: PENCIL, borderRadius: 10, paddingVertical: 16, alignItems: "center",
+             flexDirection: "row", justifyContent: "center", gap: 8 },
   primaryText: { color: SLATE, fontSize: 17, fontWeight: "700" },
-  secondary: { borderColor: PENCIL, borderWidth: 1, borderRadius: 8, paddingVertical: 14, alignItems: "center" },
+  secondary: { borderColor: PENCIL, borderWidth: 1, borderRadius: 10, paddingVertical: 14, alignItems: "center" },
   secondaryText: { color: PENCIL, fontSize: 16, fontWeight: "600" },
-  summary: { padding: 24, paddingTop: 40, gap: 18 },
+  summary: { padding: 24, paddingTop: 40, gap: 18, alignItems: "stretch" },
   stats: { flexDirection: "row", justifyContent: "space-between" },
-  stat: { alignItems: "center", flex: 1 },
+  stat: { alignItems: "center", flex: 1, gap: 2 },
   statValue: { color: CHALK, fontSize: 28, fontWeight: "700" },
 });

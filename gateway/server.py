@@ -66,6 +66,8 @@ TURN_TTL_S = int(os.environ.get("SENSEI_TURN_TTL", 6 * 3600))
 # SENSEI_LLM_URL=http://localhost:8000/v1  SENSEI_LLM_MODEL=qwen3-vl-30b-a3b-gguf  SENSEI_LLM_KEY=...
 BRAIN = Brain.from_env()
 FRAME_EVERY_S = 0.5  # how often the tutor looks at the latest frame
+# What this gateway can do; the app checks it so a button never silently does nothing.
+FEATURES = ["look", "talk", "memory", "pause"]
 
 # The tutor's ears: speech-to-text for voice mode (see ears.py). SENSEI_STT=off disables it.
 TRANSCRIBER = Transcriber() if os.environ.get("SENSEI_STT", "on") != "off" else None
@@ -340,7 +342,9 @@ async def config():
     """What the phone needs before calling: the TURN relay (if configured) and whether the
     tutor is here and has a model. (Gateways from before the tutor don't send "tutor".)"""
     ice = [{"urls": TURN_URLS, **turn_credentials()}] if TURN_URLS and TURN_SECRET else []
-    return {"iceServers": ice, "tutor": {"brain": BRAIN.model if BRAIN else None}}
+    return {"iceServers": ice, "tutor": {"brain": BRAIN.model if BRAIN else None,
+                                         "ears": TRANSCRIBER.name if TRANSCRIBER else None,
+                                         "features": FEATURES}}
 
 
 @app.post("/offer")

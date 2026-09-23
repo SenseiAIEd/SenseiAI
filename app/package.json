@@ -4,6 +4,7 @@
   "main": "index.ts",
   "dependencies": {
     "@config-plugins/react-native-webrtc": "^15.0.2",
+    "@expo/vector-icons": "^15.0.2",
     "expo": "~57.0.24",
     "expo-build-properties": "~57.0.21",
     "expo-keep-awake": "~57.0.2",

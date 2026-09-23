@@ -229,6 +229,8 @@ RESUMED = "Welcome back. Let's keep going."
 GOODBYE = "That's our time. Nice work today. See you next time!"
 LOOKING = {"hint": "Let me look at your work.", "check": "Okay, let me check your work.", "look": "Let me look."}
 STILL_LOOKING = "Still looking at your work, one moment."
+HEARD = ["Okay, let me think.", "Good question. One moment.", "Let me see.", "Got it. Give me a second."]
+HEARD_WHILE_BUSY = "Got it. I'll answer that in a moment."
 
 Speak = Callable[[str, str], Awaitable[None]]    # (text, why) -> spoken on the phone
 Notify = Callable[[dict], Awaitable[None]]        # state update for the phone
@@ -275,6 +277,9 @@ class Tutor:
         self.conversation: list[dict] = []
         self.last_seen: Optional[str] = None
         self.paused_at = 0.0
+        # A question that arrived while Sensei was busy: answered as soon as the current look ends.
+        self.pending_question: Optional[tuple[str, Optional[np.ndarray]]] = None
+        self._heard_count = 0
 
     # -- state ---------------------------------------------------------------------------
     def remaining_s(self) -> float:
@@ -418,14 +423,21 @@ class Tutor:
         self.remember("student", text)
         if self.phase != "watching":
             return
+        self.last_activity = self.clock()
         if self.brain is None:
             await self.speak(NO_BRAIN, "no_brain")
         elif self.thinking:
-            if self.clock() - self.last_spoke_at > self.MIN_GAP_S:
-                await self.speak(STILL_LOOKING, "busy")
+            # Never drop a question: keep it (the latest one wins) and answer when the look ends.
+            self.pending_question = (text, img)
+            await self.speak(HEARD_WHILE_BUSY, "busy")
         else:
-            self.last_activity = self.clock()
-            await self._judge(img, request="talk", said=text)
+            await self._answer(text, img)
+
+    async def _answer(self, text: str, img: Optional[np.ndarray]):
+        """Acknowledge right away (the model takes a while), then answer with eyes and ears."""
+        self._heard_count += 1
+        await self.speak(HEARD[(self._heard_count - 1) % len(HEARD)], "ack")
+        await self._judge(img, request="talk", said=text)
 
     # -- deciding what to say ------------------------------------------------------------
     def _instructions(self, request: Optional[str], said: Optional[str] = None) -> str:
@@ -439,9 +451,9 @@ class Tutor:
                     "conversation. If they ask what they asked, what you understood or what you said, answer from "
                     "the conversation, quoting briefly. If they ask what you see, describe it. If they answered "
                     "your question or explained a step, tell them honestly whether it's on the right track, "
-                    "without giving away the final answer. If what they said is unclear or seems misheard, say "
-                    "what you heard and ask them to repeat. If it's small talk, reply warmly and steer back to "
-                    "their work."
+                    "without giving away the final answer. If what they said is unclear, seems misheard, or could "
+                    "mean different things, don't guess: say briefly what you understood and ask one short "
+                    "clarifying question. If it's small talk, reply warmly and steer back to their work."
                     + (f" Earlier you asked about step {self.mistake[0]} of their work." if self.mistake else ""))
         parts = []
         if self.problem:
@@ -496,8 +508,16 @@ class Tutor:
                        frame=frame_file, frame_size=frame_size,
                        page=a.page, problem=a.problem, steps=a.steps, first_error=a.first_error,
                        error_kind=a.error_kind, finished=a.finished, say=a.say)
-        await self._react(a, request)
+        if self.pending_question and request is None:
+            # The student asked something while this background look ran: their question comes first.
+            self.log_event("tutor_superseded", page=a.page)
+        else:
+            await self._react(a, request)
         await self.notify()
+        if self.pending_question and self.phase == "watching":
+            text, img = self.pending_question
+            self.pending_question = None
+            await self._answer(text, img)
 
     @staticmethod
     def _describe_seen(a: Assessment) -> str:
@@ -514,9 +534,10 @@ class Tutor:
         if request == "look":  # "What do you see?": just describe it
             await self.speak(a.say or (UNREADABLE if a.page == "unreadable" else NO_PAGE), "look")
             return
+        if a.page != "work" and request is None:
+            return  # background looks only speak up about study work; the room is talked about on request
         if a.page == "other":
-            # Not study work, but something Sensei can talk about: say what it sees, ask about it.
-            if a.say and (request or now - self.last_spoke_at > self.MIN_GAP_S):
+            if a.say:
                 await self.speak(a.say, "other")
             return
         if a.page != "work":
