@@ -58,6 +58,9 @@ denied-peer-ip=::-ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff
 allowed-peer-ip=$LAN_IP
 log-file=stdout
 simple-log
+# Run as a normal user: keep coturn's pid file and (unused) user DB out of root-owned dirs.
+pidfile=/var/tmp/turnserver.pid
+userdb=/var/tmp/turndb
 EOF
   chmod 600 turnserver.conf
 fi
