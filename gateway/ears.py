@@ -57,6 +57,18 @@ PHANTOMS = {"thank you", "thanks", "thank you very much", "thanks for watching",
             "uh", "um", "i", "yeah", "no", "perfect", "hello", "see you again", "see you next time"}
 
 
+# Whisper's other favourite inventions come from YouTube outros; they are never a student.
+OUTRO = re.compile(r"\b(subscribe|thanks? for watching|like and share|see you in the next (video|one))\b", re.I)
+
+# Context for Whisper: a short prompt of the kind of thing students say to a tutor. Without it,
+# small.en heard "Is the solution correct?" as "Is that some action current?" (25 Sep session).
+STT_PROMPT = os.environ.get("SENSEI_STT_PROMPT",
+                            "A student is talking to their maths and science tutor about their homework. "
+                            "Is my solution correct? What do you see? Is this step right? I don't understand. "
+                            "x plus 5 equals 7, so x equals 2.")
+STT_BEAM = int(os.environ.get("SENSEI_STT_BEAM", 5))
+
+
 def voiced_seconds(audio: np.ndarray) -> float:
     """How much of the clip Silero VAD thinks is speech."""
     from faster_whisper.vad import VadOptions, get_speech_timestamps
@@ -66,7 +78,7 @@ def voiced_seconds(audio: np.ndarray) -> float:
 
 def is_phantom(text: str, no_speech_prob: float) -> bool:
     words = " ".join(re.findall(r"[a-z']+", text.lower()))
-    return not words or (words in PHANTOMS and no_speech_prob >= PHANTOM_NO_SPEECH)
+    return not words or bool(OUTRO.search(text)) or (words in PHANTOMS and no_speech_prob >= PHANTOM_NO_SPEECH)
 
 
 # A student pausing to think mid-sentence isn't done talking. The recordings have one sentence
@@ -126,7 +138,8 @@ class Transcriber:
         if self.url:
             return self._via_server(audio)
         self.load()
-        segments, _ = self._model.transcribe(audio, language=self.language, beam_size=1,
+        segments, _ = self._model.transcribe(audio, language=self.language, beam_size=STT_BEAM,
+                                             initial_prompt=STT_PROMPT or None,
                                              vad_filter=False, condition_on_previous_text=False)
         segments = list(segments)
         text = " ".join(s.text.strip() for s in segments).strip()

@@ -150,3 +150,9 @@ def test_numbers_finish_a_sentence():
     assert not sounds_unfinished("x equals 5")
     assert not sounds_unfinished("the answer is 12.5")
     assert sounds_unfinished("x equals")
+
+
+def test_youtube_outros_are_never_a_student():
+    assert is_phantom("Please don't forget to subscribe to our channel.", 0.05)   # 25 Sep session
+    assert is_phantom("Thanks for watching!", 0.0)
+    assert not is_phantom("Is the solution correct?", 0.3)
