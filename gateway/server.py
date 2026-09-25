@@ -96,9 +96,17 @@ app = FastAPI()
 relay = MediaRelay()
 
 
+PATH_PREFIX = "/sensei"
+
+
 @app.middleware("http")
 async def require_key(request: Request, call_next):
-    if ACCESS_KEY and request.url.path != "/":  # the console page itself holds no data
+    # Also served under /sensei/..., for a Funnel path on the standard HTTPS port
+    # (tailscale funnel --set-path /sensei ...), which some networks allow when :8443 isn't.
+    path = request.scope["path"]
+    if path == PATH_PREFIX or path.startswith(PATH_PREFIX + "/"):
+        path = request.scope["path"] = path[len(PATH_PREFIX):] or "/"
+    if ACCESS_KEY and path != "/":  # the console page itself holds no data
         bearer = request.headers.get("authorization", "").removeprefix("Bearer ").strip()
         given = request.headers.get("x-sensei-key") or bearer or request.query_params.get("key") or ""
         if not hmac.compare_digest(given.encode(), ACCESS_KEY.encode()):

@@ -335,3 +335,13 @@ def test_jev_backend_can_be_changed_at_runtime(gateway, monkeypatch):
     assert state["backend"] == "semif" and state["floors"]["reply"] == 0.15 and state["on"] is False
     assert httpx.post(f"{base}/jev", json={"backend": "hosted"}).status_code == 400  # no key
     assert httpx.post(f"{base}/jev", json={"backend": "jevk5", "on": True}).json()["on"] is True
+
+
+def test_served_under_a_path_prefix_too(gateway, monkeypatch):
+    base, _ = gateway
+    monkeypatch.setattr(server, "ACCESS_KEY", "k")
+    http = httpx.Client(base_url=base, timeout=10)
+    assert http.get("/sensei/status").status_code == 401
+    assert http.get("/sensei/status", headers={"X-Sensei-Key": "k"}).json()["connected"] is False
+    assert http.get("/status", headers={"X-Sensei-Key": "k"}).status_code == 200
+    assert http.get("/sensei/").status_code == 200 and http.get("/senseix").status_code in (401, 404)
