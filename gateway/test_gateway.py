@@ -348,3 +348,81 @@ def test_served_under_a_path_prefix_too(gateway, monkeypatch):
     assert http.get("/sensei/status", headers={"X-Sensei-Key": "k"}).json()["connected"] is False
     assert http.get("/status", headers={"X-Sensei-Key": "k"}).status_code == 200
     assert http.get("/sensei/").status_code == 200 and http.get("/senseix").status_code in (401, 404)
+
+
+# --- the SenseiDesk tab: a human tutor or parent watching from the web app ------------------------
+def test_a_desk_sees_every_event_and_the_live_video(gateway):
+    from aiortc import RTCPeerConnection, RTCSessionDescription
+
+    base, _ = gateway
+    http = httpx.Client(base_url=base, timeout=10)
+    assert http.post("/watch", json={"sdp": "", "type": "offer"}).status_code == 409  # no phone yet
+    seen: list[dict] = []
+    stop = threading.Event()
+
+    def listen():
+        with httpx.stream("GET", f"{base}/events", timeout=30) as r:
+            for line in r.iter_lines():
+                if line.startswith("data: "):
+                    seen.append(json.loads(line[6:]))
+                if stop.is_set():
+                    return
+
+    async def desk_watches() -> int:
+        pc = RTCPeerConnection()
+        pc.addTransceiver("video", direction="recvonly")
+        pc.addTransceiver("audio", direction="recvonly")
+        got = asyncio.get_running_loop().create_future()
+
+        @pc.on("track")
+        def on_track(track):
+            if track.kind == "video":
+                async def first_frame():
+                    frame = await track.recv()
+                    if not got.done():
+                        got.set_result(frame.width)
+                asyncio.ensure_future(first_frame())
+
+        await pc.setLocalDescription(await pc.createOffer())
+        answer = await asyncio.to_thread(http.post, "/watch", json={"sdp": pc.localDescription.sdp,
+                                                                     "type": pc.localDescription.type})
+        assert answer.status_code == 200, answer.text
+        await pc.setRemoteDescription(RTCSessionDescription(**answer.json()))
+        width = await asyncio.wait_for(got, 15)
+        await pc.close()
+        return width
+
+    async def run():
+        phone = FakePhone(base)
+        await phone.connect()
+        assert await asyncio.to_thread(wait_for, lambda: http.get("/status").json().get("connected"))
+        listener = threading.Thread(target=listen, daemon=True)
+        listener.start()
+        assert await asyncio.to_thread(wait_for, lambda: any(m["type"] == "hello" for m in seen))
+        width = await desk_watches()
+        assert (await asyncio.to_thread(http.post, "/say", json={"text": "Hello from the desk"})).json()["ok"]
+        await asyncio.to_thread(wait_for, lambda: any(m.get("event") == "say" for m in seen))
+        stop.set()
+        await phone.close()
+        return width
+
+    width = asyncio.run(run())
+    assert width > 0                                                  # the desk got live video
+    hello = next(m for m in seen if m["type"] == "hello")
+    assert hello["status"]["connected"] and any(e["event"] == "started" for e in hello["history"])
+    assert any(m.get("event") == "desk_watch" for m in seen)
+    assert any(m.get("event") == "say" and m["text"] == "Hello from the desk" for m in seen)
+    assert any(m["type"] == "phone" and m["msg"] == {"type": "say", "text": "Hello from the desk"} for m in seen)
+    http.post("/hangup")
+
+
+def test_the_desk_web_app_can_call_from_another_origin(gateway, monkeypatch):
+    base, _ = gateway
+    monkeypatch.setattr(server, "ACCESS_KEY", "s3cret")
+    origin = {"Origin": "https://spark-e257.tail803c7f.ts.net"}
+    pre = httpx.options(f"{base}/say", headers={**origin, "Access-Control-Request-Method": "POST",
+                                                "Access-Control-Request-Headers": "x-sensei-key,content-type"})
+    assert pre.status_code == 200                                     # preflights carry no key
+    r = httpx.get(f"{base}/status", headers={**origin, "X-Sensei-Key": "s3cret"})
+    assert r.status_code == 200 and r.headers["access-control-allow-origin"] == "*"
+    assert httpx.get(f"{base}/events", headers=origin).status_code == 401  # still needs the key

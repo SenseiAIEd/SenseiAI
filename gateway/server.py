@@ -36,6 +36,7 @@ from aiortc import MediaStreamTrack, RTCConfiguration, RTCPeerConnection, RTCSes
 from aiortc.contrib.media import MediaRelay
 from aiortc.mediastreams import MediaStreamError
 from fastapi import FastAPI, HTTPException, Request
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse, Response, StreamingResponse
 from pydantic import BaseModel
 from typing import Optional
@@ -115,6 +116,52 @@ async def require_key(request: Request, call_next):
         if not hmac.compare_digest(given.encode(), ACCESS_KEY.encode()):
             return JSONResponse({"detail": "missing or wrong access key"}, status_code=401)
     return await call_next(request)
+
+
+# The SenseiDesk tab of the Sensei web app runs on another origin (the web app's). Every route
+# still needs the access key, sent as a header, never a cookie, so allowing any origin exposes
+# nothing to a page that doesn't have the key. Added after require_key, so it wraps it: browser
+# preflights (which carry no key) are answered here, and 401s still carry CORS headers.
+app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"],
+                   allow_headers=["x-sensei-key", "authorization", "content-type"])
+
+
+class Hub:
+    """Everyone watching from a desk (the SenseiDesk tab of the Sensei web app, for a human tutor
+    or a parent): each subscriber gets every session event and every message to the phone, live."""
+
+    MAX_QUEUE = 500
+
+    def __init__(self):
+        self.queues: set[asyncio.Queue] = set()
+        self.loop: asyncio.AbstractEventLoop | None = None
+
+    def subscribe(self) -> asyncio.Queue:
+        self.loop = asyncio.get_running_loop()
+        q: asyncio.Queue = asyncio.Queue(maxsize=self.MAX_QUEUE)
+        self.queues.add(q)
+        return q
+
+    def unsubscribe(self, q: asyncio.Queue):
+        self.queues.discard(q)
+
+    def publish(self, msg: dict):
+        if not self.queues or self.loop is None:
+            return
+        for q in list(self.queues):  # thread-safe: log() may one day be called off the loop
+            self.loop.call_soon_threadsafe(self._put, q, msg)
+
+    @staticmethod
+    def _put(q: asyncio.Queue, msg: dict):
+        try:
+            q.put_nowait(msg)
+        except asyncio.QueueFull:
+            pass  # a stalled desk misses events rather than growing memory
+
+
+HUB = Hub()
+MAX_VIEWERS = 4
+viewers: set[RTCPeerConnection] = set()  # desks receiving the phone's live video and audio
 
 
 def turn_credentials(now: float | None = None) -> dict:
@@ -216,6 +263,7 @@ class Session:
         self.channel = None
         self.tracks: list[str] = []
         self.media: dict[str, MediaStreamTrack] = {}
+        self.sources: dict[str, MediaStreamTrack] = {}  # the phone's own tracks, for desk viewers
         self.latest_frame = None  # newest camera frame (BGR ndarray), for the tutor later
         self.latest_jpeg: bytes | None = None
         self.frames = 0
@@ -260,10 +308,13 @@ class Session:
         """Append to log.jsonl; `t` is seconds since the recording started."""
         if event == "tutor_assessment":
             self.last_look = {"t": self.elapsed(), **fields}
+        line = json.dumps({"t": self.elapsed(), "event": event, **fields})
         with open(self.folder / "log.jsonl", "a") as f:
-            f.write(json.dumps({"t": self.elapsed(), "event": event, **fields}) + "\n")
+            f.write(line + "\n")
+        HUB.publish({"type": "event", "session": self.folder.name, **json.loads(line)})
 
     def send(self, msg: dict) -> bool:
+        HUB.publish({"type": "phone", "session": self.folder.name, "msg": msg})  # desks see what the phone gets
         if self.channel is None or self.channel.readyState != "open":
             return False
         self.channel.send(json.dumps(msg))
@@ -574,6 +625,7 @@ async def offer(body: Offer):
     @pc.on("track")
     def on_track(track):
         s.tracks.append(track.kind)
+        s.sources[track.kind] = track
         s.media[track.kind] = relay.subscribe(track)
         if track.kind == "video":
             s.tasks.append(asyncio.ensure_future(s.watch_video(relay.subscribe(track))))
@@ -609,6 +661,73 @@ async def log_route(s: Session):
             s.log("route", route=route)
             return
         await asyncio.sleep(0.1)
+
+
+@app.post("/watch")
+async def watch(body: Offer):
+    """A desk (the SenseiDesk tab) watches the call: answer its receive-only WebRTC offer with the
+    phone's live video and audio, relayed. A new phone call ends it; the desk calls again."""
+    if session is None or session.closed or not session.sources:
+        raise HTTPException(409, "phone not connected")
+    for old in [v for v in viewers if v.connectionState in ("failed", "closed")]:
+        viewers.discard(old)
+    if len(viewers) >= MAX_VIEWERS:
+        raise HTTPException(429, f"at most {MAX_VIEWERS} desks can watch at once")
+    pc = RTCPeerConnection(RTC_CONFIG)
+    viewers.add(pc)
+
+    @pc.on("connectionstatechange")
+    async def on_state():
+        if pc.connectionState in ("failed", "closed"):
+            viewers.discard(pc)
+            await pc.close()
+
+    s = session
+    await pc.setRemoteDescription(RTCSessionDescription(sdp=body.sdp, type=body.type))
+    for kind in ("video", "audio"):
+        if kind in s.sources:  # unbuffered: a viewer wants now, not every frame
+            pc.addTrack(relay.subscribe(s.sources[kind], buffered=False))
+    await pc.setLocalDescription(await pc.createAnswer())
+    s.log("desk_watch", viewers=len(viewers))
+    return {"sdp": pc.localDescription.sdp, "type": pc.localDescription.type}
+
+
+def session_history(limit: int = 300) -> list[dict]:
+    """The current session's events so far, so a desk that opens mid-session sees what happened."""
+    if session is None:
+        return []
+    try:
+        lines = (session.folder / "log.jsonl").read_text().splitlines()[-limit:]
+    except OSError:
+        return []
+    return [{"type": "event", "session": session.folder.name, **json.loads(l)} for l in lines if l.strip()]
+
+
+@app.get("/events")
+async def events(request: Request):
+    """Server-sent events for a desk: a snapshot (status and the session so far), then every
+    session event and every message to the phone as it happens. EventSource can't send headers,
+    so the key comes as ?key=."""
+    q = HUB.subscribe()
+
+    async def stream():
+        try:
+            snapshot = {"type": "hello", "status": await status(), "history": session_history(),
+                        "session": session.folder.name if session else None}
+            yield f"data: {json.dumps(snapshot, default=str)}\n\n"
+            while True:
+                try:
+                    msg = await asyncio.wait_for(q.get(), timeout=15)
+                    yield f"data: {json.dumps(msg, default=str)}\n\n"
+                except asyncio.TimeoutError:
+                    yield ": ping\n\n"  # keeps proxies from closing an idle stream
+                if await request.is_disconnected():
+                    return
+        finally:
+            HUB.unsubscribe(q)
+
+    return StreamingResponse(stream(), media_type="text/event-stream",
+                             headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"})
 
 
 @app.post("/say")
