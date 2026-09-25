@@ -78,6 +78,18 @@
       <button class="head" data-nt="5" title="tilt 5° the other way">▼</button>
       <button class="head" data-np="5" title="pan right 5°">▶</button>
     </div>
+    <label for="brain">Tutor brain (switching reloads it on the Spark: a 30B takes a minute or two)</label>
+    <div class="row">
+      <select id="brain" style="flex:1"></select>
+      <button id="useBrain">Use this model</button>
+      <span id="brainNote" class="stats" style="margin:0"></span>
+    </div>
+    <label>Jev: fast decisions (whether to answer, what about, whether the page is needed)</label>
+    <div class="row">
+      <button id="jevToggle">…</button>
+      <select id="jevBackend"></select>
+      <span id="jevNote" class="stats" style="margin:0"></span>
+    </div>
     <label for="text">Say on the phone (teacher override)</label>
     <textarea id="text" placeholder="Type an instruction, then press Enter"></textarea>
     <div class="row">
@@ -138,6 +150,63 @@ document.querySelectorAll("button.head").forEach((b) => (b.onclick = async () =>
   if (!res.ok) $("err").textContent = (await res.json()).detail || res.statusText;
 }));
 
+async function loadBrains() {
+  const res = await api("/brain");
+  if (!res.ok) { $("brainNote").textContent = "no model configured"; return; }
+  const { model, available } = await res.json();
+  $("brain").innerHTML = "";
+  for (const id of available.length ? available : [model]) {
+    const o = document.createElement("option");
+    o.value = o.textContent = id;
+    o.selected = id === model;
+    $("brain").append(o);
+  }
+  $("brainNote").textContent = `now: ${model}`;
+}
+
+$("useBrain").onclick = async () => {
+  const model = $("brain").value;
+  $("useBrain").disabled = true;
+  $("brainNote").textContent = `loading ${model}…`;
+  const res = await api("/brain", { method: "POST", headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ model }) });
+  const body = await res.json();
+  $("brainNote").textContent = res.ok ? `now: ${body.model} (ready in ${body.warm_up_s}s)` : "";
+  if (!res.ok) $("err").textContent = body.detail || res.statusText;
+  $("useBrain").disabled = false;
+};
+
+async function loadJev() {
+  const res = await api("/jev");
+  const j = res.ok ? await res.json() : { available: false };
+  $("jevToggle").disabled = !j.available;
+  $("jevToggle").textContent = !j.available ? "Jev not configured" : j.on ? "Turn Jev off" : "Turn Jev on";
+  $("jevToggle").dataset.on = j.on ? "1" : "";
+  $("jevNote").textContent = j.available
+    ? `${j.on ? "ON" : "off"} · ${j.backend} (${j.where}) · reply floor ${j.floors.reply}` : "Jev not configured";
+  $("jevBackend").innerHTML = "";
+  for (const b of j.backends || []) {
+    const o = document.createElement("option");
+    o.value = o.textContent = b; o.selected = b === j.backend;
+    $("jevBackend").append(o);
+  }
+  $("jevBackend").disabled = !j.available;
+}
+
+$("jevBackend").onchange = async () => {
+  const res = await api("/jev", { method: "POST", headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ backend: $("jevBackend").value }) });
+  if (!res.ok) $("err").textContent = (await res.json()).detail || res.statusText;
+  loadJev();
+};
+
+$("jevToggle").onclick = async () => {
+  const res = await api("/jev", { method: "POST", headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ on: !$("jevToggle").dataset.on }) });
+  if (!res.ok) $("err").textContent = (await res.json()).detail || res.statusText;
+  loadJev();
+};
+
 async function poll() {
   try {
     const res = await api("/status");
@@ -185,6 +254,8 @@ async function pollEyes() {
 }
 
 poll();
+loadBrains();
+loadJev();
 </script>
 </body>
 </html>

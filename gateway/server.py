@@ -38,9 +38,11 @@ from aiortc.mediastreams import MediaStreamError
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import FileResponse, JSONResponse, Response, StreamingResponse
 from pydantic import BaseModel
+from typing import Optional
 
 from ears import Ears, Transcriber
 from head import GAZE_REPLY, PRESETS, Head, gaze_command
+from jev import BACKENDS, Jev
 from tutor import Brain, Tutor
 
 RECORD_DIR = Path(os.environ.get("SENSEI_RECORD_DIR", "sessions"))
@@ -66,6 +68,12 @@ TURN_TTL_S = int(os.environ.get("SENSEI_TURN_TTL", 6 * 3600))
 # The tutor's vision model: an OpenAI-compatible endpoint on the Spark, e.g.
 # SENSEI_LLM_URL=http://localhost:8000/v1  SENSEI_LLM_MODEL=qwen3-vl-30b-a3b-gguf  SENSEI_LLM_KEY=...
 BRAIN = Brain.from_env()
+# Optional second model for conversation (SENSEI_CHAT_MODEL): judging maths wants the slow,
+# careful model; talking back wants one that answers before the student gives up waiting.
+CHAT_BRAIN = Brain.chat_from_env()
+# Fast typed decisions (jev.py): whether to answer, what about, whether the page is needed.
+# Exists whenever it is configured; USE_JEV (or POST /jev) decides whether the tutor uses it.
+JEV = Jev.from_env()
 FRAME_EVERY_S = 0.5  # how often the tutor looks at the latest frame
 # What this gateway can do; the app checks it so a button never silently does nothing.
 FEATURES = ["look", "talk", "memory", "pause"]
@@ -75,6 +83,11 @@ HEAD = Head.from_env()  # the pan-tilt head, if SENSEI_HEAD_PORT names its USB s
 TRANSCRIBER = Transcriber() if os.environ.get("SENSEI_STT", "on") != "off" else None
 
 log = logging.getLogger("sensei")
+# uvicorn configures its own loggers only, so without this every log.info here goes nowhere -
+# including "ears ready" and the model warm-up, the two things you watch for on a cold start.
+log.setLevel(os.environ.get("SENSEI_LOG_LEVEL", "INFO"))
+if not logging.getLogger().handlers:
+    logging.basicConfig(level=logging.WARNING, format="%(levelname)s: %(name)s: %(message)s")
 app = FastAPI()
 relay = MediaRelay()
 
@@ -260,7 +273,7 @@ class Session:
             self.send(state)
 
         self.tutor = Tutor(BRAIN, speak, notify, minutes=minutes, log_event=self.log,
-                           save_frame=self.save_judged_frame)
+                           save_frame=self.save_judged_frame, chat_brain=CHAT_BRAIN, decider=JEV)
         await self.tutor.start()
         if HEAD is not None:  # the tutor watches the notebook
             asyncio.ensure_future(HEAD.look("notebook"))
@@ -363,12 +376,32 @@ class TutorAction(BaseModel):
     minutes: float = 10
 
 
+class JevSwitch(BaseModel):
+    on: Optional[bool] = None
+    backend: Optional[str] = None  # jevk5 | semif | hosted
+
+
+def jev_state() -> dict:
+    if JEV is None:
+        return {"on": False, "available": False}
+    return {"on": JEV.enabled, "available": True, "backend": JEV.backend, "where": JEV.where,
+            "url": JEV.url, "backends": sorted(BACKENDS),
+            "floors": {"reply": JEV.skip_below, "reply_after_question": JEV.skip_if_answer_below,
+                       "no_page": JEV.no_page_below}}
+
+
+class BrainChoice(BaseModel):
+    model: str  # one of the ids from GET /brain
+
+
 @app.get("/config")
 async def config():
     """What the phone needs before calling: the TURN relay (if configured) and whether the
     tutor is here and has a model. (Gateways from before the tutor don't send "tutor".)"""
     ice = [{"urls": TURN_URLS, **turn_credentials()}] if TURN_URLS and TURN_SECRET else []
     return {"iceServers": ice, "tutor": {"brain": BRAIN.model if BRAIN else None,
+                                         "chat_brain": CHAT_BRAIN.model if CHAT_BRAIN else None,
+                                         "jev": jev_state(),
                                          "ears": TRANSCRIBER.name if TRANSCRIBER else None,
                                          "features": FEATURES}}
 
@@ -525,9 +558,69 @@ async def status():
         "tutor": session.tutor.state() if session.tutor else None,
         "conversation": session.tutor.conversation[-10:] if session.tutor else [],
         "brain": BRAIN.model if BRAIN else None,
+        "jev": jev_state(),
         "ears": TRANSCRIBER.name if TRANSCRIBER else None,
         "head": HEAD.state() if HEAD else None,
     }
+
+
+@app.get("/brain")
+async def which_brain():
+    """The model in use and the ones this endpoint can serve, so you can try another."""
+    if BRAIN is None:
+        raise HTTPException(409, "no model configured (set SENSEI_LLM_URL)")
+    try:
+        available = await asyncio.to_thread(BRAIN.list_models)
+    except Exception as e:  # the list is a convenience; the current model still works
+        log.warning("could not list models: %s", e)
+        available = []
+    return {"model": BRAIN.model, "available": available}
+
+
+@app.post("/brain")
+async def choose_brain(body: BrainChoice):
+    """Switch the tutor to another model without a restart.
+
+    The first look afterwards pays the router's load (minutes for a 30B), because it serves one
+    model at a time. Warming happens here rather than leaving the student to wait for it."""
+    if BRAIN is None:
+        raise HTTPException(409, "no model configured (set SENSEI_LLM_URL)")
+    was, BRAIN.model = BRAIN.model, body.model
+    log.info("brain: %s -> %s", was, BRAIN.model)
+    t0 = time.time()
+    try:
+        await asyncio.to_thread(BRAIN.ping)
+    except Exception as e:
+        BRAIN.model = was  # it can't answer: don't leave the tutor pointed at a dead model
+        raise HTTPException(502, f"{body.model} did not answer ({e}); staying on {was}")
+    if session is not None:
+        session.log("brain_changed", was=was, now=BRAIN.model)
+    return {"model": BRAIN.model, "was": was, "warm_up_s": round(time.time() - t0, 1)}
+
+
+@app.get("/jev")
+async def which_jev():
+    """Whether the tutor is using Jev for its fast decisions (USE_JEV, switchable at runtime)."""
+    return jev_state()
+
+
+@app.post("/jev")
+async def switch_jev(body: JevSwitch):
+    """Turn Jev on or off, or change backend, without a restart. Off means Sensei decides
+    exactly as it did before."""
+    if JEV is None:
+        raise HTTPException(409, "Jev is not configured (set SENSEI_JEV_BACKEND, or a key for hosted)")
+    if body.backend is not None:
+        try:
+            JEV.use(body.backend)
+        except ValueError as e:
+            raise HTTPException(400, str(e))
+    if body.on is not None:
+        JEV.enabled = body.on
+    log.info("jev %s, backend %s", "on" if JEV.enabled else "off", JEV.backend)
+    if session is not None:
+        session.log("jev_switched", on=JEV.enabled, backend=JEV.backend)
+    return jev_state()
 
 
 @app.get("/last_look")
@@ -594,6 +687,31 @@ async def wake_head():
             if await HEAD.connect():
                 log.info("pan-tilt head ready on %s at pan %s tilt %s", HEAD.port, HEAD.pan, HEAD.tilt)
         asyncio.ensure_future(wake())
+
+
+@app.on_event("startup")
+async def warm_up_brains():
+    """Ask each model a trivial question so it is resident before a student arrives.
+
+    A router that has to load a 30B model answers the first request minutes later - longer
+    than SENSEI_LLM_TIMEOUT, so the student's first look would simply fail."""
+    async def warm_each():
+        # One at a time: a router loading a 30B model has nothing to spare for a second
+        # request, and two pings at once means both wait and one times out. Quick model first,
+        # so the conversation is ready even while the careful one is still loading.
+        warmed = set()
+        for brain, what in ((CHAT_BRAIN, "chat brain"), (BRAIN, "brain")):
+            if brain is None or brain.model in warmed:
+                continue
+            warmed.add(brain.model)
+            t0 = time.time()
+            try:
+                await asyncio.to_thread(brain.ping)
+                log.info("%s ready: %s (%.0fs)", what, brain.model, time.time() - t0)
+            except Exception as e:
+                log.warning("%s (%s) did not warm up: %s", what, brain.model, e)
+
+    asyncio.ensure_future(warm_each())
 
 
 @app.on_event("shutdown")
