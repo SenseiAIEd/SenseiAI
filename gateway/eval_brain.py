@@ -7,6 +7,8 @@ Score the tutor's vision model on the sample solutions, before trusting it with 
   python eval_brain.py --limit 6            # quick check
   python eval_brain.py --models qwen3-vl-30b-a3b-thinking,cosmos-reason2-8b,cosmos-reason2-32b
                                             # race several models (router swaps between them)
+  python eval_brain.py --playbook           # with the subject's playbook, as a live session's
+                                            # second look has it (the subject is the page's folder)
 
 For every good_N page the model should find no mistake; for every bad_N page it should
 flag the one wrong line (listed in datasets/samples/<subject>/README.md), and its question
@@ -21,7 +23,7 @@ from pathlib import Path
 
 import cv2
 
-from tutor import Brain
+from tutor import MISTAKE_KINDS, PLAYBOOKS, Brain
 
 SAMPLES = Path(__file__).resolve().parent.parent / "datasets/samples"
 FIRST_LOOK = "If there is a mistake, use hint level 1. If every step so far is correct and unfinished, " \
@@ -29,7 +31,15 @@ FIRST_LOOK = "If there is a mistake, use hint level 1. If every step so far is c
              "why their key step works."
 
 
-def run_model(brain: Brain, pages: list[Path], out) -> dict:
+def instructions_for(page: Path, playbook: bool) -> str:
+    subject = page.relative_to(SAMPLES).parts[0]
+    if not playbook or subject not in PLAYBOOKS:
+        return FIRST_LOOK
+    return (f"{PLAYBOOKS[subject]} For \"error_kind\" use one of: {', '.join(MISTAKE_KINDS[subject])}. "
+            + FIRST_LOOK)
+
+
+def run_model(brain: Brain, pages: list[Path], out, playbook: bool = False) -> dict:
     # One warm-up call: a router that keeps one model resident takes minutes to swap models,
     # and that must not count as this model's speed.
     print(f"\n=== {brain.model}: loading (warm-up call)...", flush=True)
@@ -45,7 +55,7 @@ def run_model(brain: Brain, pages: list[Path], out) -> dict:
         expected_error = p.stem.startswith("bad_")
         t0 = time.time()
         try:
-            a = brain.assess(cv2.imread(str(p)), FIRST_LOOK)
+            a = brain.assess(cv2.imread(str(p)), instructions_for(p, playbook))
             error = None
         except Exception as e:
             a, error = None, str(e)[:200]
@@ -58,14 +68,14 @@ def run_model(brain: Brain, pages: list[Path], out) -> dict:
         print(f"{'OK ' if ok else 'XX '} {str(p.relative_to(SAMPLES)):48} {latency:5.1f}s  "
               f"{'flags: ' + repr(flagged) if found else ('error: ' + error if error else 'no mistake')}"
               f"{'  | says: ' + a.say if a and a.say else ''}", flush=True)
-        out.write(json.dumps({"model": brain.model, "page": str(p.relative_to(SAMPLES)),
+        out.write(json.dumps({"model": brain.model, "playbook": playbook, "page": str(p.relative_to(SAMPLES)),
                               "expected_error": expected_error, "ok": ok, "latency_s": round(latency, 2),
                               "error": error, "assessment": a.__dict__ if a else None}) + "\n")
         out.flush()
 
     bads = [ok for p, ok in rows if p.stem.startswith("bad_")]
     goods = [ok for p, ok in rows if p.stem.startswith("good_")]
-    return {"model": brain.model, "right": sum(ok for _, ok in rows), "total": len(rows),
+    return {"model": brain.model + (" +playbook" if playbook else ""), "right": sum(ok for _, ok in rows), "total": len(rows),
             "caught": f"{sum(bads)}/{len(bads)}", "left_alone": f"{sum(goods)}/{len(goods)}",
             "median_s": statistics.median(latencies), "max_s": max(latencies)}
 
@@ -76,6 +86,7 @@ def main():
     ap.add_argument("--models", default="", help="comma-separated model names to compare (default: SENSEI_LLM_MODEL)")
     ap.add_argument("--limit", type=int, default=0, help="stop after this many pages")
     ap.add_argument("--out", default="eval_results.jsonl")
+    ap.add_argument("--playbook", action="store_true", help="also run each model with the subject playbooks")
     args = ap.parse_args()
 
     brain = Brain.from_env()
@@ -95,6 +106,8 @@ def main():
         for m in models:
             brain.model = m
             results.append(run_model(brain, pages, out))
+            if args.playbook:
+                results.append(run_model(brain, pages, out, playbook=True))
 
     print(f"\n{'model':42} {'right':>7} {'mistakes caught':>16} {'good left alone':>16} {'median':>8} {'max':>7}")
     for r in results:

@@ -804,3 +804,70 @@ def test_encouragement_waits_for_new_lines_not_just_time():
     h.now += 60
     h.settle(page_with("ab"))                       # the page changed, but no new correct line
     assert h.whys().count("progress") == 1
+
+
+# --- subjects: which playbook Sensei teaches from --------------------------------------------
+def test_subject_topic_and_mistake_kind_are_read_and_normalized():
+    a = parse_assessment('{"page": "work", "subject": "Maths", "topic": "linear equations", "steps": ["a", "b"], '
+                         '"first_error": 2, "error_kind": "Sign Convention"}')
+    assert (a.subject, a.topic, a.error_kind) == ("math", "linear equations", "sign_convention")
+    assert parse_assessment('{"page": "work", "subject": "biology"}').subject == "other"
+    assert parse_assessment('{"page": "work"}').subject is None
+
+
+def physics(n, **kw):
+    return Assessment(page="work", subject="physics", topic="unit conversion", problem="72 km/h for 5.0 s",
+                      steps=["v = 72 km/h", "d = v x t", "d = 72 x 5.0", "d = 360 m"][:n], **kw)
+
+
+def test_the_page_sets_the_subject_and_the_next_look_uses_its_playbook():
+    brain = ScriptedBrain(physics(1), physics(2))
+    h = Harness(brain)
+    h.run(h.tutor.start())
+    h.settle(page_with("a"))
+    assert "Set \"subject\"" in brain.instructions[0]                    # not known yet: ask for it
+    assert (h.tutor.subject, h.tutor.topic) == ("physics", "unit conversion") and "tutor_subject" in h.events
+    h.settle(page_with("ab"))
+    assert "PHYSICS" in brain.instructions[1] and "normal_force" in brain.instructions[1]
+    assert "MATH" not in brain.instructions[1] and "CHEMISTRY" not in brain.instructions[1]
+    assert h.notes[-1]["subject"] == "physics"
+
+
+def test_an_unclear_read_does_not_undo_a_known_subject():
+    h = Harness(ScriptedBrain(physics(1), Assessment(page="work", subject="other", steps=["?"])))
+    h.run(h.tutor.start())
+    h.settle(page_with("a"))
+    h.settle(page_with("ab"))
+    assert h.tutor.subject == "physics"
+
+
+def test_the_student_can_name_the_subject():
+    h = Harness(ScriptedBrain(Assessment(page="work", about="steer", say="Sure, show me the problem.")))
+    h.run(h.tutor.start())
+    h.run(h.tutor.hear("can you help me with my chemistry homework", PAGE))
+    assert h.tutor.subject == "chemistry"
+    assert tutor.named_subject("physics or chemistry?") is None           # two subjects: don't guess
+
+
+def test_finishing_asks_for_the_subjects_own_check():
+    brain = ScriptedBrain(physics(1), physics(4, finished=True))
+    h = Harness(brain)
+    h.run(h.tutor.start())
+    h.settle(page_with("a"))
+    h.settle(page_with("ab"))
+    assert "check the units" in brain.instructions[-1]
+
+
+def test_a_hint_gets_time_to_work_before_the_next_one():
+    brain = ScriptedBrain(MISTAKE, MISTAKE, MISTAKE, MISTAKE)
+    h = Harness(brain)
+    h.run(h.tutor.start())
+    h.settle(page_with("a"))
+    h.settle(page_with("ab"))                         # confirmed on a second look: first hint
+    assert h.whys()[-1] == "hint_1"
+    h.now += 12                                       # past the old 8 s gap, inside the new wait
+    h.settle(page_with("abc"))
+    assert h.whys()[-1] == "hint_1"
+    h.now += 20
+    h.settle(page_with("abcd"))
+    assert h.whys()[-1] == "hint_2"

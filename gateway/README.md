@@ -62,6 +62,25 @@ When the student taps **Start** in the app (5, 10 or 15 minutes), `tutor.py` run
 Every decision is logged to the session's `log.jsonl` (`tutor_assessment` with the model's
 full reading and latency, `tutor_say` with why it spoke), next to the video.
 
+### Subjects: math, physics, chemistry
+
+Each read of the page also returns `subject` and `topic`, and the student can name the subject
+out loud ("help me with my physics homework"). Once Sensei knows the subject, every look at the
+work carries that subject's playbook (`tutor.PLAYBOOKS`) and its fixed list of mistake kinds
+(`tutor.MISTAKE_KINDS`, from the ranked lists in `datasets/samples/<subject>/README.md`):
+
+| | Where the mistake usually is | Hint level 2 | Hint level 3 | The student's own check |
+|---|---|---|---|---|
+| math | a line: a sign through brackets, (a+b)^2, the chain rule | names the rule | a tiny parallel example | put the answer back in |
+| physics | before the algebra: units, components, which force | asks about the physics | a simpler situation | units, size and direction |
+| chemistry | what a formula means: subscripts, limiting reagent, Kelvin | asks what the formula means | a simpler parallel case | count atoms and charge |
+
+After a hint Sensei waits 20 s before asking again unprompted, so the student can find it
+themselves. A finished problem gets a short congratulation and the subject's own check. The
+subject goes to the phone and console (`subject`, `topic` in the tutor state), into Jev's state,
+and into the log as `tutor_subject`. `python eval_brain.py --playbook` scores a model with and
+without the playbooks.
+
 ### Eyes, ears, mouth
 
 - **Eyes**: the student taps **What do you see?** and Sensei describes what's in view. The
