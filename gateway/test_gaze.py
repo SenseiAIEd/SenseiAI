@@ -144,18 +144,36 @@ class FakeJev:
         return self.answer
 
 
-def test_jev_overrules_when_confident_but_not_the_guard_rails():
-    assert Attention(FakeJev("student", 0.8)).decide(moment()) == "student"
-    assert Attention(FakeJev("student", 0.3)).decide(moment()) is None           # not sure: rules stand
-    assert Attention(FakeJev("stay", 0.9)).decide(
-        moment(sensei_asked_a_question=True, seconds_since_sensei_spoke=2)) is None
-    assert Attention(FakeJev("student", 0.9)).decide(moment(seconds_since_glance=5)) is None
-    assert Attention(FakeJev("stay", 0.9)).decide(moment(looking_at="student", seconds_here=20)) == "notebook"
+def test_jev_decides_and_the_notebook_wins_whenever_it_cannot():
+    quiet = dict(seconds_since_page_activity=20)
+    assert Attention(FakeJev("student", 0.8)).decide(moment(**quiet)) == "student"
+    # Writing on the page: Jev can't take the head off it (the 25 Sep demo looked at the
+    # student every three seconds while they worked).
+    assert Attention(FakeJev("student", 0.8)).decide(moment()) is None
+    # Unsure, or down: the notebook, even where the rules alone would have glanced up.
+    stuck = dict(seconds_since_page_activity=60)
+    assert Attention(FakeJev("student", 0.3)).decide(moment(**stuck)) is None
+    assert Attention(FakeJev("student", 0.3)).decide(moment(looking_at="student", seconds_here=4)) == "notebook"
 
     class Down(FakeJev):
         def ask(self, state, questions):
             raise ConnectionError("down")
-    assert Attention(Down("x", 1)).decide(moment(seconds_since_page_activity=60)) == "student"
+    assert Attention(Down("x", 1)).decide(moment(**stuck)) is None
+    assert Attention(Down("x", 1)).decide(moment(looking_at="student", seconds_here=4)) == "notebook"
+    # The rules' reasons still let a confident Jev glance up while the page is busy.
+    asked = dict(sensei_asked_a_question=True, seconds_since_sensei_spoke=2)
+    assert Attention(FakeJev("student", 0.9)).decide(moment(**asked)) == "student"
+    assert Attention(FakeJev("stay", 0.9)).decide(moment(**asked)) is None        # at the notebook: stays there
+    # Guard rails beat Jev: no glance right after one, and "stay" can't stretch a glance.
+    assert Attention(FakeJev("student", 0.9)).decide(moment(seconds_since_glance=5, **quiet)) is None
+    assert Attention(FakeJev("stay", 0.9)).decide(moment(looking_at="student", seconds_here=9)) == "notebook"
+    assert Attention(FakeJev("stay", 0.9)).decide(moment(looking_at="student", seconds_here=4)) is None
+    assert Attention(FakeJev("stay", 0.9)).decide(moment(looking_at="student", seconds_here=20)) == "notebook"
+
+
+def test_without_jev_the_rules_decide():
+    assert Attention().decide(moment(seconds_since_page_activity=60)) == "student"
+    assert Attention().decide(moment()) is None
 
 
 # --- in a session ------------------------------------------------------------------------

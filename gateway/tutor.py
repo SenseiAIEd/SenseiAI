@@ -391,6 +391,10 @@ LOOKING = {"hint": "Let me look at your work.", "check": "Okay, let me check you
 STILL_LOOKING = "Still looking at your work, one moment."
 HEARD = ["Okay, let me think.", "Good question. One moment.", "Let me see.", "Got it. Give me a second."]
 HEARD_WHILE_BUSY = "Got it. I'll answer that in a moment."
+# Correct work used to get total silence until the end: a student can't tell a tutor that is
+# happy with them from one that has stopped watching. One short line now and then says "I see it,
+# it's right" without breaking their flow; see Tutor.PROGRESS_*.
+PROGRESS = ["That's right so far. Keep going.", "Good, those steps check out.", "You're on track. Nice and careful."]
 
 # Short acknowledgements that carry no question. Whisper also emits these for coughs, breaths
 # and the tail of Sensei's own voice, so they are the bulk of what a quiet room "says".
@@ -438,6 +442,8 @@ class Tutor:
     ANSWER_WINDOW_S = 30.0   # after Sensei's question, even "no" is an answer worth taking
     MAX_HINTS_PER_MISTAKE = 3  # ask three times, then let it go: a fourth is nagging
     STEER_GRACE_S = 20.0     # after the student redirects us, background looks hold their tongue
+    PROGRESS_STEPS = 2       # new correct lines since Sensei last said "that's right" ...
+    PROGRESS_GAP_S = 45.0    # ... and this long since Sensei said anything: one word of encouragement
     # Jev thresholds (see docs/jev-in-sensei.md). The reply floors and no_page_below are really
     # per backend (jev.BACKENDS) and are read from the decider; these are the fallbacks.
     # 0.40 from evals/utterances.jsonl (24 Sep, 47 cases): what Jev wrongly let through scored
@@ -501,6 +507,8 @@ class Tutor:
         self._jev_turn = None    # Jev's decision on the utterance being answered, if any
         self.pending_jev = None
         self._heard_count = 0
+        self.steps_confirmed = 0  # correct lines of the current problem Sensei has already praised
+        self._progress_count = 0
 
     # -- state ---------------------------------------------------------------------------
     def remaining_s(self) -> float:
@@ -536,7 +544,7 @@ class Tutor:
         if was and self.mistake:
             self.log_event("tutor_dropped_mistake", step=self.mistake[0], problem=was)
         self.mistake = self.candidate_mistake = None
-        self.hint_level = self.hints_on_mistake = self._rechecks = 0
+        self.hint_level = self.hints_on_mistake = self._rechecks = self.steps_confirmed = 0
         if who == "student":
             # Only a person gets the quiet moment afterwards; the page noticing a new problem
             # is Sensei talking to itself and shouldn't gag it.
@@ -771,7 +779,9 @@ class Tutor:
         it if the model is taking longer than a natural pause — otherwise the answer just comes."""
         task = asyncio.ensure_future(self._judge(img, request="talk", said=text, extra=extra))
         done, _ = await asyncio.wait([task], timeout=self.ACK_AFTER_S)
-        if not done:
+        jev = self._jev_turn
+        small_talk = jev is not None and jev.about == "social" and jev.about_confidence >= self.JEV_ABOUT_MIN
+        if not done and not small_talk:  # "Okay, let me think." before "Hello back!" sounds odd
             self._heard_count += 1
             await self.speak(HEARD[(self._heard_count - 1) % len(HEARD)], "ack")
         await task
@@ -1000,9 +1010,16 @@ class Tutor:
             why = "finished"
         elif request:
             why = request
+        say = a.say
+        if why is None and not a.finished and len(a.steps) - self.steps_confirmed >= self.PROGRESS_STEPS \
+                and now - self.last_spoke_at >= self.PROGRESS_GAP_S:
+            self._progress_count += 1
+            why, say = "progress", PROGRESS[(self._progress_count - 1) % len(PROGRESS)]
+        if why in ("fixed", "finished", "progress", "check", "hint"):
+            self.steps_confirmed = len(a.steps) if not mistake else self.steps_confirmed
 
-        if why is not None and a.say:
-            await self.speak(a.say, why)
+        if why is not None and say:
+            await self.speak(say, why)
         if next_problem and not _same_line(next_problem, self.problem):
             # Only now: they have finished one problem and started another on the same page.
             self.switch_to(next_problem, who="page")

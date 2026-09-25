@@ -766,3 +766,41 @@ def test_hosted_cannot_be_chosen_without_a_key():
     j = Jev("http://127.0.0.1:8095/v1/systemone", backend="jevk5")
     with pytest.raises(ValueError):
         j.use("hosted")
+
+
+def test_small_talk_gets_no_filler_even_when_the_model_is_slow():
+    h, _ = with_jev(FakeJev(respond=0.9, about="social", needs_page=0.1),
+                    Assessment(page="work", about="social", say="Hello! Ready when you are."))
+    h.tutor.ACK_AFTER_S = 0.0
+    h.run(h.tutor.hear("Hello.", PAGE))
+    assert h.whys()[-1:] == ["reply"] and "ack" not in h.whys()
+
+
+# --- saying "that's right" while the work is right ------------------------------------------
+def on_track(n):
+    return Assessment(page="work", problem="5 - (2x - 4) = 11", steps=["5 - 2x + 4 = 11", "9 - 2x = 11", "-2x = 2",
+                                                                        "x = -1"][:n], say=None)
+
+
+def test_correct_work_gets_an_occasional_word_of_encouragement():
+    h = Harness(ScriptedBrain(on_track(1), on_track(2), on_track(3), on_track(4)))
+    h.run(h.tutor.start())
+    h.settle(page_with("a"))                        # one line: nothing to say yet
+    h.now += 60
+    h.settle(page_with("ab"))                       # two correct lines, a minute of silence
+    assert h.whys()[-1] == "progress" and h.said[-1][1] in tutor.PROGRESS
+    h.now += 10
+    h.settle(page_with("abc"))                      # just spoke: stay quiet
+    h.now += 60
+    h.settle(page_with("abcd"))                     # two more lines since the last "that's right"
+    assert h.whys().count("progress") == 2 and h.said[-1][1] != h.said[-3][1]  # not the same words
+
+
+def test_encouragement_waits_for_new_lines_not_just_time():
+    h = Harness(ScriptedBrain(on_track(2), on_track(2)))
+    h.run(h.tutor.start())
+    h.now += 60
+    h.settle(page_with("a"))
+    h.now += 60
+    h.settle(page_with("ab"))                       # the page changed, but no new correct line
+    assert h.whys().count("progress") == 1
