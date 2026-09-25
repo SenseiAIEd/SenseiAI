@@ -68,6 +68,16 @@
       <button class="tutor" data-action="resume">Resume</button>
       <button class="tutor" data-action="end">End</button>
     </div>
+    <label>Pan-tilt head <span id="headState"></span></label>
+    <div class="row">
+      <button class="head" data-preset="notebook">Notebook</button>
+      <button class="head" data-preset="student">Student</button>
+      <button class="head" data-preset="home">Home</button>
+      <button class="head" data-np="-5" title="pan left 5°">◀</button>
+      <button class="head" data-nt="-5" title="tilt 5° (direction depends on how the servo is mounted)">▲</button>
+      <button class="head" data-nt="5" title="tilt 5° the other way">▼</button>
+      <button class="head" data-np="5" title="pan right 5°">▶</button>
+    </div>
     <label for="text">Say on the phone (teacher override)</label>
     <textarea id="text" placeholder="Type an instruction, then press Enter"></textarea>
     <div class="row">
@@ -120,11 +130,24 @@ document.querySelectorAll("button.tutor").forEach((b) => (b.onclick = async () =
   if (!res.ok) $("err").textContent = (await res.json()).detail || res.statusText;
 }));
 
+document.querySelectorAll("button.head").forEach((b) => (b.onclick = async () => {
+  $("err").textContent = "";
+  const d = b.dataset;
+  const body = d.preset ? { preset: d.preset } : { nudge_pan: Number(d.np || 0), nudge_tilt: Number(d.nt || 0) };
+  const res = await api("/head", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
+  if (!res.ok) $("err").textContent = (await res.json()).detail || res.statusText;
+}));
+
 async function poll() {
   try {
     const res = await api("/status");
     if (res.status === 401) { $("state").textContent = "add ?key=<access key> to this page's address"; setTimeout(poll, 3000); return; }
     const s = await res.json();
+    const h = s.head;
+    $("headState").textContent = !h ? "· not configured (set SENSEI_HEAD_PORT on the Spark)"
+      : !h.connected ? `· not connected on ${h.port}${h.error ? ": " + h.error : ""}`
+      : `· pan ${h.pan}° tilt ${h.tilt}°` + (h.preset ? ` (${h.preset})` : "") + " · copy these into the firmware presets";
+    document.querySelectorAll("button.head").forEach((b) => (b.disabled = !h));
     $("dot").className = "dot" + (s.connected ? " live" : s.state ? " lost" : "");
     $("state").textContent = s.connected ? "live" : s.state || "no phone";
     for (const id of ["send", "hush"]) $(id).disabled = !(s.connected && s.channel === "open");

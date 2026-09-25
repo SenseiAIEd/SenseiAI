@@ -138,6 +138,31 @@ python fake_phone.py --tutor 5 --seconds 120      # streams a sample page and ta
 
 Or use the **Start / Hint / Check / End** buttons in the console while any phone is connected.
 
+## The pan-tilt head (Sensei's body)
+
+The phone sits on a two-servo pan-tilt head driven by an ESP32
+(`firmware/sensei_head/sensei_head.ino`, build guide sections 6-7). Plug the ESP32 into the
+Spark's USB, then tell the gateway where it is:
+
+```sh
+ls /dev/ttyUSB* /dev/ttyACM*               # the ESP32 shows up as one of these
+sudo usermod -aG dialout $USER             # once, then log out and in (serial permission)
+echo 'SENSEI_HEAD_PORT=/dev/ttyUSB0' >> sensei.env
+```
+
+Restart the gateway. The head is off unless `SENSEI_HEAD_PORT` is set.
+
+- **Start** points the head at the notebook.
+- **Voice:** "look at my notebook" / "look down", "look at me" / "look up", "look straight".
+  These move the head and Sensei says so; other questions still go to the tutor.
+- **Console:** Notebook / Student / Home buttons, and ◀ ▲ ▼ ▶ nudges 5° at a time. The console
+  shows the current angles: aim at the notebook, copy the numbers into the firmware's
+  `presets[]`, and upload again.
+- A pulled cable never stops the tutor; the console shows the error and the next command reconnects.
+
+No hardware yet? `python fake_head.py` prints a pseudo-terminal that behaves like the ESP32; set
+`SENSEI_HEAD_PORT` to it.
+
 ## Networking
 
 Three ways for the phone to reach the gateway:
@@ -219,6 +244,7 @@ pytest                                                             # end-to-end 
 | POST | `/offer` | Phone's WebRTC offer in, answer out; starts a session (replaces any old one) |
 | POST | `/say` | `{"text": "..."}` -> spoken on the phone (409 if no phone) |
 | POST | `/tutor` | `{"action": "start" \| "hint" \| "check" \| "repeat" \| "end", "minutes": 10}`, like the phone's buttons |
+| POST | `/head` | `{"preset": "notebook" \| "student" \| "home"}`, `{"pan": 90, "tilt": 120}` or `{"nudge_pan": -5}` (409 if no head) |
 | POST | `/hush` | Stop the phone speaking |
 | POST | `/hangup` | End the session and finalize the recording |
 | GET | `/config` | ICE servers for the phone: the TURN relay with short-lived credentials, or `[]` |

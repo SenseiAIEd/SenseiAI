@@ -6,3 +6,4 @@ numpy
 httpx
 pytest
 faster-whisper
+pyserial

@@ -40,6 +40,7 @@ from fastapi.responses import FileResponse, JSONResponse, Response, StreamingRes
 from pydantic import BaseModel
 
 from ears import Ears, Transcriber
+from head import GAZE_REPLY, PRESETS, Head, gaze_command
 from tutor import Brain, Tutor
 
 RECORD_DIR = Path(os.environ.get("SENSEI_RECORD_DIR", "sessions"))
@@ -70,6 +71,7 @@ FRAME_EVERY_S = 0.5  # how often the tutor looks at the latest frame
 FEATURES = ["look", "talk", "memory", "pause"]
 
 # The tutor's ears: speech-to-text for voice mode (see ears.py). SENSEI_STT=off disables it.
+HEAD = Head.from_env()  # the pan-tilt head, if SENSEI_HEAD_PORT names its USB serial port
 TRANSCRIBER = Transcriber() if os.environ.get("SENSEI_STT", "on") != "off" else None
 
 log = logging.getLogger("sensei")
@@ -260,6 +262,8 @@ class Session:
         self.tutor = Tutor(BRAIN, speak, notify, minutes=minutes, log_event=self.log,
                            save_frame=self.save_judged_frame)
         await self.tutor.start()
+        if HEAD is not None:  # the tutor watches the notebook
+            asyncio.ensure_future(HEAD.look("notebook"))
         if not any(getattr(t, "sensei_role", "") == "tutor" for t in self.tasks):
             task = asyncio.ensure_future(self.run_tutor())
             task.sensei_role = "tutor"
@@ -290,11 +294,25 @@ class Session:
         """The student said something in voice mode."""
         self.send({"type": "heard", "text": text})
         self.last_heard = text
-        if self.tutor is not None:
+        preset = gaze_command(text) if HEAD is not None else None
+        if preset is not None:
+            await self.gaze(preset, text, info)
+        elif self.tutor is not None:
             self.log("heard", text=text, **info)
             await self.tutor.hear(text, self.latest_frame)
         else:
             self.log("student_said", text=text, **info)
+
+    async def gaze(self, preset: str, text: str, info: dict):
+        """'Look at my notebook': point the head, and say so (a command, not a question for the model)."""
+        self.log("gaze", preset=preset, text=text, **info)
+        ok = await HEAD.look(preset)
+        reply = GAZE_REPLY[preset] if ok else "Sorry, I can't move my head right now."
+        if self.tutor is not None and self.tutor.phase == "watching":
+            self.tutor.remember("student", text)
+            await self.tutor.speak(reply, "gaze")
+        else:
+            self.send({"type": "say", "text": reply, "why": "gaze"})
 
     async def tutor_request(self, what: str, minutes: float = 10):
         if what == "start":
@@ -330,6 +348,14 @@ class Offer(BaseModel):
 
 class Say(BaseModel):
     text: str
+
+
+class Gaze(BaseModel):
+    preset: str | None = None  # notebook | student | home
+    pan: int | None = None     # absolute servo degrees (0-180, 90 = centred) ...
+    tilt: int | None = None
+    nudge_pan: int = 0         # ... or relative, for calibrating presets from the console
+    nudge_tilt: int = 0
 
 
 class TutorAction(BaseModel):
@@ -442,6 +468,28 @@ async def tutor_action(body: TutorAction):
     return {"ok": True, "tutor": session.tutor.state() if session.tutor else None}
 
 
+@app.post("/head")
+async def head(body: Gaze):
+    """Point the pan-tilt head: a preset, absolute angles, or a nudge."""
+    if HEAD is None:
+        raise HTTPException(409, "no pan-tilt head (set SENSEI_HEAD_PORT, e.g. /dev/ttyUSB0)")
+    if body.preset is not None:
+        if body.preset not in PRESETS:
+            raise HTTPException(400, f"preset must be one of {', '.join(PRESETS)}")
+        ok = await HEAD.look(body.preset)
+    elif body.pan is not None and body.tilt is not None:
+        ok = await HEAD.move(body.pan, body.tilt)
+    elif body.nudge_pan or body.nudge_tilt:
+        ok = await HEAD.nudge(body.nudge_pan, body.nudge_tilt)
+    else:
+        ok = await HEAD.connect()
+    if session is not None and not session.closed:
+        session.log("head", request=body.model_dump(exclude_defaults=True), ok=ok, **HEAD.state())
+    if not ok:
+        raise HTTPException(502, HEAD.error or "pan-tilt head failed")
+    return {"ok": True, "head": HEAD.state()}
+
+
 @app.post("/hush")
 async def hush():
     if session is None or not session.send({"type": "hush"}):
@@ -460,7 +508,7 @@ async def hangup():
 @app.get("/status")
 async def status():
     if session is None:
-        return {"connected": False}
+        return {"connected": False, "head": HEAD.state() if HEAD else None}
     return {
         "connected": session.pc.connectionState == "connected" and not session.closed,
         "state": session.pc.connectionState,
@@ -478,6 +526,7 @@ async def status():
         "conversation": session.tutor.conversation[-10:] if session.tutor else [],
         "brain": BRAIN.model if BRAIN else None,
         "ears": TRANSCRIBER.name if TRANSCRIBER else None,
+        "head": HEAD.state() if HEAD else None,
     }
 
 
@@ -537,7 +586,19 @@ async def warm_up_ears():
         asyncio.ensure_future(load())
 
 
+@app.on_event("startup")
+async def wake_head():
+    """Connect to the pan-tilt head (the ESP32 reboots when its port opens, so do it early)."""
+    if HEAD is not None:
+        async def wake():
+            if await HEAD.connect():
+                log.info("pan-tilt head ready on %s at pan %s tilt %s", HEAD.port, HEAD.pan, HEAD.tilt)
+        asyncio.ensure_future(wake())
+
+
 @app.on_event("shutdown")
 async def shutdown():
     if session is not None:
         await session.close()
+    if HEAD is not None:
+        HEAD.close()
