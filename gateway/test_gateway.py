@@ -185,6 +185,37 @@ def test_config_hands_out_coturn_rest_credentials(gateway, monkeypatch):
     assert base64.b64decode(ice["credential"]) == expected
 
 
+def test_the_model_can_be_swapped_without_a_restart(gateway, monkeypatch):
+    """Trying the fast model against the careful one shouldn't mean editing a file and
+    restarting mid-session. A model that can't answer is rejected, not adopted."""
+    base, _ = gateway
+
+    class Brain:
+        base_url = "http://model"
+        model = "thinking"
+
+        def list_models(self):
+            return ["fast", "thinking"]
+
+        def ping(self):
+            if self.model == "broken":
+                raise RuntimeError("no such model")
+            return "ready"
+
+    monkeypatch.setattr(server, "BRAIN", Brain())
+
+    listed = httpx.get(f"{base}/brain").json()
+    assert listed["model"] == "thinking" and listed["available"] == ["fast", "thinking"]
+
+    swapped = httpx.post(f"{base}/brain", json={"model": "fast"}).json()
+    assert swapped == {"model": "fast", "was": "thinking", "warm_up_s": swapped["warm_up_s"]}
+    assert httpx.get(f"{base}/brain").json()["model"] == "fast"
+
+    refused = httpx.post(f"{base}/brain", json={"model": "broken"})
+    assert refused.status_code == 502
+    assert httpx.get(f"{base}/brain").json()["model"] == "fast"  # still on the working one
+
+
 def test_student_starts_a_session_and_gets_a_hint(gateway, monkeypatch):
     """Phone taps Start over the data channel; the tutor greets, looks at the streamed page
     and speaks its hint through the same channel."""
@@ -195,7 +226,7 @@ def test_student_starts_a_session_and_gets_a_hint(gateway, monkeypatch):
         model = "scripted"
         calls = 0
 
-        def assess(self, img, instructions):
+        def assess(self, img, instructions, system=""):
             Brain.calls += 1
             assert img.shape[0] > 100  # a real decoded camera frame
             return Assessment(page="work", problem="5 - (2x - 4) = 11", steps=["5 - 2x - 4 = 11"],
@@ -223,15 +254,18 @@ def test_student_starts_a_session_and_gets_a_hint(gateway, monkeypatch):
     states = [m for m in messages if m["type"] == "tutor"]
     assert states and states[0]["phase"] == "watching" and 0 < states[0]["remaining_s"] <= 300
     assert messages[-1]["type"] == "session_ended"
-    assert Brain.calls == 1  # the same still page is judged once
+    # A mistake is never spoken about on one reading: the same page is looked at twice, and only
+    # then does the hint go out. (An unchanging correct page is still judged just once.)
+    assert Brain.calls == 2
     # the frame the model judged is kept, with its size, next to the recording
     [folder] = [f for f in server.RECORD_DIR.iterdir() if (f / "judged_001.jpg").exists()]
     judged = [json.loads(l) for l in (folder / "log.jsonl").read_text().splitlines()
               if '"tutor_assessment"' in l]
     assert judged[0]["frame"] == "judged_001.jpg" and judged[0]["frame_size"][0] > 0
-    # ...and the console can show it: the frame and what the model made of it
+    # ...and the console can show it: the frame the hint was actually based on (the second
+    # look, the one that confirmed the mistake) and what the model made of it
     look = server.session.last_look
-    assert look["frame"] == "judged_001.jpg" and look["say"].startswith("Look at your first line")
+    assert look["frame"] == "judged_002.jpg" and look["say"].startswith("Look at your first line")
 
 
 @pytest.mark.skipif(__import__("shutil").which("espeak-ng") is None, reason="needs espeak-ng for a test voice")
@@ -252,7 +286,7 @@ def test_student_asks_out_loud_and_sensei_answers(gateway, monkeypatch, tmp_path
     class Brain:
         model = "scripted"
 
-        def assess(self, img, instructions):
+        def assess(self, img, instructions, system=""):
             asked.append((img is not None, instructions))
             return Assessment(page="work", steps=["5 - 2x - 4 = 11"], say="Almost. Look at the minus four.")
 
@@ -277,3 +311,27 @@ def test_student_asks_out_loud_and_sensei_answers(gateway, monkeypatch, tmp_path
     assert replies == ["Almost. Look at the minus four."]
     talk = [i for has_img, i in asked if "said out loud" in i]
     assert talk and "first line" in talk[0].lower()
+
+
+def test_jev_can_be_switched_on_and_off_at_runtime(gateway, monkeypatch):
+    from jev import Jev
+    base, _ = gateway
+    monkeypatch.setattr(server, "JEV", None)
+    assert httpx.get(f"{base}/jev").json() == {"on": False, "available": False}
+    assert httpx.post(f"{base}/jev", json={"on": True}).status_code == 409  # nothing to switch on
+
+    monkeypatch.setattr(server, "JEV", Jev("http://localhost:1/v1/systemone", enabled=False))
+    assert httpx.get(f"{base}/jev").json()["on"] is False
+    assert httpx.post(f"{base}/jev", json={"on": True}).json()["on"] is True
+    assert httpx.get(f"{base}/config").json()["tutor"]["jev"]["on"] is True
+    assert httpx.post(f"{base}/jev", json={"on": False}).json()["on"] is False
+
+
+def test_jev_backend_can_be_changed_at_runtime(gateway, monkeypatch):
+    from jev import Jev
+    base, _ = gateway
+    monkeypatch.setattr(server, "JEV", Jev("http://127.0.0.1:8095/v1/systemone", backend="jevk5"))
+    state = httpx.post(f"{base}/jev", json={"backend": "semif"}).json()
+    assert state["backend"] == "semif" and state["floors"]["reply"] == 0.15 and state["on"] is False
+    assert httpx.post(f"{base}/jev", json={"backend": "hosted"}).status_code == 400  # no key
+    assert httpx.post(f"{base}/jev", json={"backend": "jevk5", "on": True}).json()["on"] is True

@@ -225,3 +225,26 @@ pytest                                                             # end-to-end 
 | GET | `/status` | Connection state, route (direct or relay), tracks, fps, recording path, last spoken line |
 | GET | `/snapshot.jpg` | Latest camera frame |
 | GET | `/preview.mjpg` | Live MJPEG preview (about 8 fps) |
+
+## Jev: fast decisions on what the student says
+
+With `USE_JEV=1` in `sensei.env`, each thing the student says first goes to Jev
+([TypeSafe](https://docs.typesafe.ai)'s typed decision model, ~270 ms) to decide whether Sensei
+should answer at all, what it is about, whether the answer needs the camera image, and whether
+the student has moved to another problem. Only then is the vision model called, if at all.
+Details and results: `docs/jev-in-sensei.md`.
+
+```sh
+USE_JEV=1                  # off by default; when off nothing changes
+SENSEI_JEV_BACKEND=jevk5   # default: local JevK5 on :8095, offline. Or semif (:8096), or hosted
+SENSEI_JEV_KEY=...         # hosted only; or TYPESAFEAI_KEY, or read from ~/projects/jev/.env
+```
+
+The local servers run in tmux windows `sensei:jevk5` and `sensei:semif`; to start them after a
+reboot see `~/projects/jev-local/README.md`.
+
+Switch it, or its backend, at runtime from the console or `POST /jev {"on": false}` /
+`POST /jev {"backend": "semif"}`. If Jev is
+slow or down, Sensei decides as before, and stops trying for 30 s. Every decision is logged as a
+`jev` event in the session's `log.jsonl`. Score changes against real utterances with
+`python jev_eval.py` (cases in `evals/utterances.jsonl`).
