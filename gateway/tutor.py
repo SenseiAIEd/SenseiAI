@@ -424,6 +424,11 @@ Speak = Callable[[str, str], Awaitable[None]]    # (text, why) -> spoken on the 
 Notify = Callable[[dict], Awaitable[None]]        # state update for the phone
 
 
+def env_flag(name: str, default: str = "0") -> bool:
+    """True when the env var is a common truthy string (1/true/yes/on). Default off."""
+    return os.environ.get(name, default).lower() in ("1", "true", "yes", "on")
+
+
 class Tutor:
     """One interactive session. Feed it frames (`on_frame`) and button presses
     (`request`); it speaks through `speak` and reports its state through `notify`."""
@@ -453,7 +458,8 @@ class Tutor:
     def __init__(self, brain: Optional[Brain], speak: Speak, notify: Notify, minutes: float = 10,
                  clock: Callable[[], float] = time.monotonic, log_event: Callable[..., None] = lambda *a, **k: None,
                  save_frame: Callable[[np.ndarray], Optional[str]] = lambda img: None,
-                 chat_brain: Optional[Brain] = None, decider=None):
+                 chat_brain: Optional[Brain] = None, decider=None,
+                 tap_only: Optional[bool] = None):
         self.brain = brain
         self.chat_brain = chat_brain or brain  # the quick one, for talking back
         self.decider = decider                 # jev.Jev: fast typed decisions, used when .enabled
@@ -462,6 +468,9 @@ class Tutor:
         self.save_frame = save_frame  # keeps each judged frame, so we can see what the model saw
         self.clock = clock
         self.minutes = max(1.0, min(30.0, float(minutes)))
+        # Demo / visitor plant: detect mistakes but stay quiet until Hint or Check.
+        # Default off (SENSEI_TAP_ONLY unset) so Andy main behavior is unchanged.
+        self.tap_only = env_flag("SENSEI_TAP_ONLY") if tap_only is None else bool(tap_only)
         self.watcher = PageWatcher()
         self.phase = "idle"                 # idle -> watching -> ended
         self.started_at = 0.0
@@ -611,8 +620,11 @@ class Tutor:
         if left <= 60 and not self.warned_one_minute:
             self.warned_one_minute = True
             await self.speak(ONE_MINUTE, "time")
-        elif (self.clock() - self.last_activity > self.IDLE_S and self.clock() - self.last_spoke_at > self.IDLE_S
+        elif (not self.tap_only
+              and self.clock() - self.last_activity > self.IDLE_S
+              and self.clock() - self.last_spoke_at > self.IDLE_S
               and not self.thinking):
+            # Tap-only / visitor demos stay quiet during long writing windows (ASR often off).
             self.last_activity = self.clock()
             await self.speak(IDLE_NUDGE, "idle")
         await self.notify()
@@ -972,7 +984,19 @@ class Tutor:
             self.candidate_mistake = None
         why = None
         if mistake:
-            if mistake == self.mistake:
+            if request is None and self.tap_only:
+                # Detect / pin state, but do not auto-speak or escalate. Locked Fri plant:
+                # quiet until an explicit Hint or Check tap. hint_level stays 0 so the first
+                # Hint tap still lands as hint_1 (see escalate branch below).
+                if mistake != self.mistake:
+                    self.mistake, self.hint_level, self.hints_on_mistake = mistake, 0, 0
+                    self.candidate_mistake = None
+                    self.mistakes_found.append(
+                        f"step {mistake[0]}: {a.steps[mistake[0] - 1]} ({a.error_kind or 'error'})")
+                    self.log_event("tutor_detected", step=mistake[0],
+                                   line=a.steps[mistake[0] - 1], tap_only=True)
+                # Same mistake already pinned: still quiet — no hint_2 / let_it_go from looks.
+            elif mistake == self.mistake:
                 self.hints_on_mistake += 1
                 if self.hints_on_mistake > self.MAX_HINTS_PER_MISTAKE:
                     # Asking a fourth time in different words is not teaching, it is nagging.
@@ -984,12 +1008,13 @@ class Tutor:
                     return
                 self.hint_level = min(3, self.hint_level + 1)
                 why = f"hint_{self.hint_level}"
+                self.hints_given += 1
             else:
                 self.mistake, self.hint_level, self.hints_on_mistake = mistake, 1, 1
                 self.candidate_mistake = None
                 self.mistakes_found.append(f"step {mistake[0]}: {a.steps[mistake[0] - 1]} ({a.error_kind or 'error'})")
                 why = "hint_1"
-            self.hints_given += 1
+                self.hints_given += 1
         elif self.mistake:
             self.mistakes_fixed.append(f"step {self.mistake[0]}")
             self.mistake, self.hint_level = None, 0
