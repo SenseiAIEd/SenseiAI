@@ -32,135 +32,150 @@ Built for the Antler × Austin Hardtech Hackathon (Deep Tech Week, Sept 2026).
 | **Moves** | A pan-tilt head on an ESP32 turns between the notebook and the student, frames the student's face, and reads their expression to set its tone |
 | **Runs offline** | Phone to Spark over Wi-Fi, every model on the Spark; from anywhere via Tailscale Funnel and a locked-down TURN relay |
 | **Records** | Every session as video, audio and a timed event log of everything Sensei read, heard, decided and said |
-| **Tested** | 142 automated tests, including real Whisper on synthesized speech and a simulated ESP32; every model choice made by measuring on our own data |
+| **Lets a human in** | **SenseiDesk**: a tutor or parent watches the live call (video and the student's voice) and every decision from any browser, and can step in: hints, checks, say something, move the head |
+| **Tested** | 144 automated tests, including real Whisper on synthesized speech and a simulated ESP32; every model choice made by measuring on our own data |
 
 ---
 
 ## Architecture
 
-### The system
+### The big picture
+
+A student works on paper. The phone on the head sees and hears them and speaks for Sensei. The
+Spark does all the thinking, and a human tutor or parent can watch and step in from anywhere.
 
 ```mermaid
+%%{init: {"theme": "base", "themeVariables": {"fontSize": "15px", "lineColor": "#94a3b8", "primaryTextColor": "#1e293b", "edgeLabelBackground": "#ffffff"}, "flowchart": {"curve": "basis", "nodeSpacing": 30, "rankSpacing": 70, "padding": 18}}}%%
 flowchart LR
-    subgraph Desk["On the desk"]
-        Phone["Sensei Cam app (Pixel 2 XL)<br/>back camera 1280x720 @ 15 fps<br/>microphone · Android text-to-speech"]
-        Head["Pan-tilt head<br/>ESP32 + 2 MG996R servos<br/>presets and limits in flash"]
+    student(["🧑‍🎓 Student<br/>works on paper"])
+
+    subgraph desk ["🪑 On the desk"]
+        direction TB
+        phone["📱 Phone<br/>camera · mic · speaker"]
+        head["🦾 Pan-tilt head<br/>ESP32 + two servos"]
+        head -. "points" .-> phone
     end
 
-    subgraph Net["Network (any one of three)"]
-        LAN["Same Wi-Fi<br/>http :8787, no internet needed"]
-        TS["Tailscale on the phone"]
-        Funnel["Tailscale Funnel<br/>https :8443 call setup<br/>TLS :10000 media"]
+    subgraph spark ["🖥️ DGX Spark · offline"]
+        direction TB
+        gateway["🧠 Sensei<br/>sees · hears · decides"]
+        models["🤖 Local models<br/>vision · speech · Jev"]
+        logs[("🗂️ Every session<br/>recorded")]
+        gateway <--> models
+        gateway --> logs
     end
 
-    subgraph Spark["NVIDIA DGX Spark (GB10, 121 GB unified memory)"]
-        TURN["coturn TURN relay<br/>localhost only, 6 h credentials"]
-        GW["Sensei gateway<br/>FastAPI + aiortc :8787"]
-        Router["Model router :8010<br/>vLLM / llama.cpp<br/>qwen3-vl-30b-a3b vision model"]
-        Jev["JevK5 :8095<br/>System One decisions"]
-        STT["faster-whisper small.en<br/>+ Silero VAD, on CPU"]
-        Face["YuNet face detector<br/>on CPU"]
-        Rec[("sessions/<br/>session.mp4 · log.jsonl<br/>judged frames")]
-    end
+    human(["👩‍🏫 Tutor or parent<br/>SenseiDesk tab"])
 
-    Console["Operator console<br/>any browser"]
+    student <-- "work, voice ⇄ Sensei's voice" --> desk
+    desk <-- "live call · head moves" --> spark
+    spark <-- "live view · step in" --> human
 
-    Phone -- "WebRTC video + audio" --> LAN --> GW
-    Phone -.-> TS -.-> GW
-    Phone -. "signalling" .-> Funnel -.-> GW
-    Funnel -. "media over TLS" .-> TURN -.-> GW
-    GW -- "data channel: say, hush, tutor state" --> Phone
-    GW --> Router
-    GW --> Jev
-    GW --> STT
-    GW --> Face
-    GW --> Rec
-    GW -- "USB serial 115200<br/>PRESET, MOVE, POS?" --> Head
-    Head -. "turns" .-> Phone
-    Console <--> GW
+    classDef person fill:#fef3c7,stroke:#d97706,stroke-width:2px,color:#1e293b
+    classDef device fill:#ffedd5,stroke:#ea580c,stroke-width:2px,color:#1e293b
+    classDef core fill:#e0e7ff,stroke:#4f46e5,stroke-width:2px,color:#1e293b
+    classDef model fill:#dcfce7,stroke:#16a34a,stroke-width:2px,color:#1e293b
+    classDef store fill:#f1f5f9,stroke:#64748b,stroke-width:2px,color:#1e293b
+    class student,human person
+    class phone,head device
+    class gateway core
+    class models model
+    class logs store
+    style desk fill:#fff7ed,stroke:#fdba74,color:#9a3412
+    style spark fill:#eef2ff,stroke:#a5b4fc,color:#3730a3
 ```
 
-### Inside the gateway: perception, policy, expression
+### How Sensei decides
 
-The models perceive and word things; **code decides whether to speak**, so Sensei stays quiet
-while the student is on track and never repeats itself too fast.
+The models perceive and word things; **plain code decides whether to speak**. That's what keeps
+Sensei quiet while the work is right, and stops it repeating itself.
 
 ```mermaid
-flowchart TB
-    subgraph IN["Inputs from the phone"]
-        Video["Video track"]
-        Audio["Audio track (voice mode only)"]
-        Taps["Buttons: Start, Hint, Check,<br/>What do you see?, Repeat, Pause, End"]
+%%{init: {"theme": "base", "themeVariables": {"fontSize": "14px", "lineColor": "#94a3b8", "primaryTextColor": "#1e293b"}, "flowchart": {"curve": "basis", "nodeSpacing": 24, "rankSpacing": 60, "padding": 14}}}%%
+flowchart LR
+    subgraph sense ["👀 👂 Perceive"]
+        direction TB
+        subgraph hear ["Hear"]
+            direction TB
+            h1["Someone speaks"] --> h2["Real voice?<br/>phantom words dropped"] --> h3["Transcript, joined<br/>if mid-sentence"]
+        end
+        subgraph see ["See"]
+            direction TB
+            s1["Pen lifted,<br/>page settles"] --> s2["Vision model reads it:<br/>subject, steps, first mistake"] --> s3["A second look<br/>must agree"]
+        end
     end
 
-    subgraph EYES["Eyes"]
-        Watch["PageWatcher<br/>hand lifted ~3 s + new writing"]
-        Look["Vision model: page to JSON<br/>subject, topic, problem, steps,<br/>first_error, error_kind, finished,<br/>hand_over_page, rotated, say"]
-        Confirm["Second look must agree<br/>before any hint"]
+    subgraph decide ["⚖️ Decide"]
+        direction TB
+        d1["Jev, in ~0.4 s:<br/>reply? about what?<br/>need the page?"] --> d2["Tutor rules:<br/>hints 1 → 2 → 3, wait 20 s,<br/>quiet while it's right"] --> d3["Where to look:<br/>unsure → notebook"]
     end
 
-    subgraph EARS["Ears"]
-        VAD["Energy VAD<br/>segments utterances"]
-        Silero["Silero VAD<br/>at least 0.4 s of real voice"]
-        Whisper["faster-whisper small.en"]
-        Phantom["Phantom filter<br/>stock phrase + no_speech_prob"]
-        Hold["Unfinished sentence?<br/>hold 1.5 s and join"]
+    subgraph act ["🗣️ Act"]
+        direction TB
+        a1["Ask one<br/>guiding question"] ~~~ a2["Confirm a fix,<br/>encourage progress"] ~~~ a3["Turn the head,<br/>read the face"]
     end
 
-    subgraph POLICY["Policy"]
-        JevU["Jev, one call per utterance:<br/>respond? about? needs page?<br/>new problem? follow-up?"]
-        Tutor["Tutor<br/>focus and subject · hint ladder 1-2-3<br/>20 s wait after a hint · let go after 3<br/>encouragement · idle check-in · timers"]
-        Attn["Attention: where to look<br/>Jev decides, unsure means notebook<br/>guard rails: dwell, glance length, gap"]
-    end
+    sense --> decide --> act
 
-    subgraph OUT["Expression"]
-        Say["Speak on the phone"]
-        Move["Move the head"]
-        Frame["Frame the face and read<br/>the expression"]
-        Log["Log every decision"]
-    end
-
-    Video --> Watch --> Look --> Confirm --> Tutor
-    Audio --> VAD --> Silero --> Whisper --> Phantom --> Hold --> JevU --> Tutor
-    Taps --> Tutor
-    Tutor -- "talk: reply using the page if needed" --> Look
-    Tutor --> Say
-    Tutor --> Attn --> Move --> Frame -- "tone for the next minute" --> Tutor
-    Tutor --> Log
+    classDef sense fill:#e0f2fe,stroke:#0284c7,stroke-width:2px,color:#0c4a6e
+    classDef think fill:#ede9fe,stroke:#7c3aed,stroke-width:2px,color:#3b0764
+    classDef act fill:#dcfce7,stroke:#16a34a,stroke-width:2px,color:#14532d
+    class s1,s2,s3,h1,h2,h3 sense
+    class d1,d2,d3 think
+    class a1,a2,a3 act
+    style sense fill:#f8fafc,stroke:#cbd5e1,color:#334155
+    style see fill:#f0f9ff,stroke:#7dd3fc,color:#075985
+    style hear fill:#f0f9ff,stroke:#7dd3fc,color:#075985
+    style decide fill:#f5f3ff,stroke:#c4b5fd,color:#5b21b6
+    style act fill:#f0fdf4,stroke:#86efac,color:#166534
 ```
 
 ### One tutoring moment
 
 ```mermaid
+%%{init: {"theme": "base", "themeVariables": {"fontSize": "14px", "actorBkg": "#e0e7ff", "actorBorder": "#4f46e5", "actorTextColor": "#1e293b", "signalColor": "#64748b", "signalTextColor": "#1e293b", "noteBkgColor": "#fef3c7", "noteBorderColor": "#d97706", "labelBoxBkgColor": "#e0e7ff"}}}%%
 sequenceDiagram
     autonumber
-    participant S as Student
-    participant P as Phone
-    participant G as Gateway (Tutor)
-    participant V as Vision model
-    participant J as JevK5
-    participant H as Head
+    box rgb(255, 247, 237) On the desk
+        actor S as Student
+        participant P as Phone + head
+    end
+    box rgb(238, 242, 255) DGX Spark
+        participant G as Sensei
+        participant V as Vision model
+        participant J as Jev
+    end
 
-    S->>P: writes a line, lifts the pen
-    P->>G: video frames
-    Note over G: page still for ~3 s and changed
-    G->>V: look 1 (subject playbook, mistake list)
-    V-->>G: first_error = line 1 (candidate)
-    G->>V: look 2, same page
-    V-->>G: same mistake: confirmed
+    S->>P: writes "5 - 2x - 4 = 11", lifts the pen
+    P->>G: live video
+    G->>V: read the page, twice to be sure
+    V-->>G: line 1 is wrong (a sign)
     G->>P: "What happens to each term inside the brackets?"
-    P->>S: speaks it
-    G->>H: glance up while waiting for the answer
+    Note over P,G: the head glances up, waiting for the answer
     S->>P: "Oh, it should be plus four"
-    P->>G: audio
-    Note over G: Silero + Whisper + phantom filter
-    G->>J: respond? about? needs the page?
-    J-->>G: reply, about the subject, page needed
-    G->>V: talk: judge the answer
-    V-->>G: "Yes, the minus changes both signs. Good thinking!"
-    G->>P: say it
-    G->>H: back to the notebook
+    P->>G: voice
+    G->>J: reply? about what? need the page?
+    J-->>G: yes, it's about the maths
+    G->>V: is the student right?
+    V-->>G: yes
+    G->>P: "Yes, the minus changes both signs. Good thinking!"
+    Note over P,G: the head turns back to the notebook
 ```
+
+### What runs where
+
+| Piece | What it is | Where |
+|---|---|---|
+| Sensei Cam | React Native (Expo) app on the phone: camera, mic, text-to-speech, the student's buttons | the phone |
+| Pan-tilt head | ESP32 firmware driving two servos, over USB serial | the desk |
+| Gateway | FastAPI + aiortc: the call, recording, tutor, ears, gaze, head, Jev client, console | Spark `:8787` |
+| Vision model | `qwen3-vl-30b-a3b` behind the Spark's model router (vLLM / llama.cpp) | Spark `:8010` |
+| Speech | faster-whisper `small.en` + Silero VAD, on the CPU | inside the gateway |
+| Faces | YuNet face detector, on the CPU | inside the gateway |
+| Jev | JevK5, a local System One decision model | Spark `:8095` |
+| TURN relay | coturn, localhost only, short-lived credentials | Spark `:3478` |
+| SenseiDesk | The desk tab of the Sensei web app, for a human tutor or parent | any browser |
+| Remote access | Tailscale Funnel: `:8443` for the gateway, `:10000` for the relay | public HTTPS |
 
 ---
 
@@ -248,6 +263,24 @@ Jev, switchable at runtime. If Jev is slow or down, Sensei decides as before and
   frustrated, bored, happy, tired, away), which sets Sensei's tone for the next minute.
 - A pulled cable never stops the tutor: a failed move leaves the camera where it was, and the
   head is retried every 15 s.
+
+### SenseiDesk: a human in the loop
+
+The **SenseiDesk** tab of the Sensei web app is the controller for a human tutor or a parent. It
+connects to the gateway with the access key and shows:
+
+- **the live call**: the phone's camera over WebRTC, relayed by the gateway, with the student's
+  voice one click away; it works from anywhere through the same TURN relay as the phone;
+- **everything as it happens**: what the student said, what Sensei read on the page (the exact
+  frame, with the wrong line highlighted), what it said and why, where the head looked, and
+  what it heard but chose not to answer;
+- **the session**: time left, subject, problem, hints given, head and voice-mode state;
+- **ways to step in**: start a session, Hint, Check, What do you see?, Repeat, Pause, Hush, End,
+  type anything for Sensei to say, move the head, and switch auto-look and Jev.
+
+Behind it are two gateway routes: `GET /events` (a server-sent event stream of every session
+event and every message to the phone) and `POST /watch` (a receive-only WebRTC call carrying the
+phone's live tracks).
 
 ### The app, the console and the network
 
@@ -344,7 +377,7 @@ are fixed and covered by tests. Write-up:
 
 ## Tests
 
-**142 automated tests**, all passing (`cd gateway && pytest`):
+**144 automated tests**, all passing (`cd gateway && pytest`):
 
 | File | Tests | What |
 |---|---|---|
@@ -352,7 +385,7 @@ are fixed and covered by tests. Write-up:
 | `test_ears.py` | 23 | Real Whisper on synthesized speech, silence and clicks ignored, loud noise that isn't speech, the phantom rule, pauses mid-sentence |
 | `test_head.py` | 14 | The serial protocol and head control against a simulated ESP32 |
 | `test_gaze.py` | 12 | Face framing in a simulated room (including a servo mounted backwards), where to look, Jev and its guard rails |
-| `test_gateway.py` | 12 | End to end: a real WebRTC call from a fake phone, recording, `/say`, a session with a hint, a spoken question answered, the access key, TURN credentials, swapping the model and Jev at runtime |
+| `test_gateway.py` | 14 | End to end: a real WebRTC call from a fake phone, recording, `/say`, a session with a hint, a spoken question answered, the access key, TURN credentials, swapping the model and Jev at runtime, a SenseiDesk watching the live call |
 | `test_plant_contract.py` | 6 | The demo page's contract (projectile, first error on line 1, correct page left alone) through the tutor |
 
 No hardware needed: `fake_phone.py` makes the same WebRTC call as the app (streams a sample page,
