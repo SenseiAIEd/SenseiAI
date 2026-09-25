@@ -587,10 +587,10 @@ class FakeJev:
     """Answers in the real /v1/systemone shape, so decide_utterance's parsing is exercised too."""
 
     def __init__(self, respond=0.9, about="subject", needs_page=0.9, new_problem=0.0,
-                 which=None, enabled=True, fail=False):
+                 which=None, followup=0.1, enabled=True, fail=False):
         self.enabled, self.fail, self.calls = enabled, fail, []
         self.a = {"respond": respond, "about": about, "needs_page": needs_page,
-                  "new_problem": new_problem, "which": which}
+                  "new_problem": new_problem, "which": which, "followup": followup}
 
     def ask(self, state, questions):
         self.calls.append((state, questions))
@@ -601,7 +601,7 @@ class FakeJev:
             "respond": {"type": "noul", "noul": a["respond"]},
             "about": {"type": "choice", "choice": a["about"], "confidence": 0.9,
                       "probabilities": {a["about"]: 0.9}},
-            "followup": {"type": "noul", "noul": 0.1},
+            "followup": {"type": "noul", "noul": a["followup"]},
             "needs_page": {"type": "noul", "noul": a["needs_page"]},
             "new_problem": {"type": "noul", "noul": a["new_problem"]},
         }
@@ -739,9 +739,20 @@ def test_thanks_after_a_question_is_still_not_an_answer():
     assert h.whys()[-1] == "finished" and brain.instructions == []
 
 
+def test_jev_high_followup_uses_the_answer_window_floor_even_without_a_question_mark():
+    """Sensei's last line may lack '?'; followup still lowers the reply floor."""
+    # respond=0.35 is under the default skip_below (0.40) but over skip_if_answer_below (0.30)
+    h, brain = with_jev(FakeJev(respond=0.35, about="subject", followup=0.80), REPLY)
+    h.run(h.tutor.speak("Try subtracting five from both sides.", "hint_1"))
+    assert not h.tutor.awaiting_answer()  # no trailing '?'
+    h.run(h.tutor.hear("okay, so x equals three", PAGE))
+    assert h.whys()[-1] == "reply"
+
+
 def test_each_backend_brings_its_own_floors():
     """Local models spread probabilities differently: 0.30 on JevK5 is a real question."""
     from jev import BACKENDS, Jev
+    assert "jevk8" in BACKENDS
     j = Jev(BACKENDS["jevk5"]["url"], backend="jevk5")
     assert (j.skip_below, j.no_page_below) == (0.25, 0.15) and j.headers == {}
     j.key = "k"
@@ -749,6 +760,9 @@ def test_each_backend_brings_its_own_floors():
     assert j.skip_below == 0.40 and j.headers["Authorization"] == "Bearer k" and j.where == "hosted"
     j.use("semif")
     assert j.skip_below == 0.15 and j.url.endswith(":8096/v1/systemone") and j.headers == {}
+    j.use("jevk8")  # floors provisional copy of jevk5
+    assert (j.skip_below, j.skip_if_answer_below, j.no_page_below) == (0.25, 0.15, 0.15)
+    assert j.url.endswith(":8099/v1/systemone") and j.headers == {}
     with pytest.raises(ValueError):
         j.use("nonsense")
 
