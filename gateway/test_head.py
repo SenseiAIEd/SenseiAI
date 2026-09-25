@@ -65,7 +65,7 @@ def test_spoken_gaze_commands(said, preset):
     assert gaze_command(said) == preset
 
 
-def test_console_and_voice_move_the_head(gateway, esp32, monkeypatch):  # noqa: F811
+def test_console_and_voice_move_the_head(gateway, esp32, monkeypatch, tmp_path):  # noqa: F811
     base, _ = gateway
     monkeypatch.setattr(server, "HEAD", Head(esp32.port, connect=connect))
     http = httpx.Client(base_url=base, timeout=10)
@@ -77,21 +77,33 @@ def test_console_and_voice_move_the_head(gateway, esp32, monkeypatch):  # noqa: 
     assert http.post("/head", json={"preset": "ceiling"}).status_code == 400
     assert http.get("/status").json()["head"]["connected"]
 
-    class Channel:
-        readyState = "open"
-        sent = []
-
-        def send(self, msg):
-            self.sent.append(json.loads(msg))
-
-    async def speak():
-        s = server.Session.__new__(server.Session)  # just enough of a session to hear speech
-        s.channel, s.tutor, s.last_heard, s.log = Channel(), None, None, lambda *a, **k: None
-        await s.heard("Sensei, look at me", {})
-        return s.channel.sent
-    sent = asyncio.run(speak())
+    sent = asyncio.run(hear_in_session(tmp_path, "Sensei, look at me"))
     assert server.HEAD.preset == "student"
-    assert sent[-1] == {"type": "say", "text": "Okay, looking at you.", "why": "gaze"}
+    assert {"type": "say", "text": "Okay, looking at you.", "why": "gaze"} in sent
+
+
+class Channel:
+    readyState = "open"
+
+    def __init__(self):
+        self.sent = []
+
+    def send(self, msg):
+        self.sent.append(json.loads(msg))
+
+
+def bare_session(tmp_path, monkeypatch=None):
+    """A Session without a WebRTC call: enough to hear speech and move the head."""
+    server.RECORD_DIR = tmp_path
+    s = server.Session(pc=None)
+    s.channel = Channel()
+    return s
+
+
+async def hear_in_session(tmp_path, text):
+    s = bare_session(tmp_path)
+    await s.heard(text, {})
+    return s.channel.sent
 
 
 def test_no_head_configured(gateway, monkeypatch):  # noqa: F811
@@ -100,3 +112,38 @@ def test_no_head_configured(gateway, monkeypatch):  # noqa: F811
     http = httpx.Client(base_url=base, timeout=10)
     assert http.post("/head", json={"preset": "home"}).status_code == 409
     assert gaze_command("look at me") == "student"  # parsed, but the server only acts with a head
+
+
+def test_presets_and_limits_are_set_from_the_gateway(esp32):
+    async def run():
+        head = Head(esp32.port, connect=connect)
+        assert await head.connect()
+        assert head.state()["limits"] == {"pan": (10, 170), "tilt": (40, 150)}
+        await head.move(100, 120)
+        assert await head.save("notebook")
+        assert head.state()["presets"]["notebook"] == (100, 120)
+        await head.look("home")
+        assert await head.look("notebook") and (head.pan, head.tilt) == (100, 120)
+        assert await head.set_limit("tilt", 60, 200)                  # 200 is past the hard limit
+        assert head.state()["limits"]["tilt"] == (60, 160)
+        assert await head.move(90, 20) and head.tilt == 60            # can't over-rotate
+        assert not await head.set_limit("tilt", 90, 80)               # nonsense is refused
+        head.close()
+    asyncio.run(run())
+
+
+def test_old_firmware_without_settings_still_works(esp32):
+    real = esp32._handle
+
+    def v1(line):  # the build guide's original sketch: no PRESETS?/LIMITS?
+        if line.split()[0].upper() in ("PRESETS?", "LIMITS?", "SAVE", "LIMIT", "NUDGE", "STOP", "RELAX"):
+            return esp32._reply("ERR unknown command")
+        real(line)
+    esp32._handle = v1
+
+    async def run():
+        head = Head(esp32.port, connect=connect)
+        assert await head.connect() and head.error is None and "presets" not in head.state()
+        assert await head.look("student") and await head.nudge(5, 0)
+        head.close()
+    asyncio.run(run())

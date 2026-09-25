@@ -49,6 +49,8 @@
         <div id="eyesMeta" class="stats" style="margin:0"></div>
         <div id="eyesSaid" class="said"></div>
         <pre id="eyesRead"></pre>
+        <h3 style="margin-top:10px">Last glance at the student</h3>
+        <img id="faceImg" alt="no glance yet" style="max-height:160px;width:auto">
         <h3 style="margin-top:10px">Sensei's ears: last heard</h3>
         <div id="ears" class="said"></div>
         <h3 style="margin-top:10px">Conversation (what Sensei remembers)</h3>
@@ -78,6 +80,13 @@
       <button class="head" data-nt="5" title="tilt 5° the other way">▼</button>
       <button class="head" data-np="5" title="pan right 5°">▶</button>
     </div>
+    <div class="row">
+      <button class="head" data-save="notebook" title="store where the head points now as the notebook view (kept on the ESP32)">Save as notebook</button>
+      <button class="head" data-save="student" title="store where the head points now as the student view">Save as student</button>
+      <button class="head" data-face="1" title="centre the student's face from here, and read their expression">Find my face</button>
+      <button class="head" id="autoLook">Auto look: …</button>
+    </div>
+    <div id="headWhy" class="stats" style="margin:0"></div>
     <label for="brain">Tutor brain (switching reloads it on the Spark: a 30B takes a minute or two)</label>
     <div class="row">
       <select id="brain" style="flex:1"></select>
@@ -145,7 +154,8 @@ document.querySelectorAll("button.tutor").forEach((b) => (b.onclick = async () =
 document.querySelectorAll("button.head").forEach((b) => (b.onclick = async () => {
   $("err").textContent = "";
   const d = b.dataset;
-  const body = d.preset ? { preset: d.preset } : { nudge_pan: Number(d.np || 0), nudge_tilt: Number(d.nt || 0) };
+  const body = d.preset ? { preset: d.preset } : d.save ? { save: d.save } : d.face ? { find_face: true }
+    : b.id === "autoLook" ? { auto: !autoLook } : { nudge_pan: Number(d.np || 0), nudge_tilt: Number(d.nt || 0) };
   const res = await api("/head", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
   if (!res.ok) $("err").textContent = (await res.json()).detail || res.statusText;
 }));
@@ -207,6 +217,7 @@ $("jevToggle").onclick = async () => {
   loadJev();
 };
 
+let autoLook = false, lastGlance = null;
 async function poll() {
   try {
     const res = await api("/status");
@@ -217,6 +228,22 @@ async function poll() {
       : !h.connected ? `· not connected on ${h.port}${h.error ? ": " + h.error : ""}`
       : `· pan ${h.pan}° tilt ${h.tilt}°` + (h.preset ? ` (${h.preset})` : "") + " · copy these into the firmware presets";
     document.querySelectorAll("button.head").forEach((b) => (b.disabled = !h));
+    autoLook = !!(h && h.auto);
+    $("autoLook").textContent = `Auto look: ${autoLook ? "on" : "off"}`;
+    $("headWhy").textContent = !h ? "" : [
+      h.looking_at ? `looking at: ${h.looking_at}` : "",
+      h.why ? `why: ${h.why}` : "",
+      h.jev ? `jev: ${h.jev.choice} (${h.jev.confidence})` : "",
+      h.manual_hold_s ? `holding for you ${h.manual_hold_s}s` : "",
+      h.limits ? `limits pan ${h.limits.pan.join("–")}°, tilt ${h.limits.tilt.join("–")}°` : "",
+      h.presets ? "presets " + Object.entries(h.presets).map(([n, [p, t]]) => `${n} ${p}/${t}`).join(", ") : "",
+      h.glance ? `last glance: ${h.glance.framed ? "face centred" : h.glance.note} in ${h.glance.steps} moves` +
+        (h.glance.expression ? `, looked ${h.glance.expression}` : "") : "",
+    ].filter(Boolean).join(" · ");
+    if (h && h.glance && h.glance.at !== lastGlance) {
+      lastGlance = h.glance.at;
+      $("faceImg").src = `/face.jpg?key=${encodeURIComponent(KEY)}&t=${Date.now()}`;
+    }
     $("dot").className = "dot" + (s.connected ? " live" : s.state ? " lost" : "");
     $("state").textContent = s.connected ? "live" : s.state || "no phone";
     for (const id of ["send", "hush"]) $(id).disabled = !(s.connected && s.channel === "open");

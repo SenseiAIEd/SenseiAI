@@ -10,9 +10,8 @@ import os
 import threading
 import time
 
-PAN_MIN, PAN_MAX = 10, 170
-TILT_MIN, TILT_MAX = 40, 150
-PRESETS = {"home": (90, 90), "notebook": (90, 135), "student": (90, 70)}
+HARD_PAN = (5, 175)
+HARD_TILT = (30, 160)
 
 
 def clamp(v: int, lo: int, hi: int) -> int:
@@ -25,6 +24,9 @@ class FakeHead:
         self.port = os.ttyname(slave)
         self._slave = slave
         self.pan = self.tilt = 90
+        self.limits = {"pan": [10, 170], "tilt": [40, 150]}
+        self.presets = {"home": [90, 90], "notebook": [90, 135], "student": [90, 70]}
+        self.relaxed = False
         self.step_s = step_s   # seconds per 1-degree step (the firmware defaults to 15 ms)
         self.commands: list[str] = []
         self._stop = False
@@ -34,7 +36,8 @@ class FakeHead:
         os.write(self.master, (text + "\r\n").encode())
 
     def _go(self, pan: int, tilt: int):
-        pan, tilt = clamp(pan, PAN_MIN, PAN_MAX), clamp(tilt, TILT_MIN, TILT_MAX)
+        pan, tilt = clamp(pan, *self.limits["pan"]), clamp(tilt, *self.limits["tilt"])
+        self.relaxed = False
         self._reply("OK")
         steps = max(abs(pan - self.pan), abs(tilt - self.tilt))
         time.sleep(steps * self.step_s)
@@ -57,11 +60,37 @@ class FakeHead:
                 self._go(int(arg), self.tilt)
             elif cmd == "TILT":
                 self._go(self.pan, int(arg))
+            elif cmd == "NUDGE":
+                p, t = arg.split()
+                self._go(self.pan + int(p), self.tilt + int(t))
             elif cmd == "PRESET":
-                if arg.lower() not in PRESETS:
+                if arg.lower() not in self.presets:
                     self._reply("ERR unknown preset")
                 else:
-                    self._go(*PRESETS[arg.lower()])
+                    self._go(*self.presets[arg.lower()])
+            elif cmd == "SAVE":
+                if arg.lower() not in self.presets:
+                    self._reply("ERR unknown preset")
+                else:
+                    self.presets[arg.lower()] = [self.pan, self.tilt]
+                    self._reply("OK")
+            elif cmd == "PRESETS?":
+                self._reply("PRESETS " + " ".join(f"{n} {p} {t}" for n, (p, t) in self.presets.items()))
+            elif cmd == "LIMIT":
+                axis, lo, hi = arg.split()
+                hard = HARD_PAN if axis.upper() == "PAN" else HARD_TILT
+                if axis.upper() not in ("PAN", "TILT") or int(lo) >= int(hi):
+                    raise ValueError
+                self.limits[axis.lower()] = [clamp(int(lo), *hard), clamp(int(hi), *hard)]
+                self._reply("OK")
+            elif cmd == "LIMITS?":
+                self._reply("LIMITS {} {} {} {}".format(*self.limits["pan"], *self.limits["tilt"]))
+            elif cmd == "STOP":
+                self._reply("OK")
+                self._reply(f"ARRIVED {self.pan} {self.tilt}")
+            elif cmd == "RELAX":
+                self.relaxed = True
+                self._reply("OK")
             elif cmd == "SPEED":
                 self._reply("OK")
             else:

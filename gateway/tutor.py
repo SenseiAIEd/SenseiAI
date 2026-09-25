@@ -486,6 +486,7 @@ class Tutor:
         self.mistakes_found: list[str] = []
         self.mistakes_fixed: list[str] = []
         self.hints_given = 0
+        self.student_face: Optional[tuple[str, float]] = None  # (expression, clock) from the head's last glance
         self.problems_finished = 0
         self._finished_problem: Optional[str] = None
         self._task: Optional[asyncio.Task] = None
@@ -776,6 +777,22 @@ class Tutor:
         await task
 
     # -- deciding what to say ------------------------------------------------------------
+    FACE_FRESH_S = 60.0
+
+    def note_face(self, expression: str):
+        """The pan-tilt head glanced at the student (gaze.py) and saw this expression."""
+        self.student_face = (expression, self.clock())
+        self.log_event("student_face", expression=expression)
+
+    def _face_note(self) -> str:
+        if not self.student_face or self.clock() - self.student_face[1] > self.FACE_FRESH_S:
+            return ""
+        expression, at = self.student_face
+        if expression in ("engaged", "happy", "away"):
+            return ""
+        return (f"A glance at the student's face {self.clock() - at:.0f} seconds ago: they looked {expression}. "
+                "Let that set your tone (patient, encouraging); don't mention their face.\n")
+
     def _instructions(self, request: Optional[str], said: Optional[str] = None) -> str:
         if request == "talk":
             history = self.recent_conversation(skip_last=1)  # the last turn is `said` itself
@@ -789,6 +806,7 @@ class Tutor:
                        "about something else, go with them - set \"focus\" and help with the new "
                        "one. Never tell them to go back.\n" if self.problem else "")
                     + (f"What you last saw in the camera: {self.last_seen}\n" if self.last_seen else "")
+                    + self._face_note()
                     + f"The student just said out loud: \"{said}\"\n"
                     "Decide \"about\" first, then answer accordingly. The camera image is attached so you can "
                     "use it IF they were asking about it - if they weren't, it is background you should ignore, "
@@ -796,7 +814,7 @@ class Tutor:
                     "honestly whether it's on the right track, without giving away the final answer."
                     + (f" Earlier you asked them about step {self.mistake[0]} of their work."
                        if self.mistake else ""))
-        parts = []
+        parts = [self._face_note().strip()] if self._face_note() else []
         if self.problem:
             parts.append(f"The problem in focus is: {self.problem}. Judge only the lines that "
                          "belong to it; put any other problem on the page in \"other_problems\".")

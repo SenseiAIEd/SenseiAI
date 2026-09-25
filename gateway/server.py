@@ -41,6 +41,7 @@ from pydantic import BaseModel
 from typing import Optional
 
 from ears import Ears, Transcriber
+from gaze import Attention, FaceFinder, Framer, Moment, read_expression
 from head import GAZE_REPLY, PRESETS, Head, gaze_command
 from jev import BACKENDS, Jev
 from tutor import Brain, Tutor
@@ -80,6 +81,9 @@ FEATURES = ["look", "talk", "memory", "pause"]
 
 # The tutor's ears: speech-to-text for voice mode (see ears.py). SENSEI_STT=off disables it.
 HEAD = Head.from_env()  # the pan-tilt head, if SENSEI_HEAD_PORT names its USB serial port
+# With a head: glance at the student when it helps, and centre their face (gaze.py).
+AUTO_LOOK = {"on": os.environ.get("SENSEI_AUTO_LOOK", "on") != "off"}
+MANUAL_HOLD_S = 30.0  # after "look at me" or a console button, Sensei doesn't move on its own for this long
 TRANSCRIBER = Transcriber() if os.environ.get("SENSEI_STT", "on") != "off" else None
 
 log = logging.getLogger("sensei")
@@ -214,6 +218,18 @@ class Session:
         self.voice = False  # the student's voice mode: the phone mutes its mic unless this is on
         self.last_look: dict | None = None  # the latest frame the model judged, and what it made of it
         self.last_heard: str | None = None  # the latest thing the student said (voice mode)
+        self.last_heard_at = -1e9
+        # The head (gaze.py): where it points, and the last frame of the page while it pointed there.
+        self.latest_frame_at = 0.0
+        self.looking_at = "notebook"  # notebook | student | elsewhere | moving
+        self.looked_at_since = time.monotonic()
+        self.last_glance_at = -1e9
+        self.manual_until = 0.0
+        self.page_frame = None
+        self.glance = None       # gaze.Glance: the last look at the student
+        self.face_jpeg: bytes | None = None
+        self.attention = Attention(JEV)
+        self.framer: Framer | None = None  # made on the first glance
 
     def route(self) -> str | None:
         """How media reaches us: the phone's side of the chosen ICE pair, e.g. "relay 192.0.2.2:49160"
@@ -256,7 +272,9 @@ class Session:
             if now - last_jpeg >= 1.0 / PREVIEW_FPS:
                 last_jpeg = now
                 img = frame.to_ndarray(format="bgr24")
-                self.latest_frame = img
+                self.latest_frame, self.latest_frame_at = img, time.monotonic()
+                if self.looking_at == "notebook":
+                    self.page_frame = img
                 ok, jpg = await asyncio.to_thread(cv2.imencode, ".jpg", img, [cv2.IMWRITE_JPEG_QUALITY, 75])
                 if ok:
                     self.latest_jpeg = jpg.tobytes()
@@ -276,10 +294,14 @@ class Session:
                            save_frame=self.save_judged_frame, chat_brain=CHAT_BRAIN, decider=JEV)
         await self.tutor.start()
         if HEAD is not None:  # the tutor watches the notebook
-            asyncio.ensure_future(HEAD.look("notebook"))
+            asyncio.ensure_future(self.point("notebook", "session start"))
         if not any(getattr(t, "sensei_role", "") == "tutor" for t in self.tasks):
             task = asyncio.ensure_future(self.run_tutor())
             task.sensei_role = "tutor"
+            self.tasks.append(task)
+        if HEAD is not None and not any(getattr(t, "sensei_role", "") == "gaze" for t in self.tasks):
+            task = asyncio.ensure_future(self.run_gaze())
+            task.sensei_role = "gaze"
             self.tasks.append(task)
 
     def save_judged_frame(self, img) -> str:
@@ -297,7 +319,8 @@ class Session:
             t = self.tutor
             if t is None or t.phase != "watching":
                 continue
-            if self.latest_frame is not None and not t.thinking:
+            # Only the page is the page: frames of the student's face are not homework.
+            if self.latest_frame is not None and not t.thinking and self.looking_at == "notebook":
                 asyncio.ensure_future(t.on_frame(self.latest_frame))
             if time.monotonic() - last_tick >= 1.0:
                 last_tick = time.monotonic()
@@ -306,20 +329,21 @@ class Session:
     async def heard(self, text: str, info: dict):
         """The student said something in voice mode."""
         self.send({"type": "heard", "text": text})
-        self.last_heard = text
+        self.last_heard, self.last_heard_at = text, time.monotonic()
         preset = gaze_command(text) if HEAD is not None else None
         if preset is not None:
             await self.gaze(preset, text, info)
         elif self.tutor is not None:
             self.log("heard", text=text, **info)
-            await self.tutor.hear(text, self.latest_frame)
+            await self.tutor.hear(text, self.page())
         else:
             self.log("student_said", text=text, **info)
 
     async def gaze(self, preset: str, text: str, info: dict):
         """'Look at my notebook': point the head, and say so (a command, not a question for the model)."""
         self.log("gaze", preset=preset, text=text, **info)
-        ok = await HEAD.look(preset)
+        self.manual_until = time.monotonic() + MANUAL_HOLD_S
+        ok = await self.point(preset, "asked out loud")
         reply = GAZE_REPLY[preset] if ok else "Sorry, I can't move my head right now."
         if self.tutor is not None and self.tutor.phase == "watching":
             self.tutor.remember("student", text)
@@ -327,11 +351,90 @@ class Session:
         else:
             self.send({"type": "say", "text": reply, "why": "gaze"})
 
+    # -- the head: where to look ------------------------------------------------------------
+    def page(self):
+        """The newest frame of the page, even while the head looks at the student."""
+        if self.looking_at == "notebook" or self.page_frame is None:
+            return self.latest_frame
+        return self.page_frame
+
+    async def frame_after(self, t: float, timeout: float = 3.0):
+        """The first frame that left the phone after monotonic time t (+ the video's delay)."""
+        deadline = time.monotonic() + timeout
+        while self.latest_frame_at < t + 0.35 and time.monotonic() < deadline and not self.closed:
+            await asyncio.sleep(0.05)
+        return self.latest_frame
+
+    async def point(self, target: str, why: str, read_face: bool = True) -> bool:
+        """Turn the head to a preset. At the student: centre their face, then read it."""
+        self.looking_at = "moving"
+        ok = await HEAD.look(target)
+        self.looking_at = target if ok else "elsewhere"
+        self.looked_at_since = time.monotonic()
+        self.log("look", at=target, why=why, ok=ok, **({"error": HEAD.error} if not ok else {}))
+        if ok and target == "student":
+            self.last_glance_at = time.monotonic()
+            await self.glance_at_student(read_face)
+        return ok
+
+    async def glance_at_student(self, read_face: bool = True):
+        if self.framer is None or self.framer.head is not HEAD:
+            self.framer = Framer(HEAD, FaceFinder(), self.frame_after)
+        self.looking_at = "moving"
+        try:
+            g = await self.framer.frame_face()
+        finally:
+            self.looking_at = "student"
+        self.looked_at_since = time.monotonic()
+        brain = CHAT_BRAIN or BRAIN
+        if g.image is not None and g.face is not None and read_face and brain is not None:
+            try:
+                g.expression = await asyncio.to_thread(read_expression, brain, g.image, g.face)
+            except Exception as e:
+                g.note = (g.note + f"; expression unavailable: {e}").strip("; ")
+        if g.image is not None:
+            ok, jpg = await asyncio.to_thread(cv2.imencode, ".jpg", g.image, [cv2.IMWRITE_JPEG_QUALITY, 85])
+            if ok:
+                self.face_jpeg = jpg.tobytes()
+        self.glance = g
+        self.log("glance", **g.summary())
+        if g.expression and self.tutor is not None:
+            self.tutor.note_face(g.expression)
+
+    def moment(self) -> Moment:
+        t, now = self.tutor, time.monotonic()
+        return Moment(
+            looking_at=self.looking_at, seconds_here=now - self.looked_at_since,
+            seconds_since_glance=now - self.last_glance_at,
+            sensei_asked_a_question=t.awaiting_answer(),
+            seconds_since_sensei_spoke=t.clock() - t.last_spoke_at,
+            seconds_since_student_spoke=now - self.last_heard_at,
+            student_last_said=self.last_heard or "",
+            seconds_since_page_activity=t.clock() - t.last_activity,
+            hints_given=t.hints_given,
+            last_expression=(self.glance.expression if self.glance and self.glance.expression else "unknown"),
+            sensei_thinking=t.thinking)
+
+    async def run_gaze(self):
+        """Once a second: should the head look somewhere else?"""
+        while True:
+            await asyncio.sleep(1.0)
+            t = self.tutor
+            if (not AUTO_LOOK["on"] or t is None or t.phase != "watching" or self.looking_at == "moving"
+                    or time.monotonic() < self.manual_until):
+                continue
+            try:
+                target = await asyncio.to_thread(self.attention.decide, self.moment())
+                if target is not None:
+                    await self.point(target, self.attention.last_reason)
+            except Exception:
+                log.exception("gaze decision failed")
+
     async def tutor_request(self, what: str, minutes: float = 10):
         if what == "start":
             await self.start_tutor(minutes)
         elif self.tutor is not None:
-            await self.tutor.request(what, self.latest_frame)
+            await self.tutor.request(what, self.page())
 
     async def close(self):
         """Stop recording and hang up. Every caller waits until session.mp4 is finalized."""
@@ -369,6 +472,12 @@ class Gaze(BaseModel):
     tilt: int | None = None
     nudge_pan: int = 0         # ... or relative, for calibrating presets from the console
     nudge_tilt: int = 0
+    save: str | None = None    # store where the head points now as this preset (on the ESP32)
+    limit: str | None = None   # "pan" | "tilt": set that axis's soft limits to [lo, hi]
+    lo: int | None = None
+    hi: int | None = None
+    find_face: bool = False    # centre the student's face from where the head points now
+    auto: bool | None = None   # switch automatic glances on/off
 
 
 class TutorAction(BaseModel):
@@ -506,21 +615,60 @@ async def head(body: Gaze):
     """Point the pan-tilt head: a preset, absolute angles, or a nudge."""
     if HEAD is None:
         raise HTTPException(409, "no pan-tilt head (set SENSEI_HEAD_PORT, e.g. /dev/ttyUSB0)")
+    if body.auto is not None:
+        AUTO_LOOK["on"] = body.auto
+        return {"ok": True, "head": head_state()}
+    live = session is not None and not session.closed
+    if live:
+        session.manual_until = time.monotonic() + MANUAL_HOLD_S
     if body.preset is not None:
         if body.preset not in PRESETS:
             raise HTTPException(400, f"preset must be one of {', '.join(PRESETS)}")
-        ok = await HEAD.look(body.preset)
+        ok = await (session.point(body.preset, "console") if live else HEAD.look(body.preset))
     elif body.pan is not None and body.tilt is not None:
         ok = await HEAD.move(body.pan, body.tilt)
     elif body.nudge_pan or body.nudge_tilt:
         ok = await HEAD.nudge(body.nudge_pan, body.nudge_tilt)
+    elif body.save is not None:
+        if body.save not in PRESETS:
+            raise HTTPException(400, f"preset must be one of {', '.join(PRESETS)}")
+        ok = await HEAD.save(body.save)
+    elif body.limit is not None:
+        if body.limit not in ("pan", "tilt") or body.lo is None or body.hi is None or body.lo >= body.hi:
+            raise HTTPException(400, "limit needs axis pan|tilt and lo < hi")
+        ok = await HEAD.set_limit(body.limit, body.lo, body.hi)
+    elif body.find_face:
+        if not live:
+            raise HTTPException(409, "phone not connected")
+        await session.glance_at_student()
+        ok = True
     else:
         ok = await HEAD.connect()
     if session is not None and not session.closed:
         session.log("head", request=body.model_dump(exclude_defaults=True), ok=ok, **HEAD.state())
     if not ok:
         raise HTTPException(502, HEAD.error or "pan-tilt head failed")
-    return {"ok": True, "head": HEAD.state()}
+    return {"ok": True, "head": head_state()}
+
+
+def head_state() -> dict | None:
+    if HEAD is None:
+        return None
+    st = {**HEAD.state(), "auto": AUTO_LOOK["on"]}
+    if session is not None:
+        st.update(looking_at=session.looking_at, why=session.attention.last_reason,
+                  jev=session.attention.last_jev,
+                  glance=session.glance.summary() if session.glance else None,
+                  manual_hold_s=max(0, round(session.manual_until - time.monotonic())))
+    return st
+
+
+@app.get("/face.jpg")
+async def face_jpg():
+    """The frame from Sensei's last glance at the student."""
+    if session is None or session.face_jpeg is None:
+        raise HTTPException(404, "no glance yet")
+    return Response(session.face_jpeg, media_type="image/jpeg")
 
 
 @app.post("/hush")
@@ -541,7 +689,7 @@ async def hangup():
 @app.get("/status")
 async def status():
     if session is None:
-        return {"connected": False, "head": HEAD.state() if HEAD else None}
+        return {"connected": False, "head": head_state()}
     return {
         "connected": session.pc.connectionState == "connected" and not session.closed,
         "state": session.pc.connectionState,
@@ -560,7 +708,7 @@ async def status():
         "brain": BRAIN.model if BRAIN else None,
         "jev": jev_state(),
         "ears": TRANSCRIBER.name if TRANSCRIBER else None,
-        "head": HEAD.state() if HEAD else None,
+        "head": head_state(),
     }
 
 

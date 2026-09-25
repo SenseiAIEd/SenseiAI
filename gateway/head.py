@@ -69,6 +69,24 @@ class PanTilt:
     def speed(self, ms_per_step: int):
         self._send(f"SPEED {ms_per_step}")
 
+    def save(self, name: str):
+        """Store where the head points now as preset `name` (kept in the ESP32's flash)."""
+        self._send(f"SAVE {name}")
+
+    def presets(self) -> dict[str, tuple[int, int]]:
+        words = self._send("PRESETS?").split()[1:]
+        return {words[i]: (int(words[i + 1]), int(words[i + 2])) for i in range(0, len(words) - 2, 3)}
+
+    def limits(self) -> dict[str, tuple[int, int]]:
+        _, pmin, pmax, tmin, tmax = self._send("LIMITS?").split()
+        return {"pan": (int(pmin), int(pmax)), "tilt": (int(tmin), int(tmax))}
+
+    def set_limit(self, axis: str, lo: int, hi: int):
+        self._send(f"LIMIT {axis.upper()} {lo} {hi}")
+
+    def relax(self):
+        self._send("RELAX")
+
     def position(self) -> tuple[int, int]:
         _, pan, tilt = self._send("POS?").split()
         return int(pan), int(tilt)
@@ -88,6 +106,7 @@ class Head:
         self.tilt: Optional[int] = None
         self.preset: Optional[str] = None
         self.error: Optional[str] = None
+        self.saved: dict = {}      # the firmware's presets and limits, once read
         self._lock = asyncio.Lock()
 
     @classmethod
@@ -97,7 +116,7 @@ class Head:
 
     def state(self) -> dict:
         return {"port": self.port, "connected": self.dev is not None, "pan": self.pan,
-                "tilt": self.tilt, "preset": self.preset, "error": self.error}
+                "tilt": self.tilt, "preset": self.preset, "error": self.error, **self.saved}
 
     async def _run(self, what: str, fn) -> bool:
         """Run one blocking command, (re)connecting first if needed. Returns False on failure."""
@@ -121,7 +140,37 @@ class Head:
                 return False
 
     async def connect(self) -> bool:
-        return await self._run("connect", lambda d: d.position())
+        ok = await self._run("connect", lambda d: d.position())
+        if ok:
+            await self.refresh()
+        return ok
+
+    async def refresh(self):
+        """Read presets and limits (older firmware without them: leave empty)."""
+        def read(d):
+            self.saved = {"presets": d.presets(), "limits": d.limits()}
+            return d.position()
+        if not await self._run("read settings", read):
+            self.saved, self.error = {}, None  # firmware from before SAVE/LIMITS: fine, just no settings
+
+    async def save(self, name: str) -> bool:
+        def save(d):
+            d.save(name)
+            return d.position()
+        ok = await self._run(f"save {name}", save)
+        if ok:
+            self.preset = name
+            await self.refresh()
+        return ok
+
+    async def set_limit(self, axis: str, lo: int, hi: int) -> bool:
+        def lim(d):
+            d.set_limit(axis, lo, hi)
+            return d.position()
+        ok = await self._run(f"limit {axis}", lim)
+        if ok:
+            await self.refresh()
+        return ok
 
     async def look(self, preset: str) -> bool:
         ok = await self._run(f"preset {preset}", lambda d: d.preset(preset))

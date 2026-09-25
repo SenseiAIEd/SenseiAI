@@ -154,11 +154,40 @@ Restart the gateway. The head is off unless `SENSEI_HEAD_PORT` is set.
 
 - **Start** points the head at the notebook.
 - **Voice:** "look at my notebook" / "look down", "look at me" / "look up", "look straight".
-  These move the head and Sensei says so; other questions still go to the tutor.
-- **Console:** Notebook / Student / Home buttons, and ◀ ▲ ▼ ▶ nudges 5° at a time. The console
-  shows the current angles: aim at the notebook, copy the numbers into the firmware's
-  `presets[]`, and upload again.
+  These move the head and Sensei says so; other questions still go to the tutor. After a voice
+  command or a console button, Sensei doesn't move the head on its own for 30 s.
+- **Calibrate once** (no re-flashing): nudge with ◀ ▲ ▼ ▶ until the phone frames the notebook,
+  press **Save as notebook**; same for **Save as student**. Presets live in the ESP32's flash.
+- **No over-rotation:** every command is clamped twice on the ESP32: hard limits compiled into
+  the sketch (`HARD_PAN_*`, `HARD_TILT_*`: set them from what the bracket can physically do), and
+  soft limits you can narrow at runtime (`POST /head {"limit": "tilt", "lo": 60, "hi": 140}`).
+  The head also remembers where it was left, so power-up no longer snaps it to the centre.
 - A pulled cable never stops the tutor; the console shows the error and the next command reconnects.
+
+### Looking at the student (gaze.py)
+
+- **When** (Attention, once a second): Sensei glances up while waiting for the answer to a
+  question it asked, when the student sounds stuck ("this is hard", "I don't get it"), or when
+  the page has been still for 40 s. A glance lasts up to 8 s (longer while the student talks),
+  then the head goes back to the notebook; at most one unprompted glance per 20 s. With Jev on,
+  one extra Jev question ("notebook, student or stay?") can overrule these rules when it is
+  confident; the guard rails still apply.
+- **How far** (Framer): at the student preset a face detector (YuNet, `models/`, a few ms on the
+  CPU) finds the face; the angle to it comes from the camera's field of view; the head nudges and
+  looks again until the face sits in the upper middle of the frame. The first nudges are small,
+  and if a servo turns the "wrong" way for how it is mounted, the framer notices and flips that
+  axis (log line tells you which `SENSEI_HEAD_*_SIGN` to set). **Find my face** in the console
+  runs just this step.
+- **Expression:** the framed face goes to the vision model for one word (engaged, confused,
+  frustrated, bored, happy, tired, away). The tutor uses it to set its tone for the next minute.
+- Frames of the student's face are never judged as homework; a question asked while the head
+  looks at the student is answered with the last frame of the page.
+
+| Setting | Default | |
+|---|---|---|
+| `SENSEI_AUTO_LOOK` | `on` | `off`: the head only moves when asked (also a console toggle) |
+| `SENSEI_CAM_FOV` | `64,50` | camera field of view in degrees, long side and short side |
+| `SENSEI_HEAD_PAN_SIGN` / `_TILT_SIGN` | `1` | `-1` if a servo is mounted the other way round |
 
 No hardware yet? `python fake_head.py` prints a pseudo-terminal that behaves like the ESP32; set
 `SENSEI_HEAD_PORT` to it.
@@ -244,7 +273,8 @@ pytest                                                             # end-to-end 
 | POST | `/offer` | Phone's WebRTC offer in, answer out; starts a session (replaces any old one) |
 | POST | `/say` | `{"text": "..."}` -> spoken on the phone (409 if no phone) |
 | POST | `/tutor` | `{"action": "start" \| "hint" \| "check" \| "repeat" \| "end", "minutes": 10}`, like the phone's buttons |
-| POST | `/head` | `{"preset": "notebook" \| "student" \| "home"}`, `{"pan": 90, "tilt": 120}` or `{"nudge_pan": -5}` (409 if no head) |
+| POST | `/head` | `{"preset": "notebook"}`, `{"pan": 90, "tilt": 120}`, `{"nudge_pan": -5}`, `{"save": "student"}`, `{"limit": "tilt", "lo": 60, "hi": 140}`, `{"find_face": true}`, `{"auto": false}` (409 if no head) |
+| GET | `/face.jpg` | The frame from the last glance at the student |
 | POST | `/hush` | Stop the phone speaking |
 | POST | `/hangup` | End the session and finalize the recording |
 | GET | `/config` | ICE servers for the phone: the TURN relay with short-lived credentials, or `[]` |
