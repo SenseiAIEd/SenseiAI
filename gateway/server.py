@@ -86,6 +86,7 @@ AUTO_LOOK = {"on": os.environ.get("SENSEI_AUTO_LOOK", "on") != "off"}
 # Demo / Aalo plant: detect but stay quiet until Hint/Check. Default off = Andy main unchanged.
 TAP_ONLY = {"on": os.environ.get("SENSEI_TAP_ONLY", "0").lower() in ("1", "true", "yes", "on")}
 MANUAL_HOLD_S = 30.0  # after "look at me" or a console button, Sensei doesn't move on its own for this long
+HEAD_RETRY_S = 15.0   # after a failed move, wait this long before the next automatic one
 TRANSCRIBER = Transcriber() if os.environ.get("SENSEI_STT", "on") != "off" else None
 
 log = logging.getLogger("sensei")
@@ -235,6 +236,7 @@ class Session:
         self.looked_at_since = time.monotonic()
         self.last_glance_at = -1e9
         self.manual_until = 0.0
+        self.head_retry_at = 0.0  # after a failed move, the head is left alone until then
         self.page_frame = None
         self.glance = None       # gaze.Glance: the last look at the student
         self.face_jpeg: bytes | None = None
@@ -378,10 +380,15 @@ class Session:
 
     async def point(self, target: str, why: str, read_face: bool = True) -> bool:
         """Turn the head to a preset. At the student: centre their face, then read it."""
+        was = self.looking_at if self.looking_at != "moving" else "notebook"
         self.looking_at = "moving"
         ok = await HEAD.look(target)
-        self.looking_at = target if ok else "elsewhere"
+        # A move that failed (head unplugged, serial error) left the camera where it was. Calling
+        # that "elsewhere" stopped Sensei reading the page for a whole session on 25 Sep.
+        self.looking_at = target if ok else was
         self.looked_at_since = time.monotonic()
+        if not ok:  # don't retry a broken head every few seconds
+            self.head_retry_at = time.monotonic() + HEAD_RETRY_S
         self.log("look", at=target, why=why, ok=ok, **({"error": HEAD.error} if not ok else {}))
         if ok and target == "student":
             self.last_glance_at = time.monotonic()
@@ -432,7 +439,7 @@ class Session:
             await asyncio.sleep(1.0)
             t = self.tutor
             if (not AUTO_LOOK["on"] or t is None or t.phase != "watching" or self.looking_at == "moving"
-                    or time.monotonic() < self.manual_until):
+                    or time.monotonic() < max(self.manual_until, self.head_retry_at)):
                 continue
             try:
                 target = await asyncio.to_thread(self.attention.decide, self.moment())
@@ -571,7 +578,8 @@ async def offer(body: Offer):
         if track.kind == "video":
             s.tasks.append(asyncio.ensure_future(s.watch_video(relay.subscribe(track))))
         elif track.kind == "audio" and TRANSCRIBER is not None:
-            ears = Ears(TRANSCRIBER, s.heard, listening=lambda: s.voice and not s.closed)
+            ears = Ears(TRANSCRIBER, s.heard, listening=lambda: s.voice and not s.closed,
+                        on_noise=lambda info: s.log("heard_noise", **info))  # not speech: logged, never answered
             s.tasks.append(asyncio.ensure_future(ears.run(relay.subscribe(track))))
 
     @pc.on("connectionstatechange")

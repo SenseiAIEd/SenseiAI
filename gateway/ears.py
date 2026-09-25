@@ -21,6 +21,7 @@ import asyncio
 import io
 import logging
 import os
+import re
 import time
 import wave
 from typing import Awaitable, Callable, Optional
@@ -39,6 +40,62 @@ MIN_SPEECH_S = 0.3    # shorter blips (a cough, a tap) are ignored
 MAX_SPEECH_S = 15.0   # a very long turn is cut here and transcribed
 PREROLL_S = 0.3       # keep the moment just before speech was detected
 MIN_LEVEL = 0.01      # RMS below this is never speech (a muted mic sends zeros)
+
+# Whisper writes words even when nobody spoke: fed a breath, a chair or a quiet room it answers
+# "Thank you.", "Okay.", "Silence." or "Thanks for watching!" (it learned them from subtitles).
+# Replaying the recorded sessions through these ears (25 Sep, 144 utterances) found 35 such
+# phantoms, and Sensei had answered some of them ("You're welcome! Let's get back to solving.").
+# Two checks, tuned on that replay: they dropped all 35 and none of the real questions or answers.
+#  1. Silero VAD (shipped with faster-whisper) must find at least MIN_VOICED_S of actual speech;
+#     the energy detector above only knows that something was loud.
+#  2. One of Whisper's stock phrases, with Whisper itself unsure anyone spoke (no_speech_prob),
+#     is a phantom. A clearly spoken "thank you" (no_speech_prob 0.2 or less) still gets through.
+MIN_VOICED_S = float(os.environ.get("SENSEI_STT_MIN_VOICED_S", 0.4))
+PHANTOM_NO_SPEECH = 0.4
+PHANTOMS = {"thank you", "thanks", "thank you very much", "thanks for watching", "thank you for watching",
+            "bye", "bye bye", "goodbye", "you", "silence", "okay", "ok", "please", "so", "the end", "hmm",
+            "uh", "um", "i", "yeah", "no", "perfect", "hello", "see you again", "see you next time"}
+
+
+def voiced_seconds(audio: np.ndarray) -> float:
+    """How much of the clip Silero VAD thinks is speech."""
+    from faster_whisper.vad import VadOptions, get_speech_timestamps
+    stamps = get_speech_timestamps(audio, VadOptions(min_silence_duration_ms=300))
+    return sum(s["end"] - s["start"] for s in stamps) / RATE
+
+
+def is_phantom(text: str, no_speech_prob: float) -> bool:
+    words = " ".join(re.findall(r"[a-z']+", text.lower()))
+    return not words or (words in PHANTOMS and no_speech_prob >= PHANTOM_NO_SPEECH)
+
+
+# A student pausing to think mid-sentence isn't done talking. The recordings have one sentence
+# split in two at such pauses ("Yeah, this is the." / "I want to do."), and Sensei answered the
+# first half. A transcript that ends on a word a sentence can't end on is held for HOLD_S; if
+# the student carries on, the two are joined into one turn. Finished sentences aren't delayed.
+HOLD_S = float(os.environ.get("SENSEI_STT_HOLD_S", 1.5))
+DANGLING = {"and", "or", "but", "so", "because", "cause", "if", "then", "the", "a", "an", "to", "of",
+            "in", "on", "at", "for", "with", "from", "by", "like", "is", "are", "was", "my", "your",
+            "this", "that", "which", "what", "when", "where", "um", "uh", "equals", "plus", "minus",
+            "times", "over", "than", "into"}
+
+
+def sounds_unfinished(text: str) -> bool:
+    t = text.strip()
+    if t.endswith(("...", "\u2026", ",")):
+        return True
+    if t.endswith("?"):
+        return False
+    words = re.findall(r"[a-z0-9']+", t.lower())  # "x equals 5" ends on 5, not "equals"
+    return bool(words) and words[-1] in DANGLING
+
+
+class NotSpeech(Exception):
+    """The transcriber decided nobody actually spoke; `reason` says why."""
+
+    def __init__(self, reason: str, text: str = ""):
+        super().__init__(reason)
+        self.reason, self.text = reason, text
 
 
 _MODELS: dict = {}  # loaded speech models, shared by every call in this process
@@ -71,7 +128,11 @@ class Transcriber:
         self.load()
         segments, _ = self._model.transcribe(audio, language=self.language, beam_size=1,
                                              vad_filter=False, condition_on_previous_text=False)
-        return " ".join(s.text.strip() for s in segments).strip()
+        segments = list(segments)
+        text = " ".join(s.text.strip() for s in segments).strip()
+        if segments and is_phantom(text, max(s.no_speech_prob for s in segments)):
+            raise NotSpeech("stock phrase", text)
+        return text
 
     def _via_server(self, audio: np.ndarray) -> str:
         buf = io.BytesIO()
@@ -95,9 +156,13 @@ class Ears:
 
     def __init__(self, transcribe: Callable[[np.ndarray], str],
                  on_text: Callable[[str, dict], Awaitable[None]],
-                 listening: Callable[[], bool] = lambda: True):
+                 listening: Callable[[], bool] = lambda: True,
+                 on_noise: Optional[Callable[[dict], None]] = None,
+                 voiced: Callable[[np.ndarray], float] = voiced_seconds):
         self.transcribe = transcribe
         self.on_text = on_text
+        self.on_noise = on_noise or (lambda info: None)  # something loud that wasn't speech
+        self.voiced = voiced
         self.listening = listening  # voice mode on?
         self.resampler = av.AudioResampler(format="s16", layout="mono", rate=RATE)
         self.pending = np.zeros(0, np.float32)
@@ -107,6 +172,9 @@ class Ears:
         self.voiced_run = 0
         self.silence_s = 0.0
         self.busy = False               # a transcription is running
+        self.inflight = 0               # utterances waiting for or in transcription
+        self.held: Optional[tuple[str, dict]] = None  # an unfinished sentence, waiting for the rest
+        self._held_task: Optional[asyncio.Task] = None
         self._one_at_a_time = asyncio.Lock()  # utterances are transcribed in order, none dropped
 
     async def run(self, track):
@@ -153,6 +221,7 @@ class Ears:
             spoken_s = length - self.silence_s
             self._reset()
             if spoken_s >= MIN_SPEECH_S:
+                self.inflight += 1
                 asyncio.ensure_future(self._transcribe(audio, spoken_s))
 
     async def flush(self):
@@ -161,21 +230,64 @@ class Ears:
             audio, spoken_s = np.concatenate(self.speech), len(self.speech) * FRAME_S - self.silence_s
             self._reset()
             if spoken_s >= MIN_SPEECH_S:
+                self.inflight += 1
                 await self._transcribe(audio, spoken_s)
+        await self._release_held()
 
     def _reset(self):
         self.speech, self.preroll, self.voiced_run, self.silence_s = [], [], 0, 0.0
 
     async def _transcribe(self, audio: np.ndarray, spoken_s: float):
+        try:
+            await self._transcribe_one(audio, spoken_s)
+        finally:
+            self.inflight -= 1
+
+    async def _transcribe_one(self, audio: np.ndarray, spoken_s: float):
         async with self._one_at_a_time:
             self.busy = True
             t0 = time.monotonic()
+            info = {"audio_s": round(spoken_s, 2)}
             try:
+                voiced = await asyncio.to_thread(self.voiced, audio)
+                if voiced < MIN_VOICED_S:
+                    raise NotSpeech("no voice")
                 text = await asyncio.to_thread(self.transcribe, audio)
+            except NotSpeech as e:
+                self.on_noise({**info, "reason": e.reason, "text": e.text})
+                return
             except Exception as e:
                 log.warning("transcription failed: %s", e)
                 return
             finally:
                 self.busy = False
-        if text:
-            await self.on_text(text, {"audio_s": round(spoken_s, 2), "stt_s": round(time.monotonic() - t0, 2)})
+        if not text:
+            return
+        info["stt_s"] = round(time.monotonic() - t0, 2)
+        if self.held is not None:  # the rest of a sentence they paused in
+            before, before_info = self.held
+            self.held = None
+            if self._held_task is not None:
+                self._held_task.cancel()
+            text = f"{before} {text}"
+            info = {**info, "audio_s": round(before_info["audio_s"] + info["audio_s"], 2), "joined": 2}
+        if sounds_unfinished(text):
+            self.held = (text, info)
+            self._held_task = asyncio.ensure_future(self._deliver_held_later())
+            return
+        await self.on_text(text, info)
+
+    async def _deliver_held_later(self):
+        """Hand on a held sentence once the student has clearly stopped: HOLD_S of quiet, and
+        nothing new still being said or transcribed (that would be joined to it instead)."""
+        deadline, give_up = time.monotonic() + HOLD_S, time.monotonic() + HOLD_S + MAX_SPEECH_S + 30
+        while time.monotonic() < give_up and (time.monotonic() < deadline or self.speech or self.inflight):
+            await asyncio.sleep(0.05)
+        self._held_task = None
+        await self._release_held()
+
+    async def _release_held(self):
+        if self.held is not None:
+            text, info = self.held
+            self.held = None
+            await self.on_text(text, info)

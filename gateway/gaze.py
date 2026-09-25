@@ -290,6 +290,11 @@ class Attention:
     STILL_PAGE_S = 40.0    # this long with no writing and no talk: are they stuck?
     ASKED_WINDOW = (1.0, 6.0)  # after Sensei asks a question, look up for the answer in this window
     JEV_MIN = 0.55         # Jev's choice must be at least this confident to overrule the rules
+    # With Jev on, anything short of a confident, allowed "student" means the notebook. Jev may
+    # only take the head off the page once the page has gone quiet (or the rules see a reason). In the 25 Sep demo it chose "student" at ~0.8 every
+    # three seconds from the first second on, while the student was writing: a tutor that
+    # looks at your face while you work can't see the work it is meant to be checking.
+    JEV_GLANCE_QUIET_S = 12.0
 
     def __init__(self, jev=None):
         self.jev = jev
@@ -323,18 +328,39 @@ class Attention:
             return None
         target, reason = self.rules(m)
         if self.jev is not None and getattr(self.jev, "enabled", False):
-            j = self._ask_jev(m)
-            if j is not None:
-                choice, conf = j
-                if conf >= self.JEV_MIN:
-                    target = None if choice in ("stay", m.looking_at) else choice
-                    reason = f"jev {choice} ({conf:.2f})"
+            target, reason = self._jev_decides(m, target)
         if target == "student" and m.looking_at != "student" and m.seconds_since_glance < self.GLANCE_GAP_S:
             target, reason = None, "looked recently"
         if m.looking_at == "student" and m.seconds_here >= self.GLANCE_MAX_S * 2:
             target, reason = "notebook", "looked long enough"  # even Jev can't keep it there
         self.last_reason = reason
         return target if target != m.looking_at else None
+
+    def _jev_decides(self, m: Moment, rules_target: Optional[str]) -> tuple[Optional[str], str]:
+        """With Jev on, Jev decides; whenever it can't (unsure, down, or asking for something
+        the guard rails won't allow) the answer is the notebook. The page is the default: a
+        tutor that isn't sure where to look should be watching the work.
+
+        Taking the head off the page needs a reason: the page has gone quiet, or the rules see
+        one (waiting for an answer to Sensei's question, the student sounding stuck). And a
+        glance lasts only as long as the rules keep it; "stay" can't stretch it."""
+        j = self._ask_jev(m)
+        if j is None:
+            return "notebook", "jev unavailable: notebook"
+        choice, conf = j
+        if conf < self.JEV_MIN:
+            return "notebook", f"jev unsure ({choice} {conf:.2f}): notebook"
+        wants_student = choice == "student" or (choice == "stay" and m.looking_at == "student")
+        if not wants_student:
+            return "notebook", f"jev {choice} ({conf:.2f})"
+        if m.looking_at == "student":
+            allowed = rules_target is None
+        else:
+            allowed = not m.sensei_thinking and (rules_target == "student"
+                                                 or m.seconds_since_page_activity >= self.JEV_GLANCE_QUIET_S)
+        if not allowed:
+            return "notebook", f"jev {choice} ({conf:.2f}) overruled: notebook"
+        return "student", f"jev {choice} ({conf:.2f})"
 
     def _ask_jev(self, m: Moment) -> Optional[tuple[str, float]]:
         state = {k: (round(v, 1) if isinstance(v, float) else v) for k, v in asdict(m).items()}

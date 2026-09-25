@@ -71,6 +71,73 @@ class PageWatcher:
         self.judged = self.prev
 
 
+# --- Subjects --------------------------------------------------------------------------------
+# Knowing the subject changes how Sensei teaches, not just what it says. In algebra the mistake
+# is a line; in physics it is usually before any algebra (units, components, which force); in
+# chemistry it is often what a formula means. Each subject has a fixed list of mistake kinds,
+# from the ranked lists in datasets/samples/<subject>/README.md, so that counting a student's
+# recurring mistakes means something (docs/tutor-plan.md §3). The model picks from the list.
+SUBJECTS = ("math", "physics", "chemistry", "other")
+
+MISTAKE_KINDS = {
+    "math": ("sign", "distribution", "false_linearity", "chain_rule", "one_term_only",
+             "order_of_operations", "lost_parentheses", "dropped_root", "arithmetic", "copying", "concept"),
+    "physics": ("units", "components", "normal_force", "sign_convention", "quantity_confusion",
+                "extra_force", "wrong_formula", "arithmetic", "copying", "concept"),
+    "chemistry": ("subscript_changed", "limiting_reagent", "kelvin", "grams_as_moles", "diatomic",
+                  "early_rounding", "wrong_R", "arithmetic", "copying", "concept"),
+    "other": ("sign", "arithmetic", "rule", "concept", "copying"),
+}
+
+# How a good teacher of each subject finds the mistake, hints at it, and gets the student to
+# check their own answer. Only the detected subject's playbook goes to the model: a thinking
+# model reasons over every line it is given, so the other two would only slow it down.
+PLAYBOOKS = {
+    "math": (
+        "MATH. Check each line against the one above it; the usual culprits are a minus sign not "
+        "carried through brackets, (a + b) squared treated as a squared plus b squared, the chain rule "
+        "missed, or only one term divided. Hint level 2 names the rule as a question (\"what happens to "
+        "each term inside the brackets when you subtract them?\"). Hint level 3 gives a tiny parallel "
+        "example that isolates the same rule, with small numbers (\"what is 5 minus (2 minus 4)?\"), "
+        "never their own problem's next line. Their own check: put the answer back into the original "
+        "equation."),
+    "physics": (
+        "PHYSICS. Mistakes usually happen before any algebra: units not converted, a vector used whole "
+        "instead of in components, the normal force on a slope taken as mg, a sign convention flipped, "
+        "mass confused with weight. Check the units on every line. Hint level 2 asks about the physics, "
+        "not the arithmetic (\"which direction does this force act in?\", \"what unit is this speed "
+        "in?\"). Hint level 3 is a simpler situation that shows the same idea (\"on flat ground, what "
+        "would the normal force be?\"). Their own check: do the units come out right, and is the size "
+        "and direction of the answer sensible?"),
+    "chemistry": (
+        "CHEMISTRY. Common mistakes: balancing by changing a subscript (which makes a different "
+        "substance) instead of a coefficient, a limiting reagent picked without dividing by the "
+        "coefficients, Celsius used in a gas law, grams used in a mole ratio, O instead of O2. Hint "
+        "level 2 asks what the formula or number means (\"is H2O2 still water?\", \"which temperature "
+        "scale does the gas law need?\"). Hint level 3 is a simpler parallel case. Their own check: "
+        "count every atom and the charge on both sides, and check the units."),
+}
+
+# The subject's own way for the student to check a finished answer: the habit worth teaching.
+SELF_CHECK = {
+    "math": "put your answer back into the original equation",
+    "physics": "check the units, and whether the size and direction make sense",
+    "chemistry": "count every atom and the charge on both sides",
+}
+
+SUBJECT_WORDS = {
+    "math": re.compile(r"\b(math|maths|algebra|calculus|geometry|trig\w*|equation|derivative|integral)\b", re.I),
+    "physics": re.compile(r"\bphysics\b", re.I),
+    "chemistry": re.compile(r"\b(chemistry|chem)\b", re.I),
+}
+
+
+def named_subject(text: str) -> Optional[str]:
+    """The subject a student names out loud ("help me with my physics homework"), if exactly one."""
+    hits = [s for s, rx in SUBJECT_WORDS.items() if rx.search(text or "")]
+    return hits[0] if len(hits) == 1 else None
+
+
 # --- Reading the page ----------------------------------------------------------------------
 @dataclass
 class Assessment:
@@ -86,6 +153,8 @@ class Assessment:
     hand_over_page: bool = False        # still writing: the reading is half a line, don't act on it
     rotated: bool = False               # the page is upside down or sideways in view
     about: Optional[str] = None         # what the student's words were about (see ABOUT)
+    subject: Optional[str] = None       # one of SUBJECTS, when the view shows study work
+    topic: Optional[str] = None         # e.g. "linear equations", "balancing equations"
     say: Optional[str] = None           # what Sensei could say now
 
     @property
@@ -105,6 +174,8 @@ Look carefully and reply with ONE JSON object and nothing else:
 {
   "page": "work" | "other" | "unreadable" | "none",
      work: a problem, exercise or someone's working (any subject, handwritten or printed)
+  "subject": "math" | "physics" | "chemistry" | "other" | null,
+  "topic": "a few words, e.g. linear equations, unit conversion, balancing equations; or null",
      other: anything else you can make out (a screen of code or text, a diagram, a book, an object, a scene)
      unreadable: something is there but too blurry, dark or covered to read
      none: nothing meaningful in view
@@ -114,7 +185,8 @@ Look carefully and reply with ONE JSON object and nothing else:
   "steps": ["the lines of working FOR THAT ONE PROBLEM, in order, as written"],
   "other_problems": ["any OTHER problem written on the page that is not the one in focus"],
   "first_error": <1-based index of the FIRST incorrect step, or null if all correct so far>,
-  "error_kind": "sign" | "arithmetic" | "rule" | "concept" | "copying" | null,
+  "error_kind": "one word or snake_case name for the kind of mistake (the user message may give the
+     list for this subject), or null",
   "finished": <true if the student reached a final answer>,
   "hand_over_page": <true if a hand, pen or anything else covers part of the writing, or a line
      looks half-written: you are seeing the work mid-stroke>,
@@ -255,6 +327,12 @@ def parse_assessment(text: str) -> Assessment:
     about = str(data.get("about") or "").strip().lower() or None
     if about not in ABOUT:
         about = None
+    subject = str(data.get("subject") or "").strip().lower() or None
+    if subject in ("maths", "mathematics"):
+        subject = "math"
+    if subject is not None and subject not in SUBJECTS:
+        subject = "other"
+    error_kind = str(data.get("error_kind") or "").strip().lower().replace(" ", "_") or None
     others = [str(s) for s in (data.get("other_problems") or []) if str(s).strip()]
     # A step that belongs to a different problem is not this problem's mistake, whatever the
     # model says: a new question written under finished work is the student moving on.
@@ -276,11 +354,13 @@ def parse_assessment(text: str) -> Assessment:
         other_problems=others,
         focus=(str(data.get("focus")).strip() if data.get("focus") else None),
         first_error=first_error,
-        error_kind=data.get("error_kind") or None if first_error else None,
+        error_kind=error_kind if first_error else None,
         finished=bool(data.get("finished")),
         hand_over_page=hand_over_page,
         rotated=rotated,
         about=about,
+        subject=subject,
+        topic=(str(data.get("topic")).strip() or None) if data.get("topic") else None,
         say=str(say).strip() if say and str(say).strip() else None,
     )
 
@@ -391,6 +471,10 @@ LOOKING = {"hint": "Let me look at your work.", "check": "Okay, let me check you
 STILL_LOOKING = "Still looking at your work, one moment."
 HEARD = ["Okay, let me think.", "Good question. One moment.", "Let me see.", "Got it. Give me a second."]
 HEARD_WHILE_BUSY = "Got it. I'll answer that in a moment."
+# Correct work used to get total silence until the end: a student can't tell a tutor that is
+# happy with them from one that has stopped watching. One short line now and then says "I see it,
+# it's right" without breaking their flow; see Tutor.PROGRESS_*.
+PROGRESS = ["That's right so far. Keep going.", "Good, those steps check out.", "You're on track. Nice and careful."]
 
 # Short acknowledgements that carry no question. Whisper also emits these for coughs, breaths
 # and the tail of Sensei's own voice, so they are the bulk of what a quiet room "says".
@@ -434,6 +518,7 @@ class Tutor:
     (`request`); it speaks through `speak` and reports its state through `notify`."""
 
     MIN_GAP_S = 8.0          # between unprompted remarks
+    HINT_WAIT_S = 20.0       # after a hint, give them this long to find it before asking again
     MEMORY_TURNS = 20        # conversation turns kept for context
     IDLE_S = 90.0            # no new writing for this long -> a gentle check-in
     NO_PAGE_REPEAT_S = 30.0  # how often to repeat "I can't see your page"
@@ -443,6 +528,8 @@ class Tutor:
     ANSWER_WINDOW_S = 30.0   # after Sensei's question, even "no" is an answer worth taking
     MAX_HINTS_PER_MISTAKE = 3  # ask three times, then let it go: a fourth is nagging
     STEER_GRACE_S = 20.0     # after the student redirects us, background looks hold their tongue
+    PROGRESS_STEPS = 2       # new correct lines since Sensei last said "that's right" ...
+    PROGRESS_GAP_S = 45.0    # ... and this long since Sensei said anything: one word of encouragement
     # Jev thresholds (see docs/jev-in-sensei.md). The reply floors and no_page_below are really
     # per backend (jev.BACKENDS) and are read from the decider; these are the fallbacks.
     # 0.40 from evals/utterances.jsonl (24 Sep, 47 cases): what Jev wrongly let through scored
@@ -484,6 +571,8 @@ class Tutor:
         self.last_activity = 0.0
         self.last_no_page_at = -1e9
         self.problem: Optional[str] = None
+        self.subject: Optional[str] = None  # math | physics | chemistry | other, from the page or the student
+        self.topic: Optional[str] = None
         self.mistake: Optional[tuple[int, str]] = None
         # A mistake seen once but not yet spoken about: a second look has to agree before Sensei
         # says anything, because one bad read (a shadow, half a line) should never become a hint.
@@ -511,6 +600,8 @@ class Tutor:
         self._jev_turn = None    # Jev's decision on the utterance being answered, if any
         self.pending_jev = None
         self._heard_count = 0
+        self.steps_confirmed = 0  # correct lines of the current problem Sensei has already praised
+        self._progress_count = 0
 
     # -- state ---------------------------------------------------------------------------
     def remaining_s(self) -> float:
@@ -520,7 +611,8 @@ class Tutor:
 
     def state(self) -> dict:
         return {"type": "tutor", "phase": self.phase, "remaining_s": round(self.remaining_s()),
-                "thinking": self.thinking, "problem": self.problem, "hint_level": self.hint_level,
+                "thinking": self.thinking, "problem": self.problem, "subject": self.subject,
+                "topic": self.topic, "hint_level": self.hint_level,
                 "hints_given": self.hints_given}
 
     async def notify(self):
@@ -546,12 +638,23 @@ class Tutor:
         if was and self.mistake:
             self.log_event("tutor_dropped_mistake", step=self.mistake[0], problem=was)
         self.mistake = self.candidate_mistake = None
-        self.hint_level = self.hints_on_mistake = self._rechecks = 0
+        self.hint_level = self.hints_on_mistake = self._rechecks = self.steps_confirmed = 0
         if who == "student":
             # Only a person gets the quiet moment afterwards; the page noticing a new problem
             # is Sensei talking to itself and shouldn't gag it.
             self.last_focus_change = self.clock()
         self.log_event("tutor_focus", was=was, now=problem, set_by=who)
+
+    def set_subject(self, subject: Optional[str], topic: Optional[str], who: str):
+        """The subject decides which playbook Sensei teaches from. "other" never replaces a
+        subject we know: a blurry read shouldn't turn a physics lesson generic."""
+        if not subject or (subject == "other" and self.subject):
+            return
+        if subject != self.subject:
+            self.log_event("tutor_subject", was=self.subject, now=subject, topic=topic, set_by=who)
+            self.subject = subject
+        if topic:
+            self.topic = topic
 
     async def speak(self, text: str, why: str):
         # Saying the same sentence for the same reason is how a person sounds when they aren't
@@ -597,7 +700,8 @@ class Tutor:
                 "problems_finished": self.problems_finished}
 
     async def _summary(self) -> str:
-        notes = (f"Problem: {self.problem or 'unknown'}. Problems finished: {self.problems_finished}. "
+        notes = (f"Subject: {self.subject or 'unknown'}{f' ({self.topic})' if self.topic else ''}. "
+                 f"Problem: {self.problem or 'unknown'}. Problems finished: {self.problems_finished}. "
                  f"Mistakes found: {self.mistakes_found or 'none'}. Fixed: {self.mistakes_fixed or 'none'}. "
                  f"Hints given: {self.hints_given}.")
         if self.brain and (self.mistakes_found or self.problems_finished):
@@ -717,6 +821,8 @@ class Tutor:
             return
         self.log_event("student_said", text=text)
         self.remember("student", text)
+        if named_subject(text):
+            self.set_subject(named_subject(text), None, who="student")
         if self.phase != "watching":
             return
         if wants_repeat(text) and self.last_said:
@@ -745,6 +851,7 @@ class Tutor:
                  for c in self.conversation[-6:]]
         return {
             "problem_in_focus": self.problem or "none yet",
+            "subject": self.subject or "unknown",
             "page_as_last_read": self.last_seen or "nothing read yet",
             "other_problems_on_page": self.other_problems,
             "recent_conversation": turns,
@@ -790,7 +897,9 @@ class Tutor:
         it if the model is taking longer than a natural pause — otherwise the answer just comes."""
         task = asyncio.ensure_future(self._judge(img, request="talk", said=text, extra=extra))
         done, _ = await asyncio.wait([task], timeout=self.ACK_AFTER_S)
-        if not done:
+        jev = self._jev_turn
+        small_talk = jev is not None and jev.about == "social" and jev.about_confidence >= self.JEV_ABOUT_MIN
+        if not done and not small_talk:  # "Okay, let me think." before "Hello back!" sounds odd
             self._heard_count += 1
             await self.speak(HEARD[(self._heard_count - 1) % len(HEARD)], "ack")
         await task
@@ -824,6 +933,8 @@ class Tutor:
                     + (f"Up to now they have been working on: {self.problem}. If they are asking "
                        "about something else, go with them - set \"focus\" and help with the new "
                        "one. Never tell them to go back.\n" if self.problem else "")
+                    + (f"Subject: {self.subject}{f' ({self.topic})' if self.topic else ''}.\n"
+                       if self.subject and self.subject != "other" else "")
                     + (f"What you last saw in the camera: {self.last_seen}\n" if self.last_seen else "")
                     + self._face_note()
                     + f"The student just said out loud: \"{said}\"\n"
@@ -834,6 +945,11 @@ class Tutor:
                     + (f" Earlier you asked them about step {self.mistake[0]} of their work."
                        if self.mistake else ""))
         parts = [self._face_note().strip()] if self._face_note() else []
+        if self.subject in PLAYBOOKS and request != "look":
+            parts.append(PLAYBOOKS[self.subject] + " For \"error_kind\" use one of: "
+                         + ", ".join(MISTAKE_KINDS[self.subject]) + ".")
+        else:
+            parts.append("Set \"subject\" and \"topic\" from what you see.")
         if self.problem:
             parts.append(f"The problem in focus is: {self.problem}. Judge only the lines that "
                          "belong to it; put any other problem on the page in \"other_problems\".")
@@ -855,8 +971,9 @@ class Tutor:
             parts.append("The student asked you to check their work. Tell them in one sentence whether it "
                          "looks right so far; if not, ask your guiding question.")
         else:
+            check = SELF_CHECK.get(self.subject or "", "check it another way")
             parts.append("If this is work and every step so far is correct and unfinished, set \"say\" to null. If they "
-                         "finished correctly, congratulate them and ask them to explain why their key step works.")
+                         f"finished correctly, congratulate them in a few words and ask them to {check} themselves.")
         return " ".join(parts)
 
     async def _judge(self, img: Optional[np.ndarray], request: Optional[str], said: Optional[str] = None,
@@ -889,11 +1006,14 @@ class Tutor:
             self.log_event("tutor_late_reply", latency_s=round(self.clock() - t0, 2), request=request)
             return
         self.last_seen = self._describe_seen(a)
+        if a.page == "work" and request != "talk":
+            self.set_subject(a.subject, a.topic, who="page")
         if a.page == "work" and request != "talk":  # replies to speech don't re-read the whole page
             self.other_problems = [p for p in a.other_problems if not _same_line(p, self.problem)]
         self.log_event("tutor_assessment", latency_s=round(self.clock() - t0, 2), request=request,
                        model=getattr(brain, "model", None), frame=frame_file, frame_size=frame_size,
                        page=a.page, about=a.about, focus=a.focus, problem=a.problem,
+                       subject=a.subject, topic=a.topic,
                        other_problems=a.other_problems, given=a.given, steps=a.steps,
                        first_error=a.first_error, error_kind=a.error_kind, finished=a.finished,
                        hand_over_page=a.hand_over_page, rotated=a.rotated, say=a.say)
@@ -974,8 +1094,8 @@ class Tutor:
         mistake = a.mistake
         if mistake and mistake in self.let_go and request is None:
             return  # we already asked about this one three times; only a direct ask reopens it
-        if mistake and mistake == self.mistake and request is None and now - self.last_spoke_at < self.MIN_GAP_S:
-            return  # same mistake, but we just spoke: don't nag, escalate on a later look
+        if mistake and mistake == self.mistake and request is None and now - self.last_spoke_at < self.HINT_WAIT_S:
+            return  # same mistake, just hinted: let them find it themselves before asking again
         if mistake and mistake != self.mistake and request is None:
             # A mistake we haven't raised yet. One look is not enough: read it again first.
             # A student who writes a wrong line and then sits still never changes the page, so
@@ -1032,9 +1152,19 @@ class Tutor:
             why = "finished"
         elif request:
             why = request
+        say = a.say
+        # Never "that's right" about a page with a mistake on it (tap-only mode leaves `why` empty
+        # for a detected mistake), and tap-only mode keeps quiet until a tap anyway.
+        if why is None and not mistake and not self.tap_only and not a.finished \
+                and len(a.steps) - self.steps_confirmed >= self.PROGRESS_STEPS \
+                and now - self.last_spoke_at >= self.PROGRESS_GAP_S:
+            self._progress_count += 1
+            why, say = "progress", PROGRESS[(self._progress_count - 1) % len(PROGRESS)]
+        if why in ("fixed", "finished", "progress", "check", "hint"):
+            self.steps_confirmed = len(a.steps) if not mistake else self.steps_confirmed
 
-        if why is not None and a.say:
-            await self.speak(a.say, why)
+        if why is not None and say:
+            await self.speak(say, why)
         if next_problem and not _same_line(next_problem, self.problem):
             # Only now: they have finished one problem and started another on the same page.
             self.switch_to(next_problem, who="page")

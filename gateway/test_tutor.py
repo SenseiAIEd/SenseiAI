@@ -783,6 +783,109 @@ def test_hosted_cannot_be_chosen_without_a_key():
         j.use("hosted")
 
 
+def test_small_talk_gets_no_filler_even_when_the_model_is_slow():
+    h, _ = with_jev(FakeJev(respond=0.9, about="social", needs_page=0.1),
+                    Assessment(page="work", about="social", say="Hello! Ready when you are."))
+    h.tutor.ACK_AFTER_S = 0.0
+    h.run(h.tutor.hear("Hello.", PAGE))
+    assert h.whys()[-1:] == ["reply"] and "ack" not in h.whys()
+
+
+# --- saying "that's right" while the work is right ------------------------------------------
+def on_track(n):
+    return Assessment(page="work", problem="5 - (2x - 4) = 11", steps=["5 - 2x + 4 = 11", "9 - 2x = 11", "-2x = 2",
+                                                                        "x = -1"][:n], say=None)
+
+
+def test_correct_work_gets_an_occasional_word_of_encouragement():
+    h = Harness(ScriptedBrain(on_track(1), on_track(2), on_track(3), on_track(4)))
+    h.run(h.tutor.start())
+    h.settle(page_with("a"))                        # one line: nothing to say yet
+    h.now += 60
+    h.settle(page_with("ab"))                       # two correct lines, a minute of silence
+    assert h.whys()[-1] == "progress" and h.said[-1][1] in tutor.PROGRESS
+    h.now += 10
+    h.settle(page_with("abc"))                      # just spoke: stay quiet
+    h.now += 60
+    h.settle(page_with("abcd"))                     # two more lines since the last "that's right"
+    assert h.whys().count("progress") == 2 and h.said[-1][1] != h.said[-3][1]  # not the same words
+
+
+def test_encouragement_waits_for_new_lines_not_just_time():
+    h = Harness(ScriptedBrain(on_track(2), on_track(2)))
+    h.run(h.tutor.start())
+    h.now += 60
+    h.settle(page_with("a"))
+    h.now += 60
+    h.settle(page_with("ab"))                       # the page changed, but no new correct line
+    assert h.whys().count("progress") == 1
+
+
+# --- subjects: which playbook Sensei teaches from --------------------------------------------
+def test_subject_topic_and_mistake_kind_are_read_and_normalized():
+    a = parse_assessment('{"page": "work", "subject": "Maths", "topic": "linear equations", "steps": ["a", "b"], '
+                         '"first_error": 2, "error_kind": "Sign Convention"}')
+    assert (a.subject, a.topic, a.error_kind) == ("math", "linear equations", "sign_convention")
+    assert parse_assessment('{"page": "work", "subject": "biology"}').subject == "other"
+    assert parse_assessment('{"page": "work"}').subject is None
+
+
+def physics(n, **kw):
+    return Assessment(page="work", subject="physics", topic="unit conversion", problem="72 km/h for 5.0 s",
+                      steps=["v = 72 km/h", "d = v x t", "d = 72 x 5.0", "d = 360 m"][:n], **kw)
+
+
+def test_the_page_sets_the_subject_and_the_next_look_uses_its_playbook():
+    brain = ScriptedBrain(physics(1), physics(2))
+    h = Harness(brain)
+    h.run(h.tutor.start())
+    h.settle(page_with("a"))
+    assert "Set \"subject\"" in brain.instructions[0]                    # not known yet: ask for it
+    assert (h.tutor.subject, h.tutor.topic) == ("physics", "unit conversion") and "tutor_subject" in h.events
+    h.settle(page_with("ab"))
+    assert "PHYSICS" in brain.instructions[1] and "normal_force" in brain.instructions[1]
+    assert "MATH" not in brain.instructions[1] and "CHEMISTRY" not in brain.instructions[1]
+    assert h.notes[-1]["subject"] == "physics"
+
+
+def test_an_unclear_read_does_not_undo_a_known_subject():
+    h = Harness(ScriptedBrain(physics(1), Assessment(page="work", subject="other", steps=["?"])))
+    h.run(h.tutor.start())
+    h.settle(page_with("a"))
+    h.settle(page_with("ab"))
+    assert h.tutor.subject == "physics"
+
+
+def test_the_student_can_name_the_subject():
+    h = Harness(ScriptedBrain(Assessment(page="work", about="steer", say="Sure, show me the problem.")))
+    h.run(h.tutor.start())
+    h.run(h.tutor.hear("can you help me with my chemistry homework", PAGE))
+    assert h.tutor.subject == "chemistry"
+    assert tutor.named_subject("physics or chemistry?") is None           # two subjects: don't guess
+
+
+def test_finishing_asks_for_the_subjects_own_check():
+    brain = ScriptedBrain(physics(1), physics(4, finished=True))
+    h = Harness(brain)
+    h.run(h.tutor.start())
+    h.settle(page_with("a"))
+    h.settle(page_with("ab"))
+    assert "check the units" in brain.instructions[-1]
+
+
+def test_a_hint_gets_time_to_work_before_the_next_one():
+    brain = ScriptedBrain(MISTAKE, MISTAKE, MISTAKE, MISTAKE)
+    h = Harness(brain)
+    h.run(h.tutor.start())
+    h.settle(page_with("a"))
+    h.settle(page_with("ab"))                         # confirmed on a second look: first hint
+    assert h.whys()[-1] == "hint_1"
+    h.now += 12                                       # past the old 8 s gap, inside the new wait
+    h.settle(page_with("abc"))
+    assert h.whys()[-1] == "hint_1"
+    h.now += 20
+    h.settle(page_with("abcd"))
+    assert h.whys()[-1] == "hint_2"
 # --- tap-only / quiet-until-Hint (SENSEI_TAP_ONLY) ---------------------------------------
 
 def test_tap_only_detects_but_does_not_auto_speak_after_confirm():
@@ -848,3 +951,16 @@ def test_tap_only_background_looks_do_not_let_it_go():
     assert "let_it_go" not in h.whys()
     assert not any(w.startswith("hint_") for w in h.whys())
     assert h.tutor.mistake is not None and h.tutor.hint_level == 0
+
+
+def test_tap_only_never_says_thats_right_about_a_page_with_a_mistake():
+    # Tap-only detects a mistake silently, which leaves nothing said; the encouragement for
+    # correct work must not step into that silence.
+    two_lines_wrong = Assessment(page="work", problem="5 - (2x - 4) = 11", steps=STEPS[:2], first_error=1,
+                                 error_kind="sign", say="What happened to the minus four?")
+    h = Harness(ScriptedBrain(two_lines_wrong, two_lines_wrong), tap_only=True)
+    h.run(h.tutor.start())
+    h.now += 60
+    h.settle(page_with("a"))
+    h.settle(page_with("ab"))
+    assert "progress" not in h.whys() and h.tutor.mistake is not None
