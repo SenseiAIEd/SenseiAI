@@ -495,7 +495,7 @@ class TutorAction(BaseModel):
 
 class JevSwitch(BaseModel):
     on: Optional[bool] = None
-    backend: Optional[str] = None  # jevk5 | semif | hosted
+    backend: Optional[str] = None  # jevk5 | jevk8 | semif | decider | decider-v2 | hosted
 
 
 def jev_state() -> dict:

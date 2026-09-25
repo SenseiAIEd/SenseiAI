@@ -449,6 +449,7 @@ class Tutor:
     JEV_NEW_PROBLEM_MIN = 0.60        # P(moved to another problem) to switch focus
     JEV_WHICH_MIN = 0.50              # and confidence in which one
     JEV_ABOUT_MIN = 0.60              # confidence to pass the route on to the writing model
+    JEV_FOLLOWUP_MIN = 0.60           # P(reply to Sensei's last line): use answer-window floor
 
     def __init__(self, brain: Optional[Brain], speak: Speak, notify: Notify, minutes: float = 10,
                  clock: Callable[[], float] = time.monotonic, log_event: Callable[..., None] = lambda *a, **k: None,
@@ -679,14 +680,20 @@ class Tutor:
         if decision is not None:
             # Jev decided. The floor is lower right after Sensei asked something: a bare "no"
             # is then an answer, and wrongly ignoring an answer is worse than a spare reply.
+            # Also lower when followup says this utterance is a reply (last line may lack '?').
             # The floors belong to the backend: each spreads its probabilities differently.
+            # awaiting_answer still alone gates fillers/gaze; followup only affects this floor.
             j = self.decider
-            floor = (getattr(j, "skip_if_answer_below", self.JEV_SKIP_IF_ANSWER_BELOW) if self.awaiting_answer()
+            awaiting = self.awaiting_answer()
+            answer_window = awaiting or decision.followup >= self.JEV_FOLLOWUP_MIN
+            floor = (getattr(j, "skip_if_answer_below", self.JEV_SKIP_IF_ANSWER_BELOW) if answer_window
                      else getattr(j, "skip_below", self.JEV_SKIP_BELOW))
             steering = (decision.new_problem >= self.JEV_NEW_PROBLEM_MIN
                         or (decision.about == "steer" and decision.about_confidence >= self.JEV_ABOUT_MIN))
             if decision.respond < floor and not steering:  # being redirected is never ignorable
-                self.log_event("student_said", text=text, answered=False, by="jev")
+                self.log_event("student_said", text=text, answered=False, by="jev",
+                               respond=round(decision.respond, 2), floor=floor,
+                               followup=round(decision.followup, 2), awaiting=awaiting)
                 self.last_activity = self.clock()
                 return
         elif is_filler(text) and not self.awaiting_answer():

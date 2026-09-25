@@ -17,7 +17,9 @@ and calibration temperature.
 
 | decider-4b v2.1 (Mapika) | Qwen3.5-4B-Base, supervised on a decision mixture + LoRA; its own readout (`decider/`) | per type: noul 1.56, choice 1.11, score 1.29 | 8097 | `sensei:decider` |
 | decider-4b v2 (JevBench v1.4.2 #1) | the same, before v2.1's replay fix (`models/decider-4b-v2`) | 1.935 | 8098 | not started |
+| JevK8 (OpenJev) | Andy's serve on his Spark (not in this tree) | — | 8099 | external |
 
+JevK8 floors in Sensei copy jevk5 provisionally until `jev_eval.py --backend jevk8 --sweep`.
 JevK5 and SemIf take ~11 GB of GPU memory each; decider ~13 GB with the trimmed graphs below
 (~24 GB and a ten-minute start with its defaults). How they compare on Sensei's own decisions:
 `SenseiAI/docs/jev-report.md` §8. JevK5 is the default.

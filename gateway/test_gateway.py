@@ -334,6 +334,9 @@ def test_jev_backend_can_be_changed_at_runtime(gateway, monkeypatch):
     state = httpx.post(f"{base}/jev", json={"backend": "semif"}).json()
     assert state["backend"] == "semif" and state["floors"]["reply"] == 0.15 and state["on"] is False
     assert httpx.post(f"{base}/jev", json={"backend": "hosted"}).status_code == 400  # no key
+    jevk8 = httpx.post(f"{base}/jev", json={"backend": "jevk8"}).json()
+    assert jevk8["backend"] == "jevk8" and jevk8["floors"]["reply"] == 0.25
+    assert jevk8["floors"]["reply_after_question"] == 0.15
     assert httpx.post(f"{base}/jev", json={"backend": "jevk5", "on": True}).json()["on"] is True
 
 
