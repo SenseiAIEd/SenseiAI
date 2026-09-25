@@ -44,7 +44,7 @@ class ScriptedBrain:
 
 
 class Harness:
-    def __init__(self, brain, minutes=10):
+    def __init__(self, brain, minutes=10, tap_only=False):
         self.now = 1000.0
         self.said: list[tuple[str, str]] = []
         self.notes: list[dict] = []
@@ -57,7 +57,8 @@ class Harness:
             self.notes.append(state)
 
         self.tutor = Tutor(brain, speak, notify, minutes=minutes, clock=lambda: self.now,
-                           log_event=lambda event, **k: self.events.append(event))
+                           log_event=lambda event, **k: self.events.append(event),
+                           tap_only=tap_only)
 
     def run(self, coro):
         return asyncio.run(coro)
@@ -587,10 +588,10 @@ class FakeJev:
     """Answers in the real /v1/systemone shape, so decide_utterance's parsing is exercised too."""
 
     def __init__(self, respond=0.9, about="subject", needs_page=0.9, new_problem=0.0,
-                 which=None, enabled=True, fail=False):
+                 which=None, followup=0.1, enabled=True, fail=False):
         self.enabled, self.fail, self.calls = enabled, fail, []
         self.a = {"respond": respond, "about": about, "needs_page": needs_page,
-                  "new_problem": new_problem, "which": which}
+                  "new_problem": new_problem, "which": which, "followup": followup}
 
     def ask(self, state, questions):
         self.calls.append((state, questions))
@@ -601,7 +602,7 @@ class FakeJev:
             "respond": {"type": "noul", "noul": a["respond"]},
             "about": {"type": "choice", "choice": a["about"], "confidence": 0.9,
                       "probabilities": {a["about"]: 0.9}},
-            "followup": {"type": "noul", "noul": 0.1},
+            "followup": {"type": "noul", "noul": a["followup"]},
             "needs_page": {"type": "noul", "noul": a["needs_page"]},
             "new_problem": {"type": "noul", "noul": a["new_problem"]},
         }
@@ -739,9 +740,20 @@ def test_thanks_after_a_question_is_still_not_an_answer():
     assert h.whys()[-1] == "finished" and brain.instructions == []
 
 
+def test_jev_high_followup_uses_the_answer_window_floor_even_without_a_question_mark():
+    """Sensei's last line may lack '?'; followup still lowers the reply floor."""
+    # respond=0.35 is under the default skip_below (0.40) but over skip_if_answer_below (0.30)
+    h, brain = with_jev(FakeJev(respond=0.35, about="subject", followup=0.80), REPLY)
+    h.run(h.tutor.speak("Try subtracting five from both sides.", "hint_1"))
+    assert not h.tutor.awaiting_answer()  # no trailing '?'
+    h.run(h.tutor.hear("okay, so x equals three", PAGE))
+    assert h.whys()[-1] == "reply"
+
+
 def test_each_backend_brings_its_own_floors():
     """Local models spread probabilities differently: 0.30 on JevK5 is a real question."""
     from jev import BACKENDS, Jev
+    assert "jevk8" in BACKENDS
     j = Jev(BACKENDS["jevk5"]["url"], backend="jevk5")
     assert (j.skip_below, j.no_page_below) == (0.25, 0.15) and j.headers == {}
     j.key = "k"
@@ -749,6 +761,9 @@ def test_each_backend_brings_its_own_floors():
     assert j.skip_below == 0.40 and j.headers["Authorization"] == "Bearer k" and j.where == "hosted"
     j.use("semif")
     assert j.skip_below == 0.15 and j.url.endswith(":8096/v1/systemone") and j.headers == {}
+    j.use("jevk8")  # floors provisional copy of jevk5
+    assert (j.skip_below, j.skip_if_answer_below, j.no_page_below) == (0.25, 0.15, 0.15)
+    assert j.url.endswith(":8099/v1/systemone") and j.headers == {}
     with pytest.raises(ValueError):
         j.use("nonsense")
 
@@ -871,3 +886,81 @@ def test_a_hint_gets_time_to_work_before_the_next_one():
     h.now += 20
     h.settle(page_with("abcd"))
     assert h.whys()[-1] == "hint_2"
+# --- tap-only / quiet-until-Hint (SENSEI_TAP_ONLY) ---------------------------------------
+
+def test_tap_only_detects_but_does_not_auto_speak_after_confirm():
+    """Background looks still confirm a mistake, but stay quiet until Hint/Check."""
+    brain = ScriptedBrain(MISTAKE, MISTAKE, MISTAKE)
+    h = Harness(brain, tap_only=True)
+    h.run(h.tutor.start())
+    h.settle(page_with("a"))
+    assert h.whys() == ["greeting"] and "tutor_unconfirmed" in h.events
+    h.settle(page_with("ab"))  # second agreeing look: detect, do not speak
+    assert h.whys() == ["greeting"]
+    assert h.tutor.mistake == MISTAKE.mistake and h.tutor.hint_level == 0
+    assert h.tutor.hints_given == 0 and h.tutor.mistakes_found
+    assert "tutor_detected" in h.events
+    h.now += 20
+    h.settle(page_with("abc"))  # further looks: still quiet, no escalate
+    assert h.whys() == ["greeting"] and h.tutor.hint_level == 0
+
+
+def test_tap_only_hint_and_check_still_speak():
+    """Explicit Hint / Check taps still speak under tap-only; first Hint is hint_1."""
+    brain = ScriptedBrain(MISTAKE, MISTAKE, MISTAKE, FIXED)
+    h = Harness(brain, tap_only=True)
+    h.run(h.tutor.start())
+    h.settle(page_with("a"))
+    h.settle(page_with("ab"))  # detected, quiet
+    assert h.whys() == ["greeting"] and h.tutor.mistake is not None
+
+    h.run(h.tutor.request("hint", PAGE))
+    assert "hint_1" in h.whys() and h.tutor.hint_level == 1 and h.tutor.hints_given == 1
+    assert any(w == "ack" for w in h.whys())  # looking ack still fires
+
+    h.now += 20
+    h.run(h.tutor.request("check", page_with("fixed")))
+    assert h.whys()[-1] == "fixed" and h.tutor.mistake is None
+
+
+def test_tap_only_off_keeps_auto_hint_after_confirm():
+    """Default (flag off): second agreeing look still auto-speaks hint_1."""
+    brain = ScriptedBrain(MISTAKE, MISTAKE)
+    h = Harness(brain, tap_only=False)
+    h.run(h.tutor.start())
+    h.settle(page_with("a"))
+    h.settle(page_with("ab"))
+    assert h.whys()[-1] == "hint_1" and h.tutor.hint_level == 1
+
+
+def test_tap_only_suppresses_idle_nudge():
+    h = Harness(ScriptedBrain(), tap_only=True)
+    h.run(h.tutor.start())
+    h.now += Tutor.IDLE_S + 1
+    h.run(h.tutor.tick())
+    assert "idle" not in h.whys()
+
+
+def test_tap_only_background_looks_do_not_let_it_go():
+    """Without Hint taps, tap-only never escalates to let_it_go from background looks."""
+    h = Harness(ScriptedBrain(*[MISTAKE] * 8), tap_only=True)
+    h.run(h.tutor.start())
+    for i in range(6):
+        h.now += 20
+        h.settle(page_with("a" * (i + 1)))
+    assert "let_it_go" not in h.whys()
+    assert not any(w.startswith("hint_") for w in h.whys())
+    assert h.tutor.mistake is not None and h.tutor.hint_level == 0
+
+
+def test_tap_only_never_says_thats_right_about_a_page_with_a_mistake():
+    # Tap-only detects a mistake silently, which leaves nothing said; the encouragement for
+    # correct work must not step into that silence.
+    two_lines_wrong = Assessment(page="work", problem="5 - (2x - 4) = 11", steps=STEPS[:2], first_error=1,
+                                 error_kind="sign", say="What happened to the minus four?")
+    h = Harness(ScriptedBrain(two_lines_wrong, two_lines_wrong), tap_only=True)
+    h.run(h.tutor.start())
+    h.now += 60
+    h.settle(page_with("a"))
+    h.settle(page_with("ab"))
+    assert "progress" not in h.whys() and h.tutor.mistake is not None

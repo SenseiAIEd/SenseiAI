@@ -508,6 +508,11 @@ Speak = Callable[[str, str], Awaitable[None]]    # (text, why) -> spoken on the 
 Notify = Callable[[dict], Awaitable[None]]        # state update for the phone
 
 
+def env_flag(name: str, default: str = "0") -> bool:
+    """True when the env var is a common truthy string (1/true/yes/on). Default off."""
+    return os.environ.get(name, default).lower() in ("1", "true", "yes", "on")
+
+
 class Tutor:
     """One interactive session. Feed it frames (`on_frame`) and button presses
     (`request`); it speaks through `speak` and reports its state through `notify`."""
@@ -536,11 +541,13 @@ class Tutor:
     JEV_NEW_PROBLEM_MIN = 0.60        # P(moved to another problem) to switch focus
     JEV_WHICH_MIN = 0.50              # and confidence in which one
     JEV_ABOUT_MIN = 0.60              # confidence to pass the route on to the writing model
+    JEV_FOLLOWUP_MIN = 0.60           # P(reply to Sensei's last line): use answer-window floor
 
     def __init__(self, brain: Optional[Brain], speak: Speak, notify: Notify, minutes: float = 10,
                  clock: Callable[[], float] = time.monotonic, log_event: Callable[..., None] = lambda *a, **k: None,
                  save_frame: Callable[[np.ndarray], Optional[str]] = lambda img: None,
-                 chat_brain: Optional[Brain] = None, decider=None):
+                 chat_brain: Optional[Brain] = None, decider=None,
+                 tap_only: Optional[bool] = None):
         self.brain = brain
         self.chat_brain = chat_brain or brain  # the quick one, for talking back
         self.decider = decider                 # jev.Jev: fast typed decisions, used when .enabled
@@ -549,6 +556,9 @@ class Tutor:
         self.save_frame = save_frame  # keeps each judged frame, so we can see what the model saw
         self.clock = clock
         self.minutes = max(1.0, min(30.0, float(minutes)))
+        # Demo / visitor plant: detect mistakes but stay quiet until Hint or Check.
+        # Default off (SENSEI_TAP_ONLY unset) so Andy main behavior is unchanged.
+        self.tap_only = env_flag("SENSEI_TAP_ONLY") if tap_only is None else bool(tap_only)
         self.watcher = PageWatcher()
         self.phase = "idle"                 # idle -> watching -> ended
         self.started_at = 0.0
@@ -715,8 +725,11 @@ class Tutor:
         if left <= 60 and not self.warned_one_minute:
             self.warned_one_minute = True
             await self.speak(ONE_MINUTE, "time")
-        elif (self.clock() - self.last_activity > self.IDLE_S and self.clock() - self.last_spoke_at > self.IDLE_S
+        elif (not self.tap_only
+              and self.clock() - self.last_activity > self.IDLE_S
+              and self.clock() - self.last_spoke_at > self.IDLE_S
               and not self.thinking):
+            # Tap-only / visitor demos stay quiet during long writing windows (ASR often off).
             self.last_activity = self.clock()
             await self.speak(IDLE_NUDGE, "idle")
         await self.notify()
@@ -783,14 +796,20 @@ class Tutor:
         if decision is not None:
             # Jev decided. The floor is lower right after Sensei asked something: a bare "no"
             # is then an answer, and wrongly ignoring an answer is worse than a spare reply.
+            # Also lower when followup says this utterance is a reply (last line may lack '?').
             # The floors belong to the backend: each spreads its probabilities differently.
+            # awaiting_answer still alone gates fillers/gaze; followup only affects this floor.
             j = self.decider
-            floor = (getattr(j, "skip_if_answer_below", self.JEV_SKIP_IF_ANSWER_BELOW) if self.awaiting_answer()
+            awaiting = self.awaiting_answer()
+            answer_window = awaiting or decision.followup >= self.JEV_FOLLOWUP_MIN
+            floor = (getattr(j, "skip_if_answer_below", self.JEV_SKIP_IF_ANSWER_BELOW) if answer_window
                      else getattr(j, "skip_below", self.JEV_SKIP_BELOW))
             steering = (decision.new_problem >= self.JEV_NEW_PROBLEM_MIN
                         or (decision.about == "steer" and decision.about_confidence >= self.JEV_ABOUT_MIN))
             if decision.respond < floor and not steering:  # being redirected is never ignorable
-                self.log_event("student_said", text=text, answered=False, by="jev")
+                self.log_event("student_said", text=text, answered=False, by="jev",
+                               respond=round(decision.respond, 2), floor=floor,
+                               followup=round(decision.followup, 2), awaiting=awaiting)
                 self.last_activity = self.clock()
                 return
         elif is_filler(text) and not self.awaiting_answer():
@@ -1092,7 +1111,19 @@ class Tutor:
             self.candidate_mistake = None
         why = None
         if mistake:
-            if mistake == self.mistake:
+            if request is None and self.tap_only:
+                # Detect / pin state, but do not auto-speak or escalate. Locked Fri plant:
+                # quiet until an explicit Hint or Check tap. hint_level stays 0 so the first
+                # Hint tap still lands as hint_1 (see escalate branch below).
+                if mistake != self.mistake:
+                    self.mistake, self.hint_level, self.hints_on_mistake = mistake, 0, 0
+                    self.candidate_mistake = None
+                    self.mistakes_found.append(
+                        f"step {mistake[0]}: {a.steps[mistake[0] - 1]} ({a.error_kind or 'error'})")
+                    self.log_event("tutor_detected", step=mistake[0],
+                                   line=a.steps[mistake[0] - 1], tap_only=True)
+                # Same mistake already pinned: still quiet — no hint_2 / let_it_go from looks.
+            elif mistake == self.mistake:
                 self.hints_on_mistake += 1
                 if self.hints_on_mistake > self.MAX_HINTS_PER_MISTAKE:
                     # Asking a fourth time in different words is not teaching, it is nagging.
@@ -1104,12 +1135,13 @@ class Tutor:
                     return
                 self.hint_level = min(3, self.hint_level + 1)
                 why = f"hint_{self.hint_level}"
+                self.hints_given += 1
             else:
                 self.mistake, self.hint_level, self.hints_on_mistake = mistake, 1, 1
                 self.candidate_mistake = None
                 self.mistakes_found.append(f"step {mistake[0]}: {a.steps[mistake[0] - 1]} ({a.error_kind or 'error'})")
                 why = "hint_1"
-            self.hints_given += 1
+                self.hints_given += 1
         elif self.mistake:
             self.mistakes_fixed.append(f"step {self.mistake[0]}")
             self.mistake, self.hint_level = None, 0
@@ -1121,7 +1153,10 @@ class Tutor:
         elif request:
             why = request
         say = a.say
-        if why is None and not a.finished and len(a.steps) - self.steps_confirmed >= self.PROGRESS_STEPS \
+        # Never "that's right" about a page with a mistake on it (tap-only mode leaves `why` empty
+        # for a detected mistake), and tap-only mode keeps quiet until a tap anyway.
+        if why is None and not mistake and not self.tap_only and not a.finished \
+                and len(a.steps) - self.steps_confirmed >= self.PROGRESS_STEPS \
                 and now - self.last_spoke_at >= self.PROGRESS_GAP_S:
             self._progress_count += 1
             why, say = "progress", PROGRESS[(self._progress_count - 1) % len(PROGRESS)]

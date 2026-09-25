@@ -63,6 +63,7 @@ use that format, so moving between them is a URL change.
 |---|---|---|
 | Hosted Jev (`api.typesafe.ai`) | Now, and tuning | Key in `~/projects/jev/.env`. Needs internet; sends the student's words to a third party. |
 | **Local JevK5 (default)** | The unplugged demo and the product | Qwen3.5-4B + distilled LoRA, T=1.22. Port 8095, ~14 GB GPU, ~370 ms. |
+| Local JevK8 | Andy's OpenJev on his Spark | Port 8099 (override with `SENSEI_JEV_URL`). Floors provisional — copy of jevk5 until `--sweep`. |
 | Local SemIf | Comparison | The same prompt on the frozen base model, T=1.23. Port 8096. |
 | Local decider-4b v2.1 / v2 | Comparison | JevBench v1.4.2 leader. Behind JevK5 on our set and slower (jev-report.md §8). Ports 8097/8098. |
 

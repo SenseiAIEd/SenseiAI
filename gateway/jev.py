@@ -12,8 +12,8 @@ decide things the vision model used to decide as a side effect of writing a repl
 
 Configuration (all optional; with USE_JEV unset Sensei behaves exactly as before):
   USE_JEV             1 to use it from startup (it can also be switched at runtime: POST /jev)
-  SENSEI_JEV_BACKEND  jevk5 (default, local, offline) | semif | decider | decider-v2 (local)
-                      | hosted (TypeSafe)
+  SENSEI_JEV_BACKEND  jevk5 (default, local, offline) | jevk8 | semif | decider | decider-v2
+                      (local) | hosted (TypeSafe)
   SENSEI_JEV_URL      override the chosen backend's URL
   SENSEI_JEV_MODEL    model name sent to hosted Jev, default jev-latest
   SENSEI_JEV_KEY      hosted only: the API key; or TYPESAFEAI_KEY; or read from SENSEI_JEV_KEY_FILE
@@ -50,6 +50,10 @@ HOSTED_URL = "https://api.typesafe.ai/v1/systemone"
 # under the lowest score each model gave a question that did need the page.
 BACKENDS = {
     "jevk5": {"url": "http://127.0.0.1:8095/v1/systemone",
+              "skip_below": 0.25, "skip_if_answer_below": 0.15, "no_page_below": 0.15},
+    # provisional — not swept on utterances; do not claim better/worse than jevk5 until Andy
+    # runs `jev_eval.py --backend jevk8 --sweep`. Floors copy jevk5; port 8099 (8095–8098 taken).
+    "jevk8": {"url": "http://127.0.0.1:8099/v1/systemone",
               "skip_below": 0.25, "skip_if_answer_below": 0.15, "no_page_below": 0.15},
     "semif": {"url": "http://127.0.0.1:8096/v1/systemone",
               "skip_below": 0.15, "skip_if_answer_below": 0.05, "no_page_below": 0.15},
