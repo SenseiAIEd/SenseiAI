@@ -1,0 +1,9 @@
+{
+  "additionalFiles": "",
+  "compiler.optimization_flags": "-Os",
+  "customBuildProperties": "build.warn_data_percentage=75",
+  "fqbn": "esp32:esp32:esp32",
+  "hardwareFolders": "/tmp/claude-0/-home-user-SenseiAI/10eaade4-ca6d-569b-ab87-a8077d3a2eb4/scratchpad/ard/data/packages",
+  "otherLibrariesFolders": "/tmp/claude-0/-home-user-SenseiAI/10eaade4-ca6d-569b-ab87-a8077d3a2eb4/scratchpad/ard/user/libraries",
+  "sketchLocation": "/home/user/SenseiAI/firmware/sensei_head"
+}
