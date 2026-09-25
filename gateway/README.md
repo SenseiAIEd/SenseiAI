@@ -236,7 +236,8 @@ Details and results: `docs/jev-in-sensei.md`.
 
 ```sh
 USE_JEV=1                  # off by default; when off nothing changes
-SENSEI_JEV_BACKEND=jevk5   # default: local JevK5 on :8095, offline. Or semif (:8096), or hosted
+SENSEI_JEV_BACKEND=jevk5   # default: local JevK5 on :8095, offline. Or semif (:8096),
+                           # decider (:8097), decider-v2 (:8098), or hosted
 SENSEI_JEV_KEY=...         # hosted only; or TYPESAFEAI_KEY, or read from ~/projects/jev/.env
 ```
 

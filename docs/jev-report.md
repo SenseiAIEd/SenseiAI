@@ -166,3 +166,32 @@ Two things learned:
 
 The local models are weaker on "what is it about" (25–26/37 against 30–31) and on whether the
 page is needed, so they only drop the image when very sure (under 0.15).
+
+## 8. Update, 25 Sep: decider-4b, the JevBench v1.4.2 leader, on Sensei's decisions
+
+[decider-4b](https://github.com/Mapika/decider) (Mapika, Apache-2.0) tops JevBench v1.4.2 at 64.1
+against Jev 1.13's 63.3 — 0.8 points, while behind Jev on calibration (75.0 vs 76.3) and on the hard
+tier (67% vs 74%). Two things to know about that lead: its author discloses that 8,000 of v2's
+training rows were generated from the published names of the benchmark's ten sealed families, and
+the current release is v2.1, not the v2 that was ranked. We ran both on the Spark alongside JevK5 and
+SemIf, on the same 48 utterances, each at its own best floor and with Sensei's actual policy
+(including "being redirected is never ignored"):
+
+| model | should reply | silent on a real question | unneeded replies | moved to a new problem | what it's about | median / p95 |
+|---|---|---|---|---|---|---|
+| **JevK5 (default)** | **43/47** | 1 | **3** | 43/44 | 25/37 | **375 / 474 ms** |
+| SemIf | 39/47 | **0** | 8 | 43/44 | 26/37 | 384 / 484 ms |
+| decider-4b v2.1 | 41/47 | 1 | 5 | **44/44** | 26/37 | 585 / 686 ms |
+| decider-4b v2 | 40/47 | 1 | 6 | **44/44** | 27/37 | 685 / 691 ms |
+| hosted Jev (reference) | 45/47 | 1 | 1 | 43/44 | 31/37 | 264 / 299 ms |
+
+Every local model returned identical numbers on repeated runs; hosted Jev didn't. None of them ever
+answered without the image when the question needed it.
+
+**The benchmark lead doesn't carry over to Sensei.** On the decision that matters most — should
+Sensei reply at all — decider is two to three utterances behind JevK5 and 200–300 ms slower. Its
+strength, catching every "new problem" (and confidently: 38 of 44 in v2), is one utterance better
+than JevK5 on this set. With 47 cases a one- or two-case gap is within noise; the latency and the
+extra replies are the consistent differences. JevK5 stays the default; `decider` and `decider-v2`
+are selectable backends. General-purpose benchmarks measure a model; the utterance set measures it
+at our job, and is where a choice like this should be made.

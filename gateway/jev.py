@@ -12,7 +12,8 @@ decide things the vision model used to decide as a side effect of writing a repl
 
 Configuration (all optional; with USE_JEV unset Sensei behaves exactly as before):
   USE_JEV             1 to use it from startup (it can also be switched at runtime: POST /jev)
-  SENSEI_JEV_BACKEND  jevk5 (default, local, offline) | semif (local) | hosted (TypeSafe)
+  SENSEI_JEV_BACKEND  jevk5 (default, local, offline) | semif | decider | decider-v2 (local)
+                      | hosted (TypeSafe)
   SENSEI_JEV_URL      override the chosen backend's URL
   SENSEI_JEV_MODEL    model name sent to hosted Jev, default jev-latest
   SENSEI_JEV_KEY      hosted only: the API key; or TYPESAFEAI_KEY; or read from SENSEI_JEV_KEY_FILE
@@ -37,18 +38,25 @@ HOSTED_URL = "https://api.typesafe.ai/v1/systemone"
 
 # Each backend's probabilities are spread differently, so the floors travel with the backend,
 # not the tutor. Chosen on evals/utterances.jsonl (25 Sep, 47 cases), counting a silence on a
-# real question as worse than an unneeded reply (jev_eval.py --backend NAME --sweep):
-#                   silent  extra   reply accuracy
-#   hosted  0.40      2       1       44/47
-#   jevk5   0.25      2       3       42/47
-#   semif   0.15      0       8       39/47
-# no_page_below: under it (and asked about an idea), answer without the image. JevK5 scored a
-# real "is that accurate?" 0.19, so the local ones only drop the image when very sure.
+# real question as worse than an unneeded reply (jev_eval.py --backend NAME --sweep). With the
+# "being redirected is never ignored" rule:
+#                        floor  silent  extra  reply   new problem  median
+#   jevk5 (default)       0.25     1      3    43/47     43/44      375 ms
+#   semif                 0.15     0      8    39/47     43/44      384 ms
+#   decider (4b v2.1)     0.35     1      5    41/47     44/44      585 ms
+#   decider-v2 (4b v2)    0.25     1      6    40/47     44/44      685 ms
+#   hosted                0.40     1      1    45/47     43/44      264 ms
+# no_page_below: under it (and asked about an idea), answer without the image. Set a little
+# under the lowest score each model gave a question that did need the page.
 BACKENDS = {
     "jevk5": {"url": "http://127.0.0.1:8095/v1/systemone",
               "skip_below": 0.25, "skip_if_answer_below": 0.15, "no_page_below": 0.15},
     "semif": {"url": "http://127.0.0.1:8096/v1/systemone",
               "skip_below": 0.15, "skip_if_answer_below": 0.05, "no_page_below": 0.15},
+    "decider": {"url": "http://127.0.0.1:8097/v1/systemone",
+                "skip_below": 0.35, "skip_if_answer_below": 0.25, "no_page_below": 0.10},
+    "decider-v2": {"url": "http://127.0.0.1:8098/v1/systemone",
+                   "skip_below": 0.25, "skip_if_answer_below": 0.15, "no_page_below": 0.05},
     "hosted": {"url": HOSTED_URL,
                "skip_below": 0.40, "skip_if_answer_below": 0.30, "no_page_below": 0.30},
 }
