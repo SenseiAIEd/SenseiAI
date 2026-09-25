@@ -161,6 +161,38 @@ class Hub:
 
 HUB = Hub()
 MAX_VIEWERS = 4
+# What a desk gets: enough to watch someone write, light enough for a phone-hotspot uplink.
+# Full 1280x720 at 30 fps froze on the desk when the Spark was on a hotspot (25 Sep).
+DESK_LONG_SIDE = int(os.environ.get("SENSEI_DESK_LONG_SIDE", 640))
+DESK_FPS = float(os.environ.get("SENSEI_DESK_FPS", 12))
+
+
+class DeskVideo(MediaStreamTrack):
+    """The phone's video for a desk viewer: every DESK_FPS-th of a second, scaled down so its
+    long side is DESK_LONG_SIDE. Fewer, smaller frames to encode and to send."""
+
+    kind = "video"
+
+    def __init__(self, source: MediaStreamTrack):
+        super().__init__()
+        self.source = source
+        self.last = 0.0
+
+    async def recv(self):
+        while True:
+            frame = await self.source.recv()
+            now = time.monotonic()
+            if now - self.last >= 1.0 / DESK_FPS:
+                break
+        self.last = now
+        long_side = max(frame.width, frame.height)
+        if long_side > DESK_LONG_SIDE:
+            scale = DESK_LONG_SIDE / long_side
+            small = frame.reformat(width=round(frame.width * scale / 2) * 2,
+                                   height=round(frame.height * scale / 2) * 2)
+            small.pts, small.time_base = frame.pts, frame.time_base
+            frame = small
+        return frame
 viewers: set[RTCPeerConnection] = set()  # desks receiving the phone's live video and audio
 
 
@@ -686,7 +718,8 @@ async def watch(body: Offer):
     await pc.setRemoteDescription(RTCSessionDescription(sdp=body.sdp, type=body.type))
     for kind in ("video", "audio"):
         if kind in s.sources:  # unbuffered: a viewer wants now, not every frame
-            pc.addTrack(relay.subscribe(s.sources[kind], buffered=False))
+            track = relay.subscribe(s.sources[kind], buffered=False)
+            pc.addTrack(DeskVideo(track) if kind == "video" else track)
     await pc.setLocalDescription(await pc.createAnswer())
     s.log("desk_watch", viewers=len(viewers))
     return {"sdp": pc.localDescription.sdp, "type": pc.localDescription.type}
