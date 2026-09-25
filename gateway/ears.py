@@ -60,12 +60,10 @@ PHANTOMS = {"thank you", "thanks", "thank you very much", "thanks for watching",
 # Whisper's other favourite inventions come from YouTube outros; they are never a student.
 OUTRO = re.compile(r"\b(subscribe|thanks? for watching|like and share|see you in the next (video|one))\b", re.I)
 
-# Context for Whisper: a short prompt of the kind of thing students say to a tutor. Without it,
-# small.en heard "Is the solution correct?" as "Is that some action current?" (25 Sep session).
-STT_PROMPT = os.environ.get("SENSEI_STT_PROMPT",
-                            "A student is talking to their maths and science tutor about their homework. "
-                            "Is my solution correct? What do you see? Is this step right? I don't understand. "
-                            "x plus 5 equals 7, so x equals 2.")
+# No initial prompt. One was tried (25 Sep, "...x plus 5 equals 7, so x equals 2."): Whisper
+# repeated it back on silence and noise ("x plus 5 equals 6." twelve times in one session), and
+# Sensei answered the echoes. SENSEI_STT_PROMPT can set one, but leave it empty.
+STT_PROMPT = os.environ.get("SENSEI_STT_PROMPT", "")
 STT_BEAM = int(os.environ.get("SENSEI_STT_BEAM", 5))
 
 
