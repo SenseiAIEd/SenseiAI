@@ -83,6 +83,8 @@ FEATURES = ["look", "talk", "memory", "pause"]
 HEAD = Head.from_env()  # the pan-tilt head, if SENSEI_HEAD_PORT names its USB serial port
 # With a head: glance at the student when it helps, and centre their face (gaze.py).
 AUTO_LOOK = {"on": os.environ.get("SENSEI_AUTO_LOOK", "on") != "off"}
+# Demo / Aalo plant: detect but stay quiet until Hint/Check. Default off = Andy main unchanged.
+TAP_ONLY = {"on": os.environ.get("SENSEI_TAP_ONLY", "0").lower() in ("1", "true", "yes", "on")}
 MANUAL_HOLD_S = 30.0  # after "look at me" or a console button, Sensei doesn't move on its own for this long
 TRANSCRIBER = Transcriber() if os.environ.get("SENSEI_STT", "on") != "off" else None
 
@@ -299,7 +301,8 @@ class Session:
             self.send(state)
 
         self.tutor = Tutor(BRAIN, speak, notify, minutes=minutes, log_event=self.log,
-                           save_frame=self.save_judged_frame, chat_brain=CHAT_BRAIN, decider=JEV)
+                           save_frame=self.save_judged_frame, chat_brain=CHAT_BRAIN, decider=JEV,
+                           tap_only=TAP_ONLY["on"])
         await self.tutor.start()
         if HEAD is not None:  # the tutor watches the notebook
             asyncio.ensure_future(self.point("notebook", "session start"))
@@ -498,6 +501,10 @@ class JevSwitch(BaseModel):
     backend: Optional[str] = None  # jevk5 | jevk8 | semif | decider | decider-v2 | hosted
 
 
+class TapOnlySwitch(BaseModel):
+    on: bool
+
+
 def jev_state() -> dict:
     if JEV is None:
         return {"on": False, "available": False}
@@ -519,6 +526,7 @@ async def config():
     return {"iceServers": ice, "tutor": {"brain": BRAIN.model if BRAIN else None,
                                          "chat_brain": CHAT_BRAIN.model if CHAT_BRAIN else None,
                                          "jev": jev_state(),
+                                         "tap_only": TAP_ONLY["on"],
                                          "ears": TRANSCRIBER.name if TRANSCRIBER else None,
                                          "features": FEATURES}}
 
@@ -777,6 +785,25 @@ async def switch_jev(body: JevSwitch):
     if session is not None:
         session.log("jev_switched", on=JEV.enabled, backend=JEV.backend)
     return jev_state()
+
+
+@app.get("/tap_only")
+async def which_tap_only():
+    """Whether background looks stay quiet until Hint/Check (SENSEI_TAP_ONLY / plant demo)."""
+    live = session.tutor.tap_only if session is not None and session.tutor is not None else TAP_ONLY["on"]
+    return {"on": live, "default": TAP_ONLY["on"]}
+
+
+@app.post("/tap_only")
+async def switch_tap_only(body: TapOnlySwitch):
+    """Turn tap-only / quiet-until-Hint on or off without a restart. Default remains off."""
+    TAP_ONLY["on"] = bool(body.on)
+    if session is not None and session.tutor is not None:
+        session.tutor.tap_only = TAP_ONLY["on"]
+    log.info("tap_only %s", "on" if TAP_ONLY["on"] else "off")
+    if session is not None:
+        session.log("tap_only_switched", on=TAP_ONLY["on"])
+    return {"on": TAP_ONLY["on"]}
 
 
 @app.get("/last_look")

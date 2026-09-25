@@ -44,7 +44,7 @@ class ScriptedBrain:
 
 
 class Harness:
-    def __init__(self, brain, minutes=10):
+    def __init__(self, brain, minutes=10, tap_only=False):
         self.now = 1000.0
         self.said: list[tuple[str, str]] = []
         self.notes: list[dict] = []
@@ -57,7 +57,8 @@ class Harness:
             self.notes.append(state)
 
         self.tutor = Tutor(brain, speak, notify, minutes=minutes, clock=lambda: self.now,
-                           log_event=lambda event, **k: self.events.append(event))
+                           log_event=lambda event, **k: self.events.append(event),
+                           tap_only=tap_only)
 
     def run(self, coro):
         return asyncio.run(coro)
@@ -780,3 +781,70 @@ def test_hosted_cannot_be_chosen_without_a_key():
     j = Jev("http://127.0.0.1:8095/v1/systemone", backend="jevk5")
     with pytest.raises(ValueError):
         j.use("hosted")
+
+
+# --- tap-only / quiet-until-Hint (SENSEI_TAP_ONLY) ---------------------------------------
+
+def test_tap_only_detects_but_does_not_auto_speak_after_confirm():
+    """Background looks still confirm a mistake, but stay quiet until Hint/Check."""
+    brain = ScriptedBrain(MISTAKE, MISTAKE, MISTAKE)
+    h = Harness(brain, tap_only=True)
+    h.run(h.tutor.start())
+    h.settle(page_with("a"))
+    assert h.whys() == ["greeting"] and "tutor_unconfirmed" in h.events
+    h.settle(page_with("ab"))  # second agreeing look: detect, do not speak
+    assert h.whys() == ["greeting"]
+    assert h.tutor.mistake == MISTAKE.mistake and h.tutor.hint_level == 0
+    assert h.tutor.hints_given == 0 and h.tutor.mistakes_found
+    assert "tutor_detected" in h.events
+    h.now += 20
+    h.settle(page_with("abc"))  # further looks: still quiet, no escalate
+    assert h.whys() == ["greeting"] and h.tutor.hint_level == 0
+
+
+def test_tap_only_hint_and_check_still_speak():
+    """Explicit Hint / Check taps still speak under tap-only; first Hint is hint_1."""
+    brain = ScriptedBrain(MISTAKE, MISTAKE, MISTAKE, FIXED)
+    h = Harness(brain, tap_only=True)
+    h.run(h.tutor.start())
+    h.settle(page_with("a"))
+    h.settle(page_with("ab"))  # detected, quiet
+    assert h.whys() == ["greeting"] and h.tutor.mistake is not None
+
+    h.run(h.tutor.request("hint", PAGE))
+    assert "hint_1" in h.whys() and h.tutor.hint_level == 1 and h.tutor.hints_given == 1
+    assert any(w == "ack" for w in h.whys())  # looking ack still fires
+
+    h.now += 20
+    h.run(h.tutor.request("check", page_with("fixed")))
+    assert h.whys()[-1] == "fixed" and h.tutor.mistake is None
+
+
+def test_tap_only_off_keeps_auto_hint_after_confirm():
+    """Default (flag off): second agreeing look still auto-speaks hint_1."""
+    brain = ScriptedBrain(MISTAKE, MISTAKE)
+    h = Harness(brain, tap_only=False)
+    h.run(h.tutor.start())
+    h.settle(page_with("a"))
+    h.settle(page_with("ab"))
+    assert h.whys()[-1] == "hint_1" and h.tutor.hint_level == 1
+
+
+def test_tap_only_suppresses_idle_nudge():
+    h = Harness(ScriptedBrain(), tap_only=True)
+    h.run(h.tutor.start())
+    h.now += Tutor.IDLE_S + 1
+    h.run(h.tutor.tick())
+    assert "idle" not in h.whys()
+
+
+def test_tap_only_background_looks_do_not_let_it_go():
+    """Without Hint taps, tap-only never escalates to let_it_go from background looks."""
+    h = Harness(ScriptedBrain(*[MISTAKE] * 8), tap_only=True)
+    h.run(h.tutor.start())
+    for i in range(6):
+        h.now += 20
+        h.settle(page_with("a" * (i + 1)))
+    assert "let_it_go" not in h.whys()
+    assert not any(w.startswith("hint_") for w in h.whys())
+    assert h.tutor.mistake is not None and h.tutor.hint_level == 0
