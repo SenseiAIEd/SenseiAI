@@ -964,3 +964,30 @@ def test_tap_only_never_says_thats_right_about_a_page_with_a_mistake():
     h.settle(page_with("a"))
     h.settle(page_with("ab"))
     assert "progress" not in h.whys() and h.tutor.mistake is not None
+
+
+def test_a_new_sheet_moves_focus_even_if_the_old_problem_was_not_finished():
+    # 25 Sep: after x + 5 = 7 the student put down a square-root problem; Sensei kept reading it
+    # as x + 5 = 7 because every look was told "judge only the problem in focus".
+    first = Assessment(page="work", problem="x + 5 = 7", steps=["x + 5 = 7", "x = 7 - 5"], say=None)
+    new_sheet = Assessment(page="work", problem="(x + 3)^2 = 9", steps=["(x + 3)^2 = 9", "x + 3 = 3"], say=None)
+    brain = ScriptedBrain(first, new_sheet, new_sheet)
+    h = Harness(brain)
+    h.run(h.tutor.start())
+    h.settle(page_with("a"))
+    assert h.tutor.problem == "x + 5 = 7"
+    h.settle(page_with("ab"))
+    assert h.tutor.problem == "(x + 3)^2 = 9"
+    assert "Read what is on the page NOW" in brain.instructions[-1]
+    h.settle(page_with("abc"))
+    assert "Earlier the student was working on: (x + 3)^2 = 9" in brain.instructions[-1]
+
+
+def test_the_same_problem_written_differently_does_not_move_focus():
+    first = Assessment(page="work", problem="x + 5 = 7", steps=["x + 5 = 7"], say=None)
+    same = Assessment(page="work", problem="Solve: x+5=7", steps=["x + 5 = 7", "x = 2"], say=None)
+    h = Harness(ScriptedBrain(first, same))
+    h.run(h.tutor.start())
+    h.settle(page_with("a"))
+    h.settle(page_with("ab"))
+    assert h.tutor.problem == "x + 5 = 7" and "tutor_focus" in h.events and h.events.count("tutor_focus") == 1

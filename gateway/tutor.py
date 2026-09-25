@@ -306,6 +306,16 @@ def _same_line(a: Optional[str], b: Optional[str]) -> bool:
     return norm(a) == norm(b)
 
 
+def _mentions(text: Optional[str], problem: Optional[str]) -> bool:
+    """Whether a line on the page is (or contains) this problem, ignoring spacing, case and a
+    leading "Solve:"."""
+    if not text or not problem:
+        return False
+    norm = lambda s: re.sub(r"^(solve|find|simplify)\s*:?", "", re.sub(r"\s+", "", s).lower())
+    a, b = norm(text), norm(problem)
+    return bool(a and b) and (a == b or b in a or a in b)
+
+
 def parse_assessment(text: str) -> Assessment:
     """Pull the JSON object out of a model reply (tolerates code fences and reasoning)."""
     text = strip_reasoning(text)
@@ -951,8 +961,13 @@ class Tutor:
         else:
             parts.append("Set \"subject\" and \"topic\" from what you see.")
         if self.problem:
-            parts.append(f"The problem in focus is: {self.problem}. Judge only the lines that "
-                         "belong to it; put any other problem on the page in \"other_problems\".")
+            # Background, not an order. "The problem in focus is X, judge only X" made the model
+            # read a new sheet as the old problem (25 Sep: a square-root problem reported as
+            # "x + 5 = 7" with invented steps). What is written now wins.
+            parts.append(f"Earlier the student was working on: {self.problem}. Read what is on the page NOW. "
+                         "If it shows a different problem (a new sheet, or they moved on), report THAT one as "
+                         "\"problem\" and judge it. If several problems are on the page, judge the one written "
+                         "last and put the others in \"other_problems\".")
         if self.mistake:
             parts.append(f"Earlier you flagged step {self.mistake[0]} as the first mistake and gave a "
                          f"level {self.hint_level} hint. If that same mistake is still there, use hint level "
@@ -1084,7 +1099,11 @@ class Tutor:
             return
         if a.problem:
             if self.problem is None or not _same_line(a.problem, self.problem):
-                if self.problem is None or self._finished_problem == self.problem:
+                # A new sheet: the old problem is nowhere on the page any more, so the student has
+                # moved on, finished or not. (Before, only a finished problem let the page move us.)
+                gone = self.problem is not None and not any(
+                    _mentions(t, self.problem) for t in [a.problem, *a.steps, *a.other_problems])
+                if self.problem is None or self._finished_problem == self.problem or gone:
                     self.switch_to(a.problem, who="page")
         # Finished this one and written the next underneath? Congratulate on the one they
         # finished first, then move across - so the switch happens after we have spoken, not
