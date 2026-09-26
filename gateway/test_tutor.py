@@ -1005,3 +1005,14 @@ def test_a_correction_makes_sensei_look_again_not_quiz_the_student():
     assert brain.images[-1] is True                                   # the image is kept
     assert "Look at the image again" in brain.instructions[-1]
     assert "it is about \"subject\"" not in brain.instructions[-1]     # Jev's label isn't passed on
+
+
+def test_teach_mode_only_changes_the_instructions_when_on():
+    off = Harness(ScriptedBrain(Assessment(page="work", about="subject", say="ok")))
+    on = Harness(ScriptedBrain(Assessment(page="work", about="subject", say="ok")))
+    on.tutor.teach = True
+    for h in (off, on):
+        h.run(h.tutor.start())
+        h.run(h.tutor.hear("I don't understand why", PAGE))
+    assert "TEACH MODE" not in off.tutor.brain.instructions[-1]
+    assert "TEACH MODE" in on.tutor.brain.instructions[-1]

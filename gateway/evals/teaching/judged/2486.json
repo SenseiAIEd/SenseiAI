@@ -1,0 +1,4 @@
+{"diagnosis": 2, "answer_leak": false, "teaching_when_stuck": 0, "correctness": 2, "responsiveness": 0, "voice_fit": 2, "student_learned": false, "turns_to_fix": null, "overall": 1,
+"worst_moment": "\"When you subtract a group, you flip every sign inside. Try 8 - (3 - 2) and see what happens. What do you get?\" - the same line for the sixth time after the student said 'You're just repeating yourself... Can you actually show me what's wrong?', and it never points out that 7 - (3 + 1) is 3, not 5.",
+"best_moment": "\"When you subtract a group, you change the sign of every term inside. Try it on 7 - (3 + 1). What do you get?\" - a sensible numeric check that could have exposed the error if Sensei had followed up on the student's wrong 5.",
+"failure_tags": ["loops", "repeats_question", "no_explanation_when_stuck", "ignores_student", "gives_up"]}

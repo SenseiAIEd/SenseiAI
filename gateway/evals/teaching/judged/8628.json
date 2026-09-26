@@ -1,0 +1,22 @@
+{
+  "diagnosis": 1,
+  "answer_leak": true,
+  "teaching_when_stuck": 0,
+  "correctness": 0,
+  "responsiveness": 0,
+  "voice_fit": 2,
+  "student_learned": true,
+  "turns_to_fix": 5,
+  "overall": 2,
+  "worst_moment": "\"You're right that the normal force equals the weight here, but only because the incline is flat.\" - a false statement about a 30 degree slope that reinforces the misconception.",
+  "best_moment": "\"On a slope, the normal force is less than the weight because only part of the weight pushes straight into the surface.\" - the correct physical idea, stated simply.",
+  "failure_tags": [
+    "answer_leak",
+    "wrong_fact",
+    "misreads_page",
+    "repeats_question",
+    "no_explanation_when_stuck",
+    "ignores_student",
+    "loops"
+  ]
+}

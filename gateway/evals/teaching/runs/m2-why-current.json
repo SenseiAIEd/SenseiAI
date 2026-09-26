@@ -1,0 +1,461 @@
+{
+ "id": "m2-why-current",
+ "page": "/home/perspectivity-dgx/SenseiAI/datasets/samples/math/basic/medium/bad_1.png",
+ "variant": "current",
+ "now": 1068.0,
+ "transcript": [
+  {
+   "who": "sensei",
+   "why": "greeting",
+   "text": "Hi, I'm Sensei. Put your page under the camera and start solving. I'm watching."
+  },
+  {
+   "who": "sensei",
+   "why": "hint_1",
+   "text": "What happens to each term inside the brackets when you square (x + 3)?"
+  },
+  {
+   "who": "student",
+   "text": "Oh wait, I should multiply it out. x squared plus 6x plus 9 equals 25?"
+  },
+  {
+   "who": "sensei",
+   "why": "ack",
+   "text": "Okay, let me think."
+  },
+  {
+   "who": "sensei",
+   "why": "reply",
+   "text": "Yes, you're right, you need to multiply it out correctly."
+  },
+  {
+   "who": "student",
+   "text": "So x is 2 or minus 8. But where does the 6x actually come from? Why isnt it just x squared plus 9?"
+  },
+  {
+   "who": "sensei",
+   "why": "ack",
+   "text": "Good question. One moment."
+  },
+  {
+   "who": "sensei",
+   "why": "reply",
+   "text": "Good question! The 6x comes from multiplying x and 3 twice when you expand (x + 3)(x + 3)."
+  },
+  {
+   "who": "student",
+   "text": "Twice like x times 3 and then 3 times x? So 3x plus 3x?"
+  },
+  {
+   "who": "sensei",
+   "why": "ack",
+   "text": "Let me see."
+  },
+  {
+   "who": "sensei",
+   "why": "reply",
+   "text": "Yes, exactly! That's where the 6x comes from: x times 3 and 3 times x."
+  },
+  {
+   "who": "student",
+   "text": "Okay makes sense, squaring each bit misses those two. So line one is x squared plus 6x plus 9 equals 25. Thanks."
+  },
+  {
+   "who": "sensei",
+   "why": "ack",
+   "text": "Got it. Give me a second."
+  },
+  {
+   "who": "sensei",
+   "why": "reply",
+   "text": "You're right, you need to multiply it out correctly. The first line should be x squared plus 6x plus 9 equals 25."
+  }
+ ],
+ "events": [
+  {
+   "event": "tutor_start",
+   "minutes": 15.0
+  },
+  {
+   "event": "tutor_say",
+   "text": "Hi, I'm Sensei. Put your page under the camera and start solving. I'm watching.",
+   "why": "greeting"
+  },
+  {
+   "event": "tutor_subject",
+   "was": null,
+   "now": "math",
+   "topic": "quadratic equations",
+   "set_by": "page"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": null,
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": [
+    1200,
+    445
+   ],
+   "page": "work",
+   "about": null,
+   "focus": null,
+   "problem": "Solve: (x + 3)^2 = 25",
+   "subject": "math",
+   "topic": "quadratic equations",
+   "other_problems": [],
+   "given": "Solve: (x + 3)^2 = 25",
+   "steps": [
+    "x^2 + 9 = 25",
+    "x^2 = 16",
+    "x = 4 or x = -4"
+   ],
+   "first_error": 1,
+   "error_kind": "algebraic_expansion",
+   "finished": true,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "What did you do to expand (x + 3)^2?"
+  },
+  {
+   "event": "tutor_focus",
+   "was": null,
+   "now": "Solve: (x + 3)^2 = 25",
+   "set_by": "page"
+  },
+  {
+   "event": "tutor_unconfirmed",
+   "step": 1,
+   "line": "x^2 + 9 = 25"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": null,
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": [
+    1200,
+    445
+   ],
+   "page": "work",
+   "about": null,
+   "focus": null,
+   "problem": "Solve: (x + 3)^2 = 25",
+   "subject": "math",
+   "topic": "quadratic equations",
+   "other_problems": [],
+   "given": "Solve: (x + 3)^2 = 25",
+   "steps": [
+    "x^2 + 9 = 25",
+    "x^2 = 16",
+    "x = 4 or x = -4"
+   ],
+   "first_error": 1,
+   "error_kind": "false_linearity",
+   "finished": true,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "What happens to each term inside the brackets when you square (x + 3)?"
+  },
+  {
+   "event": "tutor_say",
+   "text": "What happens to each term inside the brackets when you square (x + 3)?",
+   "why": "hint_1"
+  },
+  {
+   "event": "jev",
+   "on": "utterance",
+   "said": "Oh wait, I should multiply it out. x squared plus 6x plus 9 equals 25?",
+   "respond": 0.76,
+   "about": "subject",
+   "about_conf": 0.97,
+   "followup": 0.92,
+   "needs_page": 0.35,
+   "new_problem": 0.01,
+   "which_problem": null,
+   "which_conf": 0.0,
+   "latency_ms": 546
+  },
+  {
+   "event": "student_said",
+   "text": "Oh wait, I should multiply it out. x squared plus 6x plus 9 equals 25?"
+  },
+  {
+   "event": "tutor_say",
+   "text": "Okay, let me think.",
+   "why": "ack"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": "talk",
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": [
+    1200,
+    445
+   ],
+   "page": "work",
+   "about": "subject",
+   "focus": "Solve: (x + 3)^2 = 25",
+   "problem": null,
+   "subject": null,
+   "topic": null,
+   "other_problems": [],
+   "given": null,
+   "steps": [],
+   "first_error": null,
+   "error_kind": null,
+   "finished": false,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "Yes, you're right, you need to multiply it out correctly."
+  },
+  {
+   "event": "tutor_about",
+   "about": "subject"
+  },
+  {
+   "event": "tutor_say",
+   "text": "Yes, you're right, you need to multiply it out correctly.",
+   "why": "reply"
+  },
+  {
+   "event": "jev",
+   "on": "utterance",
+   "said": "So x is 2 or minus 8. But where does the 6x actually come from? Why isnt it just x squared plus 9?",
+   "respond": 0.82,
+   "about": "subject",
+   "about_conf": 0.99,
+   "followup": 0.77,
+   "needs_page": 0.15,
+   "new_problem": 0.0,
+   "which_problem": null,
+   "which_conf": 0.0,
+   "latency_ms": 1371
+  },
+  {
+   "event": "student_said",
+   "text": "So x is 2 or minus 8. But where does the 6x actually come from? Why isnt it just x squared plus 9?"
+  },
+  {
+   "event": "tutor_say",
+   "text": "Good question. One moment.",
+   "why": "ack"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": "talk",
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": null,
+   "page": "work",
+   "about": "subject",
+   "focus": "Solve: (x + 3)^2 = 25",
+   "problem": null,
+   "subject": null,
+   "topic": null,
+   "other_problems": [],
+   "given": null,
+   "steps": [],
+   "first_error": null,
+   "error_kind": null,
+   "finished": false,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "Good question! The 6x comes from multiplying x and 3 twice when you expand (x + 3)(x + 3)."
+  },
+  {
+   "event": "tutor_about",
+   "about": "subject"
+  },
+  {
+   "event": "tutor_say",
+   "text": "Good question! The 6x comes from multiplying x and 3 twice when you expand (x + 3)(x + 3).",
+   "why": "reply"
+  },
+  {
+   "event": "jev_error",
+   "error": "timed out"
+  },
+  {
+   "event": "student_said",
+   "text": "Twice like x times 3 and then 3 times x? So 3x plus 3x?"
+  },
+  {
+   "event": "tutor_say",
+   "text": "Let me see.",
+   "why": "ack"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": "talk",
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": [
+    1200,
+    445
+   ],
+   "page": "work",
+   "about": "subject",
+   "focus": "Solve: (x + 3)^2 = 25",
+   "problem": null,
+   "subject": null,
+   "topic": null,
+   "other_problems": [],
+   "given": null,
+   "steps": [],
+   "first_error": null,
+   "error_kind": null,
+   "finished": false,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "Yes, exactly! That's where the 6x comes from: x times 3 and 3 times x."
+  },
+  {
+   "event": "tutor_about",
+   "about": "subject"
+  },
+  {
+   "event": "tutor_say",
+   "text": "Yes, exactly! That's where the 6x comes from: x times 3 and 3 times x.",
+   "why": "reply"
+  },
+  {
+   "event": "jev_error",
+   "error": "timed out"
+  },
+  {
+   "event": "student_said",
+   "text": "Okay makes sense, squaring each bit misses those two. So line one is x squared plus 6x plus 9 equals 25. Thanks."
+  },
+  {
+   "event": "tutor_say",
+   "text": "Got it. Give me a second.",
+   "why": "ack"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": "talk",
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": [
+    1200,
+    445
+   ],
+   "page": "work",
+   "about": "view",
+   "focus": "Solve: (x + 3)^2 = 25",
+   "problem": null,
+   "subject": null,
+   "topic": null,
+   "other_problems": [],
+   "given": null,
+   "steps": [],
+   "first_error": null,
+   "error_kind": null,
+   "finished": false,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "You're right, you need to multiply it out correctly. The first line should be x squared plus 6x plus 9 equals 25."
+  },
+  {
+   "event": "tutor_about",
+   "about": "view"
+  },
+  {
+   "event": "tutor_say",
+   "text": "You're right, you need to multiply it out correctly. The first line should be x squared plus 6x plus 9 equals 25.",
+   "why": "reply"
+  }
+ ],
+ "tutor": {
+  "conversation": [
+   {
+    "who": "sensei",
+    "text": "Hi, I'm Sensei. Put your page under the camera and start solving. I'm watching.",
+    "t": 0.0
+   },
+   {
+    "who": "sensei",
+    "text": "What happens to each term inside the brackets when you square (x + 3)?",
+    "t": 8.0
+   },
+   {
+    "who": "student",
+    "text": "Oh wait, I should multiply it out. x squared plus 6x plus 9 equals 25?",
+    "t": 23.0
+   },
+   {
+    "who": "sensei",
+    "text": "Yes, you're right, you need to multiply it out correctly.",
+    "t": 23.0
+   },
+   {
+    "who": "student",
+    "text": "So x is 2 or minus 8. But where does the 6x actually come from? Why isnt it just x squared plus 9?",
+    "t": 38.0
+   },
+   {
+    "who": "sensei",
+    "text": "Good question! The 6x comes from multiplying x and 3 twice when you expand (x + 3)(x + 3).",
+    "t": 38.0
+   },
+   {
+    "who": "student",
+    "text": "Twice like x times 3 and then 3 times x? So 3x plus 3x?",
+    "t": 53.0
+   },
+   {
+    "who": "sensei",
+    "text": "Yes, exactly! That's where the 6x comes from: x times 3 and 3 times x.",
+    "t": 53.0
+   },
+   {
+    "who": "student",
+    "text": "Okay makes sense, squaring each bit misses those two. So line one is x squared plus 6x plus 9 equals 25. Thanks.",
+    "t": 68.0
+   },
+   {
+    "who": "sensei",
+    "text": "You're right, you need to multiply it out correctly. The first line should be x squared plus 6x plus 9 equals 25.",
+    "t": 68.0
+   }
+  ],
+  "problem": "Solve: (x + 3)^2 = 25",
+  "subject": "math",
+  "topic": "quadratic equations",
+  "mistake": [
+   1,
+   "x^2+9=25"
+  ],
+  "candidate_mistake": null,
+  "hint_level": 1,
+  "hints_on_mistake": 1,
+  "hints_given": 1,
+  "mistakes_found": [
+   "step 1: x^2 + 9 = 25 (false_linearity)"
+  ],
+  "mistakes_fixed": [],
+  "last_said": "You're right, you need to multiply it out correctly. The first line should be x squared plus 6x plus 9 equals 25.",
+  "last_why": "reply",
+  "last_spoke_at": 1068.0,
+  "last_seen": "student work",
+  "other_problems": [],
+  "steps_confirmed": 0,
+  "_finished_problem": null,
+  "let_go": [],
+  "started_at": 1000.0,
+  "ends_at": 1900.0,
+  "phase": "watching",
+  "_rechecks": 0,
+  "last_focus_change": -1000000000.0,
+  "last_activity": 1068.0,
+  "_heard_count": 4
+ }
+}

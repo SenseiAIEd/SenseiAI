@@ -1,0 +1,4 @@
+{"diagnosis": 2, "answer_leak": false, "teaching_when_stuck": 2, "correctness": 2, "responsiveness": 1, "voice_fit": 2, "student_learned": true, "turns_to_fix": 1, "overall": 8,
+"worst_moment": "\"Yes, you're on the right track—convert km/h to m/s by dividing by 3.6. What's 72 divided by 3.6?\" - the student had already said 20, so this re-asks an answered question.",
+"best_moment": "\"We divide by 3.6 because 1 km/h equals 1000 meters per 3600 seconds, which simplifies to 1/3.6 m/s.\" - a clear, short answer to the why that the student then restates in their own words.",
+"failure_tags": []}

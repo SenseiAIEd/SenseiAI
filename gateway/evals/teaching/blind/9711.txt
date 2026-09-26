@@ -1,0 +1,23 @@
+PROBLEM: A 5.0 kg block slides down a 30 degree incline, friction coefficient 0.20. Find the friction force. g = 9.8
+THE REAL MISTAKE ON THE PAGE: Line 1 wrote N = mg = 49 N: on a slope the normal force is mg cos 30 = 42.4 N. Friction should be 8.5 N; student got 9.8 N.
+STUDENT PERSONA: stuck - Thinks normal force always equals weight.
+
+TRANSCRIPT:
+SENSEI: Hi, I'm Sensei. Put your page under the camera and start solving. I'm watching.
+SENSEI: You found the friction force correctly. Can you check if the normal force is really 49 N on an incline?
+STUDENT: Um, isn't normal force just the weight? 5 times 9.8 is 49. I don't get what's wrong.
+SENSEI: On an incline, the normal force is not the same as the weight. It's less than the weight because the surface is tilted.
+STUDENT: I don't understand. Why would tilting it make it less? How much less?
+SENSEI: Good question. On an incline, only part of the weight pushes straight into the surface, so the normal force is less than the full weight.
+STUDENT: Okay but I don't know how to work out that part. What do I actually do?
+SENSEI: You're on the right track with the formula, but the normal force isn't 49 N on an incline. Try breaking the weight into components.
+STUDENT: Components? I don't know what that means. Can you just show me?
+SENSEI: Components mean breaking the weight into parts. The part pushing straight into the incline is the normal force. We'll find that next.
+STUDENT: Okay, so how do I find it?
+SENSEI: To find the friction force, first find the normal force using the weight and the angle.
+STUDENT: Using the angle how? Like 49 times 30? I really don't get it.
+SENSEI: You don't multiply weight by the angle. You use the cosine of the angle to find the part of the weight that pushes into the incline.
+STUDENT: So 49 times cos 30? That's about 42.4. Then friction is 0.2 times 42.4, so 8.5?
+SENSEI: Yes, that's right—multiply the weight by cos 30 to get the normal force, then multiply by the coefficient to find friction.
+STUDENT: Okay, friction is 8.5 newtons then. Thanks.
+SENSEI: You're on the right track with the formula, but the normal force isn't 49 N on an incline. Try breaking the weight into components.

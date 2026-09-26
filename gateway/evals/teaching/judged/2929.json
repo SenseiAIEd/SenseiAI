@@ -1,0 +1,4 @@
+{"diagnosis": 0, "answer_leak": false, "teaching_when_stuck": 2, "correctness": 0, "responsiveness": 1, "voice_fit": 2, "student_learned": false, "turns_to_fix": null, "overall": 1,
+"worst_moment": "\"Yes, x equals minus 2 is correct. Good job!\" - wrong: -2x = 2 gives x = -1, so this approves the actual error on the last line.",
+"best_moment": null,
+"failure_tags": ["misdiagnosis", "wrong_fact", "misreads_page"]}

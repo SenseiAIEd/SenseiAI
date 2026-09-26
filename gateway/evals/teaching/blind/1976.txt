@@ -1,0 +1,21 @@
+PROBLEM: A ball is launched at 20 m/s, 60 degrees above horizontal. How long until it returns to launch height? g = 9.8
+THE REAL MISTAKE ON THE PAGE: Line 1 wrote v_y = 20 m/s: 20 m/s is along the launch direction, not vertical. v_y = 20 sin 60 = 17.32 m/s; total time 3.54 s, student got 4.08 s.
+STUDENT PERSONA: stuck - Has no picture of splitting a velocity into parts.
+
+TRANSCRIPT:
+SENSEI: Hi, I'm Sensei. Put your page under the camera and start solving. I'm watching.
+SENSEI: You wrote v_y = 20 m/s, but the ball was launched at an angle. What part of the initial velocity is the vertical component?
+STUDENT: I don't get it. The ball goes at 20, isn't that the velocity?
+SENSEI: The 20 m/s is the total speed, not the vertical part. Think of a triangle: the total speed is the hypotenuse, and the vertical speed is one leg. What's the vertical part if the total is 20 and the angle is 60 degrees?
+STUDENT: I don't know. Why is there a triangle? How do I get the vertical part?
+SENSEI: The total speed is like the hypotenuse of a right triangle. If the total speed is 10 m/s at 30 degrees, the vertical part is half of that. What would the vertical part be if the total speed is 20 m/s at 60 degrees?
+STUDENT: So is it half again? 10?
+SENSEI: The vertical part of velocity is found using sine of the angle. For example, if speed is 10 m/s at 30 degrees, vertical speed is 5 m/s. What is the vertical speed if the speed is 20 m/s at 60 degrees?
+STUDENT: Oh, so 20 times sine 60? That's like 17.3?
+SENSEI: The vertical speed is found using sine of the angle. For example, if speed is 10 m/s at 30 degrees, vertical speed is 5 m/s. What would the vertical speed be if speed is 20 m/s at 60 degrees?
+STUDENT: I just said, 17.3. Is that right or not?
+SENSEI: The vertical speed is found using sine of the angle. For example, if speed is 10 m/s at 30 degrees, vertical speed is 5 m/s. What would the vertical speed be if speed is 20 m/s at 60 degrees?
+STUDENT: Okay whatever, I'll use 17.3 then. So time is 2 times 17.3 over 9.8, about 3.5 seconds?
+SENSEI: The time to return to launch height depends on the vertical speed and gravity. If vertical speed is 17.3 m/s, it takes about 1.8 seconds to reach the top. How long does it take to come back down?
+STUDENT: Same again, 1.8, so 3.5 seconds total. Okay, thanks.
+SENSEI: The time to go up equals the time to come down when air resistance is ignored. So if it takes 1.8 seconds to reach the top, how long does it take to return?

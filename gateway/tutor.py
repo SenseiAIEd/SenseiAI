@@ -534,6 +534,20 @@ def is_filler(text: str) -> bool:
     return all(w in FILLERS for w in words)
 
 
+# Teach mode (SENSEI_TEACH_MODE=1): the one-sentence rule is right for a hint and wrong for a
+# student who says "I don't get it". Measured on synthetic students first (evals/teaching/).
+TEACH_RULES = """
+
+TEACH MODE (this overrides the one-sentence length rule when it applies):
+If the student is stuck - they say they don't know or don't understand, ask why or how, or
+have now missed the same idea twice - TEACH instead of asking another question. In "say":
+  1. Name the idea in plain words (one sentence).
+  2. Show it on a tiny example with DIFFERENT numbers from their problem (one or two sentences).
+  3. End with ONE short question that lets them apply it to their own line.
+At most four short spoken sentences, about 70 words, one idea per sentence, no symbols that are
+awkward to read aloud. Never give the answer to their problem or their corrected line.
+If they are not stuck, keep to one short sentence as usual."""
+
 Speak = Callable[[str, str], Awaitable[None]]    # (text, why) -> spoken on the phone
 Notify = Callable[[dict], Awaitable[None]]        # state update for the phone
 
@@ -577,8 +591,10 @@ class Tutor:
                  clock: Callable[[], float] = time.monotonic, log_event: Callable[..., None] = lambda *a, **k: None,
                  save_frame: Callable[[np.ndarray], Optional[str]] = lambda img: None,
                  chat_brain: Optional[Brain] = None, decider=None,
-                 tap_only: Optional[bool] = None):
+                 tap_only: Optional[bool] = None, teach: Optional[bool] = None):
         self.brain = brain
+        # Teach mode: a stuck student gets a short spoken explanation, not only another question.
+        self.teach = env_flag("SENSEI_TEACH_MODE") if teach is None else bool(teach)
         self.chat_brain = chat_brain or brain  # the quick one, for talking back
         self.decider = decider                 # jev.Jev: fast typed decisions, used when .enabled
         self.other_problems: list[str] = []    # other problems the page showed at the last read
@@ -977,7 +993,8 @@ class Tutor:
                     "not something to describe. If they answered your question or explained a step, tell them "
                     "honestly whether it's on the right track, without giving away the final answer."
                     + (f" Earlier you asked them about step {self.mistake[0]} of their work."
-                       if self.mistake else ""))
+                       if self.mistake else "")
+                    + (TEACH_RULES if self.teach else ""))
         parts = [self._face_note().strip()] if self._face_note() else []
         if self.subject in PLAYBOOKS and request != "look":
             parts.append(PLAYBOOKS[self.subject] + " For \"error_kind\" use one of: "

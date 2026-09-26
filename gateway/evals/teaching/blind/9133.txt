@@ -1,0 +1,23 @@
+PROBLEM: A ball is launched at 20 m/s, 60 degrees above horizontal. How long until it returns to launch height? g = 9.8
+THE REAL MISTAKE ON THE PAGE: Line 1 wrote v_y = 20 m/s: 20 m/s is along the launch direction, not vertical. v_y = 20 sin 60 = 17.32 m/s; total time 3.54 s, student got 4.08 s.
+STUDENT PERSONA: confident-wrong - Argues 'the ball is going up at 20 m/s, it says so in the question'.
+
+TRANSCRIPT:
+SENSEI: Hi, I'm Sensei. Put your page under the camera and start solving. I'm watching.
+SENSEI: You wrote v_y = 20 m/s, but the 20 m/s is the speed at an angle. What part of that speed is the vertical component?
+STUDENT: All of it. The ball's going up at 20 meters per second, it says so in the question.
+SENSEI: The 20 m/s is the total speed, not the vertical part. Think of it like a right triangle: the total speed is the hypotenuse, and the vertical part is one leg. Can you find the vertical part if the total is 20 m/s and the angle is 60 degrees?
+STUDENT: Why a triangle though? It's going up at 20. Going up means vertical.
+SENSEI: The total speed is the hypotenuse of a right triangle. The vertical speed is one leg. Think of a 3-4-5 triangle: if the total is 5, the vertical part is 4. What is the vertical part if the total is 20 and the angle is 60 degrees?
+STUDENT: But the ball isn't a triangle. It just goes up at 20. Why would the up part be smaller?
+SENSEI: The total speed is like the hypotenuse of a right triangle. The vertical part is smaller because it's only one side. Try this: if the total is 10 and the angle is 30 degrees, what’s the vertical part?
+STUDENT: I don't know, 10? It's still going up at 10. I don't see why it changes.
+SENSEI: The total speed is like the hypotenuse of a right triangle. The vertical part is smaller because it's only one side. Try this: if the total is 10 and the angle is 30 degrees, what’s the vertical part?
+STUDENT: You just said the same thing. I said 10. Is that wrong?
+SENSEI: The total speed is like the hypotenuse of a right triangle. The vertical part is smaller because it's only one side. Try this: if the total is 10 and the angle is 30 degrees, what’s the vertical part?
+STUDENT: Hello? Can you just tell me why my 20 is wrong?
+SENSEI: The total speed is like the hypotenuse of a right triangle. The vertical part is smaller because it's only one side. Try this: if the total is 10 and the angle is 30 degrees, what’s the vertical part?
+STUDENT: This is going in circles. I'm sticking with 20.
+SENSEI: The total speed is like the hypotenuse of a right triangle. The vertical part is smaller because it's only one side. Try this: if the total is 10 and the angle is 30 degrees, what’s the vertical part?
+STUDENT: I still don't get it. Bye.
+SENSEI: The total speed is split into vertical and horizontal parts, like a triangle. If the total is 10 and the angle is 30 degrees, the vertical part is smaller. What would the vertical part be if the total is 20 and the angle is 60 degrees?

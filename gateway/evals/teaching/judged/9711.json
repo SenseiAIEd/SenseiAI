@@ -1,0 +1,17 @@
+{
+  "diagnosis": 2,
+  "answer_leak": true,
+  "teaching_when_stuck": 1,
+  "correctness": 1,
+  "responsiveness": 1,
+  "voice_fit": 2,
+  "student_learned": true,
+  "turns_to_fix": 6,
+  "overall": 4,
+  "worst_moment": "\"Components mean breaking the weight into parts. The part pushing straight into the incline is the normal force. We'll find that next.\" - defers when the stuck student asks to be shown.",
+  "best_moment": "\"You don't multiply weight by the angle. You use the cosine of the angle to find the part of the weight that pushes into the incline.\" - corrects the student's 49 x 30 idea clearly.",
+  "failure_tags": [
+    "answer_leak",
+    "ignores_student"
+  ]
+}

@@ -1,0 +1,787 @@
+{
+ "id": "p2-wrong-teach",
+ "page": "/home/perspectivity-dgx/SenseiAI/datasets/samples/physics/basic/medium/bad_1.png",
+ "variant": "teach",
+ "now": 1128.0,
+ "transcript": [
+  {
+   "who": "sensei",
+   "why": "greeting",
+   "text": "Hi, I'm Sensei. Put your page under the camera and start solving. I'm watching."
+  },
+  {
+   "who": "sensei",
+   "why": "hint_1",
+   "text": "You wrote v_y = 20 m/s, but the 20 m/s is the speed at an angle. What part of that speed is the vertical component?"
+  },
+  {
+   "who": "student",
+   "text": "All of it. The ball's going up at 20 meters per second, it says so in the question."
+  },
+  {
+   "who": "sensei",
+   "why": "ack",
+   "text": "Okay, let me think."
+  },
+  {
+   "who": "sensei",
+   "why": "reply",
+   "text": "The 20 m/s is the total speed, not the vertical part. Think of it like a right triangle: the total speed is the hypotenuse, and the vertical part is one leg. Can you find the vertical part if the total is 20 m/s and the angle is 60 degrees?"
+  },
+  {
+   "who": "student",
+   "text": "Why a triangle though? It's going up at 20. Going up means vertical."
+  },
+  {
+   "who": "sensei",
+   "why": "ack",
+   "text": "Good question. One moment."
+  },
+  {
+   "who": "sensei",
+   "why": "reply",
+   "text": "The total speed is the hypotenuse of a right triangle. The vertical speed is one leg. Think of a 3-4-5 triangle: if the total is 5, the vertical part is 4. What is the vertical part if the total is 20 and the angle is 60 degrees?"
+  },
+  {
+   "who": "student",
+   "text": "But the ball isn't a triangle. It just goes up at 20. Why would the up part be smaller?"
+  },
+  {
+   "who": "sensei",
+   "why": "ack",
+   "text": "Let me see."
+  },
+  {
+   "who": "sensei",
+   "why": "reply",
+   "text": "The total speed is like the hypotenuse of a right triangle. The vertical part is smaller because it's only one side. Try this: if the total is 10 and the angle is 30 degrees, what\u2019s the vertical part?"
+  },
+  {
+   "who": "student",
+   "text": "I don't know, 10? It's still going up at 10. I don't see why it changes."
+  },
+  {
+   "who": "sensei",
+   "why": "ack",
+   "text": "Got it. Give me a second."
+  },
+  {
+   "who": "sensei",
+   "why": "reply",
+   "text": "The total speed is like the hypotenuse of a right triangle. The vertical part is smaller because it's only one side. Try this: if the total is 10 and the angle is 30 degrees, what\u2019s the vertical part?"
+  },
+  {
+   "who": "student",
+   "text": "You just said the same thing. I said 10. Is that wrong?"
+  },
+  {
+   "who": "sensei",
+   "why": "ack",
+   "text": "Okay, let me think."
+  },
+  {
+   "who": "sensei",
+   "why": "reply",
+   "text": "The total speed is like the hypotenuse of a right triangle. The vertical part is smaller because it's only one side. Try this: if the total is 10 and the angle is 30 degrees, what\u2019s the vertical part?"
+  },
+  {
+   "who": "student",
+   "text": "Hello? Can you just tell me why my 20 is wrong?"
+  },
+  {
+   "who": "sensei",
+   "why": "ack",
+   "text": "Good question. One moment."
+  },
+  {
+   "who": "sensei",
+   "why": "reply",
+   "text": "The total speed is like the hypotenuse of a right triangle. The vertical part is smaller because it's only one side. Try this: if the total is 10 and the angle is 30 degrees, what\u2019s the vertical part?"
+  },
+  {
+   "who": "student",
+   "text": "This is going in circles. I'm sticking with 20."
+  },
+  {
+   "who": "sensei",
+   "why": "ack",
+   "text": "Let me see."
+  },
+  {
+   "who": "sensei",
+   "why": "reply",
+   "text": "The total speed is like the hypotenuse of a right triangle. The vertical part is smaller because it's only one side. Try this: if the total is 10 and the angle is 30 degrees, what\u2019s the vertical part?"
+  },
+  {
+   "who": "student",
+   "text": "I still don't get it. Bye."
+  },
+  {
+   "who": "sensei",
+   "why": "ack",
+   "text": "Got it. Give me a second."
+  },
+  {
+   "who": "sensei",
+   "why": "reply",
+   "text": "The total speed is split into vertical and horizontal parts, like a triangle. If the total is 10 and the angle is 30 degrees, the vertical part is smaller. What would the vertical part be if the total is 20 and the angle is 60 degrees?"
+  }
+ ],
+ "events": [
+  {
+   "event": "tutor_start",
+   "minutes": 15.0
+  },
+  {
+   "event": "tutor_say",
+   "text": "Hi, I'm Sensei. Put your page under the camera and start solving. I'm watching.",
+   "why": "greeting"
+  },
+  {
+   "event": "tutor_subject",
+   "was": null,
+   "now": "physics",
+   "topic": "projectile motion",
+   "set_by": "page"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": null,
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": [
+    1200,
+    496
+   ],
+   "page": "work",
+   "about": null,
+   "focus": null,
+   "problem": "How long until the ball returns to launch height?",
+   "subject": "physics",
+   "topic": "projectile motion",
+   "other_problems": [],
+   "given": "A ball is launched at 20 m/s, 60 degrees above the horizontal. How long until it returns to launch height? (g = 9.8 m/s^2)",
+   "steps": [
+    "v_y = 20 m/s",
+    "t_up = v_y / g = 20 / 9.8 = 2.04 s",
+    "t_total = 2 x 2.04 = 4.08 s"
+   ],
+   "first_error": 1,
+   "error_kind": "incorrect_initial_value",
+   "finished": true,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "You wrote v_y = 20 m/s, but that's the initial speed, not the vertical component. What's the correct way to find the vertical velocity from the launch speed and angle?"
+  },
+  {
+   "event": "tutor_focus",
+   "was": null,
+   "now": "How long until the ball returns to launch height?",
+   "set_by": "page"
+  },
+  {
+   "event": "tutor_unconfirmed",
+   "step": 1,
+   "line": "v_y = 20 m/s"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": null,
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": [
+    1200,
+    496
+   ],
+   "page": "work",
+   "about": null,
+   "focus": null,
+   "problem": "How long until the ball returns to launch height?",
+   "subject": "physics",
+   "topic": "projectile motion",
+   "other_problems": [],
+   "given": "A ball is launched at 20 m/s, 60 degrees above the horizontal. How long until it returns to launch height? (g = 9.8 m/s^2)",
+   "steps": [
+    "v_y = 20 m/s",
+    "t_up = v_y / g = 20 / 9.8 = 2.04 s",
+    "t_total = 2 x 2.04 = 4.08 s"
+   ],
+   "first_error": 1,
+   "error_kind": "components",
+   "finished": true,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "You wrote v_y = 20 m/s, but the 20 m/s is the speed at an angle. What part of that speed is the vertical component?"
+  },
+  {
+   "event": "tutor_say",
+   "text": "You wrote v_y = 20 m/s, but the 20 m/s is the speed at an angle. What part of that speed is the vertical component?",
+   "why": "hint_1"
+  },
+  {
+   "event": "jev",
+   "on": "utterance",
+   "said": "All of it. The ball's going up at 20 meters per second, it says so in the question.",
+   "respond": 0.9,
+   "about": "subject",
+   "about_conf": 0.94,
+   "followup": 0.45,
+   "needs_page": 0.84,
+   "new_problem": 0.01,
+   "which_problem": null,
+   "which_conf": 0.0,
+   "latency_ms": 1161
+  },
+  {
+   "event": "student_said",
+   "text": "All of it. The ball's going up at 20 meters per second, it says so in the question."
+  },
+  {
+   "event": "tutor_say",
+   "text": "Okay, let me think.",
+   "why": "ack"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": "talk",
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": [
+    1200,
+    496
+   ],
+   "page": "work",
+   "about": "subject",
+   "focus": "How long until the ball returns to launch height?",
+   "problem": null,
+   "subject": null,
+   "topic": null,
+   "other_problems": [],
+   "given": null,
+   "steps": [],
+   "first_error": null,
+   "error_kind": null,
+   "finished": false,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "The 20 m/s is the total speed, not the vertical part. Think of it like a right triangle: the total speed is the hypotenuse, and the vertical part is one leg. Can you find the vertical part if the total is 20 m/s and the angle is 60 degrees?"
+  },
+  {
+   "event": "tutor_about",
+   "about": "subject"
+  },
+  {
+   "event": "tutor_say",
+   "text": "The 20 m/s is the total speed, not the vertical part. Think of it like a right triangle: the total speed is the hypotenuse, and the vertical part is one leg. Can you find the vertical part if the total is 20 m/s and the angle is 60 degrees?",
+   "why": "reply"
+  },
+  {
+   "event": "jev",
+   "on": "utterance",
+   "said": "Why a triangle though? It's going up at 20. Going up means vertical.",
+   "respond": 0.86,
+   "about": "subject",
+   "about_conf": 0.98,
+   "followup": 0.42,
+   "needs_page": 0.26,
+   "new_problem": 0.01,
+   "which_problem": null,
+   "which_conf": 0.0,
+   "latency_ms": 1132
+  },
+  {
+   "event": "student_said",
+   "text": "Why a triangle though? It's going up at 20. Going up means vertical."
+  },
+  {
+   "event": "tutor_say",
+   "text": "Good question. One moment.",
+   "why": "ack"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": "talk",
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": [
+    1200,
+    496
+   ],
+   "page": "work",
+   "about": "subject",
+   "focus": "How long until the ball returns to launch height?",
+   "problem": null,
+   "subject": null,
+   "topic": null,
+   "other_problems": [],
+   "given": null,
+   "steps": [],
+   "first_error": null,
+   "error_kind": null,
+   "finished": false,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "The total speed is the hypotenuse of a right triangle. The vertical speed is one leg. Think of a 3-4-5 triangle: if the total is 5, the vertical part is 4. What is the vertical part if the total is 20 and the angle is 60 degrees?"
+  },
+  {
+   "event": "tutor_about",
+   "about": "subject"
+  },
+  {
+   "event": "tutor_say",
+   "text": "The total speed is the hypotenuse of a right triangle. The vertical speed is one leg. Think of a 3-4-5 triangle: if the total is 5, the vertical part is 4. What is the vertical part if the total is 20 and the angle is 60 degrees?",
+   "why": "reply"
+  },
+  {
+   "event": "jev",
+   "on": "utterance",
+   "said": "But the ball isn't a triangle. It just goes up at 20. Why would the up part be smaller?",
+   "respond": 0.88,
+   "about": "subject",
+   "about_conf": 0.98,
+   "followup": 0.85,
+   "needs_page": 0.05,
+   "new_problem": 0.01,
+   "which_problem": null,
+   "which_conf": 0.0,
+   "latency_ms": 761
+  },
+  {
+   "event": "student_said",
+   "text": "But the ball isn't a triangle. It just goes up at 20. Why would the up part be smaller?"
+  },
+  {
+   "event": "tutor_say",
+   "text": "Let me see.",
+   "why": "ack"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": "talk",
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": null,
+   "page": "work",
+   "about": "subject",
+   "focus": "How long until the ball returns to launch height?",
+   "problem": null,
+   "subject": null,
+   "topic": null,
+   "other_problems": [],
+   "given": null,
+   "steps": [],
+   "first_error": null,
+   "error_kind": null,
+   "finished": false,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "The total speed is like the hypotenuse of a right triangle. The vertical part is smaller because it's only one side. Try this: if the total is 10 and the angle is 30 degrees, what\u2019s the vertical part?"
+  },
+  {
+   "event": "tutor_about",
+   "about": "subject"
+  },
+  {
+   "event": "tutor_say",
+   "text": "The total speed is like the hypotenuse of a right triangle. The vertical part is smaller because it's only one side. Try this: if the total is 10 and the angle is 30 degrees, what\u2019s the vertical part?",
+   "why": "reply"
+  },
+  {
+   "event": "jev_error",
+   "error": "timed out"
+  },
+  {
+   "event": "student_said",
+   "text": "I don't know, 10? It's still going up at 10. I don't see why it changes."
+  },
+  {
+   "event": "tutor_say",
+   "text": "Got it. Give me a second.",
+   "why": "ack"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": "talk",
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": [
+    1200,
+    496
+   ],
+   "page": "work",
+   "about": "subject",
+   "focus": "How long until the ball returns to launch height?",
+   "problem": null,
+   "subject": null,
+   "topic": null,
+   "other_problems": [],
+   "given": null,
+   "steps": [],
+   "first_error": null,
+   "error_kind": null,
+   "finished": false,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "The total speed is like the hypotenuse of a right triangle. The vertical part is smaller because it's only one side. Try this: if the total is 10 and the angle is 30 degrees, what\u2019s the vertical part?"
+  },
+  {
+   "event": "tutor_about",
+   "about": "subject"
+  },
+  {
+   "event": "tutor_say",
+   "text": "The total speed is like the hypotenuse of a right triangle. The vertical part is smaller because it's only one side. Try this: if the total is 10 and the angle is 30 degrees, what\u2019s the vertical part?",
+   "why": "reply"
+  },
+  {
+   "event": "jev",
+   "on": "utterance",
+   "said": "You just said the same thing. I said 10. Is that wrong?",
+   "respond": 0.93,
+   "about": "subject",
+   "about_conf": 0.95,
+   "followup": 0.85,
+   "needs_page": 0.07,
+   "new_problem": 0.02,
+   "which_problem": null,
+   "which_conf": 0.0,
+   "latency_ms": 849
+  },
+  {
+   "event": "student_said",
+   "text": "You just said the same thing. I said 10. Is that wrong?"
+  },
+  {
+   "event": "tutor_say",
+   "text": "Okay, let me think.",
+   "why": "ack"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": "talk",
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": null,
+   "page": "work",
+   "about": "subject",
+   "focus": "How long until the ball returns to launch height?",
+   "problem": null,
+   "subject": null,
+   "topic": null,
+   "other_problems": [],
+   "given": null,
+   "steps": [],
+   "first_error": null,
+   "error_kind": null,
+   "finished": false,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "The total speed is like the hypotenuse of a right triangle. The vertical part is smaller because it's only one side. Try this: if the total is 10 and the angle is 30 degrees, what\u2019s the vertical part?"
+  },
+  {
+   "event": "tutor_about",
+   "about": "subject"
+  },
+  {
+   "event": "tutor_say",
+   "text": "The total speed is like the hypotenuse of a right triangle. The vertical part is smaller because it's only one side. Try this: if the total is 10 and the angle is 30 degrees, what\u2019s the vertical part?",
+   "why": "reply"
+  },
+  {
+   "event": "jev",
+   "on": "utterance",
+   "said": "Hello? Can you just tell me why my 20 is wrong?",
+   "respond": 0.88,
+   "about": "subject",
+   "about_conf": 0.93,
+   "followup": 0.42,
+   "needs_page": 0.15,
+   "new_problem": 0.03,
+   "which_problem": null,
+   "which_conf": 0.0,
+   "latency_ms": 698
+  },
+  {
+   "event": "student_said",
+   "text": "Hello? Can you just tell me why my 20 is wrong?"
+  },
+  {
+   "event": "tutor_say",
+   "text": "Good question. One moment.",
+   "why": "ack"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": "talk",
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": null,
+   "page": "work",
+   "about": "subject",
+   "focus": "How long until the ball returns to launch height?",
+   "problem": null,
+   "subject": null,
+   "topic": null,
+   "other_problems": [],
+   "given": null,
+   "steps": [],
+   "first_error": null,
+   "error_kind": null,
+   "finished": false,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "The total speed is like the hypotenuse of a right triangle. The vertical part is smaller because it's only one side. Try this: if the total is 10 and the angle is 30 degrees, what\u2019s the vertical part?"
+  },
+  {
+   "event": "tutor_about",
+   "about": "subject"
+  },
+  {
+   "event": "tutor_say",
+   "text": "The total speed is like the hypotenuse of a right triangle. The vertical part is smaller because it's only one side. Try this: if the total is 10 and the angle is 30 degrees, what\u2019s the vertical part?",
+   "why": "reply"
+  },
+  {
+   "event": "jev",
+   "on": "utterance",
+   "said": "This is going in circles. I'm sticking with 20.",
+   "respond": 0.67,
+   "about": "subject",
+   "about_conf": 0.92,
+   "followup": 0.63,
+   "needs_page": 0.07,
+   "new_problem": 0.01,
+   "which_problem": null,
+   "which_conf": 0.0,
+   "latency_ms": 649
+  },
+  {
+   "event": "student_said",
+   "text": "This is going in circles. I'm sticking with 20."
+  },
+  {
+   "event": "tutor_say",
+   "text": "Let me see.",
+   "why": "ack"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": "talk",
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": null,
+   "page": "work",
+   "about": "subject",
+   "focus": "How long until the ball returns to launch height?",
+   "problem": null,
+   "subject": null,
+   "topic": null,
+   "other_problems": [],
+   "given": null,
+   "steps": [],
+   "first_error": null,
+   "error_kind": null,
+   "finished": false,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "The total speed is like the hypotenuse of a right triangle. The vertical part is smaller because it's only one side. Try this: if the total is 10 and the angle is 30 degrees, what\u2019s the vertical part?"
+  },
+  {
+   "event": "tutor_about",
+   "about": "subject"
+  },
+  {
+   "event": "tutor_say",
+   "text": "The total speed is like the hypotenuse of a right triangle. The vertical part is smaller because it's only one side. Try this: if the total is 10 and the angle is 30 degrees, what\u2019s the vertical part?",
+   "why": "reply"
+  },
+  {
+   "event": "jev",
+   "on": "utterance",
+   "said": "I still don't get it. Bye.",
+   "respond": 0.35,
+   "about": "subject",
+   "about_conf": 0.72,
+   "followup": 0.74,
+   "needs_page": 0.09,
+   "new_problem": 0.04,
+   "which_problem": null,
+   "which_conf": 0.0,
+   "latency_ms": 606
+  },
+  {
+   "event": "student_said",
+   "text": "I still don't get it. Bye."
+  },
+  {
+   "event": "tutor_say",
+   "text": "Got it. Give me a second.",
+   "why": "ack"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": "talk",
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": null,
+   "page": "work",
+   "about": "subject",
+   "focus": "How long until the ball returns to launch height?",
+   "problem": null,
+   "subject": null,
+   "topic": null,
+   "other_problems": [],
+   "given": null,
+   "steps": [],
+   "first_error": null,
+   "error_kind": null,
+   "finished": false,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "The total speed is split into vertical and horizontal parts, like a triangle. If the total is 10 and the angle is 30 degrees, the vertical part is smaller. What would the vertical part be if the total is 20 and the angle is 60 degrees?"
+  },
+  {
+   "event": "tutor_about",
+   "about": "subject"
+  },
+  {
+   "event": "tutor_say",
+   "text": "The total speed is split into vertical and horizontal parts, like a triangle. If the total is 10 and the angle is 30 degrees, the vertical part is smaller. What would the vertical part be if the total is 20 and the angle is 60 degrees?",
+   "why": "reply"
+  }
+ ],
+ "tutor": {
+  "conversation": [
+   {
+    "who": "sensei",
+    "text": "Hi, I'm Sensei. Put your page under the camera and start solving. I'm watching.",
+    "t": 0.0
+   },
+   {
+    "who": "sensei",
+    "text": "You wrote v_y = 20 m/s, but the 20 m/s is the speed at an angle. What part of that speed is the vertical component?",
+    "t": 8.0
+   },
+   {
+    "who": "student",
+    "text": "All of it. The ball's going up at 20 meters per second, it says so in the question.",
+    "t": 23.0
+   },
+   {
+    "who": "sensei",
+    "text": "The 20 m/s is the total speed, not the vertical part. Think of it like a right triangle: the total speed is the hypotenuse, and the vertical part is one leg. Can you find the vertical part if the total is 20 m/s and the angle is 60 degrees?",
+    "t": 23.0
+   },
+   {
+    "who": "student",
+    "text": "Why a triangle though? It's going up at 20. Going up means vertical.",
+    "t": 38.0
+   },
+   {
+    "who": "sensei",
+    "text": "The total speed is the hypotenuse of a right triangle. The vertical speed is one leg. Think of a 3-4-5 triangle: if the total is 5, the vertical part is 4. What is the vertical part if the total is 20 and the angle is 60 degrees?",
+    "t": 38.0
+   },
+   {
+    "who": "student",
+    "text": "But the ball isn't a triangle. It just goes up at 20. Why would the up part be smaller?",
+    "t": 53.0
+   },
+   {
+    "who": "sensei",
+    "text": "The total speed is like the hypotenuse of a right triangle. The vertical part is smaller because it's only one side. Try this: if the total is 10 and the angle is 30 degrees, what\u2019s the vertical part?",
+    "t": 53.0
+   },
+   {
+    "who": "student",
+    "text": "I don't know, 10? It's still going up at 10. I don't see why it changes.",
+    "t": 68.0
+   },
+   {
+    "who": "sensei",
+    "text": "The total speed is like the hypotenuse of a right triangle. The vertical part is smaller because it's only one side. Try this: if the total is 10 and the angle is 30 degrees, what\u2019s the vertical part?",
+    "t": 68.0
+   },
+   {
+    "who": "student",
+    "text": "You just said the same thing. I said 10. Is that wrong?",
+    "t": 83.0
+   },
+   {
+    "who": "sensei",
+    "text": "The total speed is like the hypotenuse of a right triangle. The vertical part is smaller because it's only one side. Try this: if the total is 10 and the angle is 30 degrees, what\u2019s the vertical part?",
+    "t": 83.0
+   },
+   {
+    "who": "student",
+    "text": "Hello? Can you just tell me why my 20 is wrong?",
+    "t": 98.0
+   },
+   {
+    "who": "sensei",
+    "text": "The total speed is like the hypotenuse of a right triangle. The vertical part is smaller because it's only one side. Try this: if the total is 10 and the angle is 30 degrees, what\u2019s the vertical part?",
+    "t": 98.0
+   },
+   {
+    "who": "student",
+    "text": "This is going in circles. I'm sticking with 20.",
+    "t": 113.0
+   },
+   {
+    "who": "sensei",
+    "text": "The total speed is like the hypotenuse of a right triangle. The vertical part is smaller because it's only one side. Try this: if the total is 10 and the angle is 30 degrees, what\u2019s the vertical part?",
+    "t": 113.0
+   },
+   {
+    "who": "student",
+    "text": "I still don't get it. Bye.",
+    "t": 128.0
+   },
+   {
+    "who": "sensei",
+    "text": "The total speed is split into vertical and horizontal parts, like a triangle. If the total is 10 and the angle is 30 degrees, the vertical part is smaller. What would the vertical part be if the total is 20 and the angle is 60 degrees?",
+    "t": 128.0
+   }
+  ],
+  "problem": "How long until the ball returns to launch height?",
+  "subject": "physics",
+  "topic": "projectile motion",
+  "mistake": [
+   1,
+   "v_y=20m/s"
+  ],
+  "candidate_mistake": null,
+  "hint_level": 1,
+  "hints_on_mistake": 1,
+  "hints_given": 1,
+  "mistakes_found": [
+   "step 1: v_y = 20 m/s (components)"
+  ],
+  "mistakes_fixed": [],
+  "last_said": "The total speed is split into vertical and horizontal parts, like a triangle. If the total is 10 and the angle is 30 degrees, the vertical part is smaller. What would the vertical part be if the total is 20 and the angle is 60 degrees?",
+  "last_why": "reply",
+  "last_spoke_at": 1128.0,
+  "last_seen": "student work",
+  "other_problems": [],
+  "steps_confirmed": 0,
+  "_finished_problem": null,
+  "let_go": [],
+  "started_at": 1000.0,
+  "ends_at": 1900.0,
+  "phase": "watching",
+  "_rechecks": 0,
+  "last_focus_change": -1000000000.0,
+  "last_activity": 1128.0,
+  "_heard_count": 8
+ }
+}

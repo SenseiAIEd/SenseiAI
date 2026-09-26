@@ -1,0 +1,20 @@
+{
+  "diagnosis": 1,
+  "answer_leak": true,
+  "teaching_when_stuck": 1,
+  "correctness": 0,
+  "responsiveness": 0,
+  "voice_fit": 2,
+  "student_learned": true,
+  "turns_to_fix": 5,
+  "overall": 2,
+  "worst_moment": "\"Yes, each term inside the brackets gets squared, but you need to expand it correctly.\" - affirms the exact misconception on the page before contradicting it.",
+  "best_moment": "\"Yes, that's correct: x squared plus 6x plus 9. Now, what do you do next?\" - confirms the student's own correct expansion and moves them on.",
+  "failure_tags": [
+    "answer_leak",
+    "wrong_fact",
+    "repeats_question",
+    "ignores_student",
+    "loops"
+  ]
+}

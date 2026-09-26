@@ -1,0 +1,21 @@
+{
+  "diagnosis": 1,
+  "answer_leak": false,
+  "teaching_when_stuck": 0,
+  "correctness": 0,
+  "responsiveness": 0,
+  "voice_fit": 2,
+  "student_learned": false,
+  "turns_to_fix": null,
+  "overall": 1,
+  "worst_moment": "\"You're on the right track with the signs, but let's check the step where you go from 5 - 2x - 4 to 1 - 2x.\" - points at a step Sensei had just confirmed was correct, contradicting itself and missing the real bracket error.",
+  "best_moment": "\"You're close, but when you subtract the brackets, you need to change the sign of each term inside.\" - correctly names the real mistake early.",
+  "failure_tags": [
+    "misdiagnosis",
+    "misreads_page",
+    "repeats_question",
+    "no_explanation_when_stuck",
+    "ignores_student",
+    "loops"
+  ]
+}

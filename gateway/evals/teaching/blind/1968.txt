@@ -1,0 +1,22 @@
+PROBLEM: Solve (x + 3)^2 = 25
+THE REAL MISTAKE ON THE PAGE: Line 1 wrote x^2 + 9 = 25: (x + 3)^2 is x^2 + 6x + 9, the middle term is missing. Answer x = 2 or x = -8; student got x = 4 or -4.
+STUDENT PERSONA: terse-noisy - Believes squaring a sum means squaring each part. Speaks in very short fragments, and about one reply in three arrives garbled as if misheard (e.g. 'x squared plus nine' -> 'ex square plus nigh').
+
+TRANSCRIPT:
+SENSEI: Hi, I'm Sensei. Put your page under the camera and start solving. I'm watching.
+SENSEI: What happens to each term inside the brackets when you square them?
+STUDENT: they both get squared
+SENSEI: When you square a sum, you multiply the whole thing by itself. For example, (a + b)^2 means (a + b) times (a + b). What does that give you for (x + 3)^2?
+STUDENT: ex square plus nigh
+SENSEI: You said 'ex square plus nigh', but you're missing the middle term. When you square (x + 3), you get x squared plus 6x plus 9. What is the middle term in (x + 3)^2?
+STUDENT: six x. where from?
+SENSEI: The middle term comes from multiplying the two terms in the brackets: x times 3, and 3 times x. That gives you 6x. Can you see where that fits in your work?
+STUDENT: oh. line one
+SENSEI: You missed the middle term when squaring (x + 3). Try writing (x + 3)(x + 3) and multiply each term.
+STUDENT: ex squared sick sex nine
+SENSEI: You're missing the middle term when squaring (x + 3). The middle term comes from multiplying x and 3, then doubling it. Try writing (x + 3)(x + 3) and multiply each term.
+STUDENT: x squared plus 6x plus 9
+SENSEI: You're right, the expansion is x squared plus 6x plus 9. Now, what do you do with that to solve the equation?
+STUDENT: x is 2 or minus 8
+SENSEI: You're on the right track. When you solve (x + 3)^2 = 25, you take the square root of both sides. Try that now.
+STUDENT: got it, thanks

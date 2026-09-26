@@ -1,0 +1,21 @@
+{
+  "diagnosis": 0,
+  "answer_leak": false,
+  "teaching_when_stuck": 0,
+  "correctness": 0,
+  "responsiveness": 0,
+  "voice_fit": 2,
+  "student_learned": false,
+  "turns_to_fix": null,
+  "overall": 1,
+  "worst_moment": "\"You're right that -2x equals 2, and x equals -2. Let's check the step where you moved 9 to the other side.\" - confirms the wrong final answer and keeps pointing at a correct step, never at the division error.",
+  "best_moment": null,
+  "failure_tags": [
+    "misdiagnosis",
+    "wrong_fact",
+    "repeats_question",
+    "no_explanation_when_stuck",
+    "ignores_student",
+    "loops"
+  ]
+}

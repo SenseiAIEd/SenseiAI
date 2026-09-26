@@ -1,0 +1,740 @@
+{
+ "id": "m2-noisy-teach",
+ "page": "/home/perspectivity-dgx/SenseiAI/datasets/samples/math/basic/medium/bad_1.png",
+ "variant": "teach",
+ "now": 1128.0,
+ "transcript": [
+  {
+   "who": "sensei",
+   "why": "greeting",
+   "text": "Hi, I'm Sensei. Put your page under the camera and start solving. I'm watching."
+  },
+  {
+   "who": "sensei",
+   "why": "hint_1",
+   "text": "What happens to each term inside the brackets when you square them?"
+  },
+  {
+   "who": "student",
+   "text": "they both get squared"
+  },
+  {
+   "who": "sensei",
+   "why": "ack",
+   "text": "Okay, let me think."
+  },
+  {
+   "who": "sensei",
+   "why": "reply",
+   "text": "When you square a sum, you multiply the whole thing by itself. For example, (a + b)^2 means (a + b) times (a + b). What does that give you for (x + 3)^2?"
+  },
+  {
+   "who": "student",
+   "text": "ex square plus nigh"
+  },
+  {
+   "who": "sensei",
+   "why": "ack",
+   "text": "Good question. One moment."
+  },
+  {
+   "who": "sensei",
+   "why": "reply",
+   "text": "You said 'ex square plus nigh', but you're missing the middle term. When you square (x + 3), you get x squared plus 6x plus 9. What is the middle term in (x + 3)^2?"
+  },
+  {
+   "who": "student",
+   "text": "six x. where from?"
+  },
+  {
+   "who": "sensei",
+   "why": "ack",
+   "text": "Let me see."
+  },
+  {
+   "who": "sensei",
+   "why": "reply",
+   "text": "The middle term comes from multiplying the two terms in the brackets: x times 3, and 3 times x. That gives you 6x. Can you see where that fits in your work?"
+  },
+  {
+   "who": "student",
+   "text": "oh. line one"
+  },
+  {
+   "who": "sensei",
+   "why": "ack",
+   "text": "Got it. Give me a second."
+  },
+  {
+   "who": "sensei",
+   "why": "reply",
+   "text": "You missed the middle term when squaring (x + 3). Try writing (x + 3)(x + 3) and multiply each term."
+  },
+  {
+   "who": "student",
+   "text": "ex squared sick sex nine"
+  },
+  {
+   "who": "sensei",
+   "why": "ack",
+   "text": "Okay, let me think."
+  },
+  {
+   "who": "sensei",
+   "why": "reply",
+   "text": "You're missing the middle term when squaring (x + 3). The middle term comes from multiplying x and 3, then doubling it. Try writing (x + 3)(x + 3) and multiply each term."
+  },
+  {
+   "who": "student",
+   "text": "x squared plus 6x plus 9"
+  },
+  {
+   "who": "sensei",
+   "why": "ack",
+   "text": "Good question. One moment."
+  },
+  {
+   "who": "sensei",
+   "why": "reply",
+   "text": "You're right, the expansion is x squared plus 6x plus 9. Now, what do you do with that to solve the equation?"
+  },
+  {
+   "who": "student",
+   "text": "x is 2 or minus 8"
+  },
+  {
+   "who": "sensei",
+   "why": "ack",
+   "text": "Let me see."
+  },
+  {
+   "who": "sensei",
+   "why": "reply",
+   "text": "You're on the right track. When you solve (x + 3)^2 = 25, you take the square root of both sides. Try that now."
+  },
+  {
+   "who": "student",
+   "text": "got it, thanks"
+  }
+ ],
+ "events": [
+  {
+   "event": "tutor_start",
+   "minutes": 15.0
+  },
+  {
+   "event": "tutor_say",
+   "text": "Hi, I'm Sensei. Put your page under the camera and start solving. I'm watching.",
+   "why": "greeting"
+  },
+  {
+   "event": "tutor_subject",
+   "was": null,
+   "now": "math",
+   "topic": "quadratic equations",
+   "set_by": "page"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": null,
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": [
+    1200,
+    445
+   ],
+   "page": "work",
+   "about": null,
+   "focus": null,
+   "problem": "Solve: (x + 3)^2 = 25",
+   "subject": "math",
+   "topic": "quadratic equations",
+   "other_problems": [],
+   "given": "Solve: (x + 3)^2 = 25",
+   "steps": [
+    "x^2 + 9 = 25",
+    "x^2 = 16",
+    "x = 4 or x = -4"
+   ],
+   "first_error": 1,
+   "error_kind": "misapplied_formula",
+   "finished": true,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "You wrote x^2 + 9 = 25\u2014what did you do to get that from (x + 3)^2?"
+  },
+  {
+   "event": "tutor_focus",
+   "was": null,
+   "now": "Solve: (x + 3)^2 = 25",
+   "set_by": "page"
+  },
+  {
+   "event": "tutor_unconfirmed",
+   "step": 1,
+   "line": "x^2 + 9 = 25"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": null,
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": [
+    1200,
+    445
+   ],
+   "page": "work",
+   "about": null,
+   "focus": null,
+   "problem": "Solve: (x + 3)^2 = 25",
+   "subject": "math",
+   "topic": "quadratic equations",
+   "other_problems": [],
+   "given": "Solve: (x + 3)^2 = 25",
+   "steps": [
+    "x^2 + 9 = 25",
+    "x^2 = 16",
+    "x = 4 or x = -4"
+   ],
+   "first_error": 1,
+   "error_kind": "false_linearity",
+   "finished": true,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "What happens to each term inside the brackets when you square them?"
+  },
+  {
+   "event": "tutor_say",
+   "text": "What happens to each term inside the brackets when you square them?",
+   "why": "hint_1"
+  },
+  {
+   "event": "jev_error",
+   "error": "timed out"
+  },
+  {
+   "event": "student_said",
+   "text": "they both get squared"
+  },
+  {
+   "event": "tutor_say",
+   "text": "Okay, let me think.",
+   "why": "ack"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": "talk",
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": [
+    1200,
+    445
+   ],
+   "page": "work",
+   "about": "subject",
+   "focus": "Solve: (x + 3)^2 = 25",
+   "problem": null,
+   "subject": null,
+   "topic": null,
+   "other_problems": [],
+   "given": null,
+   "steps": [],
+   "first_error": null,
+   "error_kind": null,
+   "finished": false,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "When you square a sum, you multiply the whole thing by itself. For example, (a + b)^2 means (a + b) times (a + b). What does that give you for (x + 3)^2?"
+  },
+  {
+   "event": "tutor_about",
+   "about": "subject"
+  },
+  {
+   "event": "tutor_say",
+   "text": "When you square a sum, you multiply the whole thing by itself. For example, (a + b)^2 means (a + b) times (a + b). What does that give you for (x + 3)^2?",
+   "why": "reply"
+  },
+  {
+   "event": "jev",
+   "on": "utterance",
+   "said": "ex square plus nigh",
+   "respond": 0.86,
+   "about": "subject",
+   "about_conf": 0.92,
+   "followup": 0.28,
+   "needs_page": 0.31,
+   "new_problem": 0.02,
+   "which_problem": null,
+   "which_conf": 0.0,
+   "latency_ms": 532
+  },
+  {
+   "event": "student_said",
+   "text": "ex square plus nigh"
+  },
+  {
+   "event": "tutor_say",
+   "text": "Good question. One moment.",
+   "why": "ack"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": "talk",
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": [
+    1200,
+    445
+   ],
+   "page": "work",
+   "about": "subject",
+   "focus": "(x + 3)^2 = 25",
+   "problem": null,
+   "subject": null,
+   "topic": null,
+   "other_problems": [],
+   "given": null,
+   "steps": [],
+   "first_error": null,
+   "error_kind": null,
+   "finished": false,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "You said 'ex square plus nigh', but you're missing the middle term. When you square (x + 3), you get x squared plus 6x plus 9. What is the middle term in (x + 3)^2?"
+  },
+  {
+   "event": "tutor_about",
+   "about": "subject"
+  },
+  {
+   "event": "tutor_say",
+   "text": "You said 'ex square plus nigh', but you're missing the middle term. When you square (x + 3), you get x squared plus 6x plus 9. What is the middle term in (x + 3)^2?",
+   "why": "reply"
+  },
+  {
+   "event": "jev_error",
+   "error": "timed out"
+  },
+  {
+   "event": "student_said",
+   "text": "six x. where from?"
+  },
+  {
+   "event": "tutor_say",
+   "text": "Let me see.",
+   "why": "ack"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": "talk",
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": [
+    1200,
+    445
+   ],
+   "page": "work",
+   "about": "subject",
+   "focus": "(x + 3)^2 = 25",
+   "problem": null,
+   "subject": null,
+   "topic": null,
+   "other_problems": [],
+   "given": null,
+   "steps": [],
+   "first_error": null,
+   "error_kind": null,
+   "finished": false,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "The middle term comes from multiplying the two terms in the brackets: x times 3, and 3 times x. That gives you 6x. Can you see where that fits in your work?"
+  },
+  {
+   "event": "tutor_about",
+   "about": "subject"
+  },
+  {
+   "event": "tutor_dropped_mistake",
+   "step": 1,
+   "problem": "Solve: (x + 3)^2 = 25"
+  },
+  {
+   "event": "tutor_focus",
+   "was": "Solve: (x + 3)^2 = 25",
+   "now": "(x + 3)^2 = 25",
+   "set_by": "student"
+  },
+  {
+   "event": "tutor_say",
+   "text": "The middle term comes from multiplying the two terms in the brackets: x times 3, and 3 times x. That gives you 6x. Can you see where that fits in your work?",
+   "why": "reply"
+  },
+  {
+   "event": "jev",
+   "on": "utterance",
+   "said": "oh. line one",
+   "respond": 0.58,
+   "about": "subject",
+   "about_conf": 0.69,
+   "followup": 0.5,
+   "needs_page": 0.58,
+   "new_problem": 0.03,
+   "which_problem": null,
+   "which_conf": 0.0,
+   "latency_ms": 592
+  },
+  {
+   "event": "student_said",
+   "text": "oh. line one"
+  },
+  {
+   "event": "tutor_say",
+   "text": "Got it. Give me a second.",
+   "why": "ack"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": "talk",
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": [
+    1200,
+    445
+   ],
+   "page": "work",
+   "about": "subject",
+   "focus": "(x + 3)^2 = 25",
+   "problem": null,
+   "subject": null,
+   "topic": null,
+   "other_problems": [],
+   "given": null,
+   "steps": [],
+   "first_error": null,
+   "error_kind": null,
+   "finished": false,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "You missed the middle term when squaring (x + 3). Try writing (x + 3)(x + 3) and multiply each term."
+  },
+  {
+   "event": "tutor_about",
+   "about": "subject"
+  },
+  {
+   "event": "tutor_say",
+   "text": "You missed the middle term when squaring (x + 3). Try writing (x + 3)(x + 3) and multiply each term.",
+   "why": "reply"
+  },
+  {
+   "event": "jev",
+   "on": "utterance",
+   "said": "ex squared sick sex nine",
+   "respond": 0.5,
+   "about": "subject",
+   "about_conf": 0.95,
+   "followup": 0.5,
+   "needs_page": 0.23,
+   "new_problem": 0.01,
+   "which_problem": null,
+   "which_conf": 0.0,
+   "latency_ms": 1030
+  },
+  {
+   "event": "student_said",
+   "text": "ex squared sick sex nine"
+  },
+  {
+   "event": "tutor_say",
+   "text": "Okay, let me think.",
+   "why": "ack"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": "talk",
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": [
+    1200,
+    445
+   ],
+   "page": "work",
+   "about": "subject",
+   "focus": "(x + 3)^2 = 25",
+   "problem": null,
+   "subject": null,
+   "topic": null,
+   "other_problems": [],
+   "given": null,
+   "steps": [],
+   "first_error": null,
+   "error_kind": null,
+   "finished": false,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "You're missing the middle term when squaring (x + 3). The middle term comes from multiplying x and 3, then doubling it. Try writing (x + 3)(x + 3) and multiply each term."
+  },
+  {
+   "event": "tutor_about",
+   "about": "subject"
+  },
+  {
+   "event": "tutor_say",
+   "text": "You're missing the middle term when squaring (x + 3). The middle term comes from multiplying x and 3, then doubling it. Try writing (x + 3)(x + 3) and multiply each term.",
+   "why": "reply"
+  },
+  {
+   "event": "jev",
+   "on": "utterance",
+   "said": "x squared plus 6x plus 9",
+   "respond": 0.58,
+   "about": "subject",
+   "about_conf": 0.95,
+   "followup": 0.89,
+   "needs_page": 0.1,
+   "new_problem": 0.01,
+   "which_problem": null,
+   "which_conf": 0.0,
+   "latency_ms": 1039
+  },
+  {
+   "event": "student_said",
+   "text": "x squared plus 6x plus 9"
+  },
+  {
+   "event": "tutor_say",
+   "text": "Good question. One moment.",
+   "why": "ack"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": "talk",
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": null,
+   "page": "work",
+   "about": "subject",
+   "focus": "(x + 3)^2 = 25",
+   "problem": null,
+   "subject": null,
+   "topic": null,
+   "other_problems": [],
+   "given": null,
+   "steps": [],
+   "first_error": null,
+   "error_kind": null,
+   "finished": false,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "You're right, the expansion is x squared plus 6x plus 9. Now, what do you do with that to solve the equation?"
+  },
+  {
+   "event": "tutor_about",
+   "about": "subject"
+  },
+  {
+   "event": "tutor_say",
+   "text": "You're right, the expansion is x squared plus 6x plus 9. Now, what do you do with that to solve the equation?",
+   "why": "reply"
+  },
+  {
+   "event": "jev",
+   "on": "utterance",
+   "said": "x is 2 or minus 8",
+   "respond": 0.85,
+   "about": "subject",
+   "about_conf": 0.97,
+   "followup": 0.69,
+   "needs_page": 0.12,
+   "new_problem": 0.03,
+   "which_problem": null,
+   "which_conf": 0.0,
+   "latency_ms": 1060
+  },
+  {
+   "event": "student_said",
+   "text": "x is 2 or minus 8"
+  },
+  {
+   "event": "tutor_say",
+   "text": "Let me see.",
+   "why": "ack"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": "talk",
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": null,
+   "page": "work",
+   "about": "subject",
+   "focus": "(x + 3)^2 = 25",
+   "problem": null,
+   "subject": null,
+   "topic": null,
+   "other_problems": [],
+   "given": null,
+   "steps": [],
+   "first_error": null,
+   "error_kind": null,
+   "finished": false,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "You're on the right track. When you solve (x + 3)^2 = 25, you take the square root of both sides. Try that now."
+  },
+  {
+   "event": "tutor_about",
+   "about": "subject"
+  },
+  {
+   "event": "tutor_say",
+   "text": "You're on the right track. When you solve (x + 3)^2 = 25, you take the square root of both sides. Try that now.",
+   "why": "reply"
+  },
+  {
+   "event": "jev",
+   "on": "utterance",
+   "said": "got it, thanks",
+   "respond": 0.06,
+   "about": "social",
+   "about_conf": 0.57,
+   "followup": 0.85,
+   "needs_page": 0.05,
+   "new_problem": 0.03,
+   "which_problem": null,
+   "which_conf": 0.0,
+   "latency_ms": 797
+  },
+  {
+   "event": "student_said",
+   "text": "got it, thanks",
+   "answered": false,
+   "by": "jev",
+   "respond": 0.06,
+   "floor": 0.15,
+   "followup": 0.85,
+   "awaiting": false
+  }
+ ],
+ "tutor": {
+  "conversation": [
+   {
+    "who": "sensei",
+    "text": "Hi, I'm Sensei. Put your page under the camera and start solving. I'm watching.",
+    "t": 0.0
+   },
+   {
+    "who": "sensei",
+    "text": "What happens to each term inside the brackets when you square them?",
+    "t": 8.0
+   },
+   {
+    "who": "student",
+    "text": "they both get squared",
+    "t": 23.0
+   },
+   {
+    "who": "sensei",
+    "text": "When you square a sum, you multiply the whole thing by itself. For example, (a + b)^2 means (a + b) times (a + b). What does that give you for (x + 3)^2?",
+    "t": 23.0
+   },
+   {
+    "who": "student",
+    "text": "ex square plus nigh",
+    "t": 38.0
+   },
+   {
+    "who": "sensei",
+    "text": "You said 'ex square plus nigh', but you're missing the middle term. When you square (x + 3), you get x squared plus 6x plus 9. What is the middle term in (x + 3)^2?",
+    "t": 38.0
+   },
+   {
+    "who": "student",
+    "text": "six x. where from?",
+    "t": 53.0
+   },
+   {
+    "who": "sensei",
+    "text": "The middle term comes from multiplying the two terms in the brackets: x times 3, and 3 times x. That gives you 6x. Can you see where that fits in your work?",
+    "t": 53.0
+   },
+   {
+    "who": "student",
+    "text": "oh. line one",
+    "t": 68.0
+   },
+   {
+    "who": "sensei",
+    "text": "You missed the middle term when squaring (x + 3). Try writing (x + 3)(x + 3) and multiply each term.",
+    "t": 68.0
+   },
+   {
+    "who": "student",
+    "text": "ex squared sick sex nine",
+    "t": 83.0
+   },
+   {
+    "who": "sensei",
+    "text": "You're missing the middle term when squaring (x + 3). The middle term comes from multiplying x and 3, then doubling it. Try writing (x + 3)(x + 3) and multiply each term.",
+    "t": 83.0
+   },
+   {
+    "who": "student",
+    "text": "x squared plus 6x plus 9",
+    "t": 98.0
+   },
+   {
+    "who": "sensei",
+    "text": "You're right, the expansion is x squared plus 6x plus 9. Now, what do you do with that to solve the equation?",
+    "t": 98.0
+   },
+   {
+    "who": "student",
+    "text": "x is 2 or minus 8",
+    "t": 113.0
+   },
+   {
+    "who": "sensei",
+    "text": "You're on the right track. When you solve (x + 3)^2 = 25, you take the square root of both sides. Try that now.",
+    "t": 113.0
+   }
+  ],
+  "problem": "(x + 3)^2 = 25",
+  "subject": "math",
+  "topic": "quadratic equations",
+  "mistake": null,
+  "candidate_mistake": null,
+  "hint_level": 0,
+  "hints_on_mistake": 0,
+  "hints_given": 1,
+  "mistakes_found": [
+   "step 1: x^2 + 9 = 25 (false_linearity)"
+  ],
+  "mistakes_fixed": [],
+  "last_said": "You're on the right track. When you solve (x + 3)^2 = 25, you take the square root of both sides. Try that now.",
+  "last_why": "reply",
+  "last_spoke_at": 1113.0,
+  "last_seen": "student work",
+  "other_problems": [],
+  "steps_confirmed": 0,
+  "_finished_problem": null,
+  "let_go": [],
+  "started_at": 1000.0,
+  "ends_at": 1900.0,
+  "phase": "watching",
+  "_rechecks": 0,
+  "last_focus_change": 1053.0,
+  "last_activity": 1128.0,
+  "_heard_count": 7
+ }
+}

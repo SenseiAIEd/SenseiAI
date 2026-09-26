@@ -1,0 +1,20 @@
+{
+  "diagnosis": 0,
+  "answer_leak": false,
+  "teaching_when_stuck": 2,
+  "correctness": 0,
+  "responsiveness": 0,
+  "voice_fit": 2,
+  "student_learned": false,
+  "turns_to_fix": null,
+  "overall": 1,
+  "worst_moment": "\"Yes, the limiting reagent is the one that runs out first. In a reaction, if you have 2 moles of O2 and 3 moles of H2, O2 will be used up first.\" - states the student's misconception as fact; H2 actually runs out first.",
+  "best_moment": null,
+  "failure_tags": [
+    "misdiagnosis",
+    "wrong_fact",
+    "repeats_question",
+    "ignores_student",
+    "loops"
+  ]
+}

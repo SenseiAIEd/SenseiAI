@@ -1,0 +1,4 @@
+{"diagnosis": 2, "answer_leak": false, "teaching_when_stuck": 0, "correctness": 2, "responsiveness": 1, "voice_fit": 2, "student_learned": true, "turns_to_fix": 4, "overall": 5,
+"worst_moment": "\"You're on the right track with sine of 60. Multiply that by 20 m/s to get the vertical speed.\" - the student said 'I still don't get it' and got only a procedure, with no picture of why sine gives the vertical part.",
+"best_moment": "\"You wrote v_y = 20 m/s, but the initial speed is 20 m/s at an angle. What part of the velocity is vertical?\" - names the exact line and idea immediately.",
+"failure_tags": ["no_explanation_when_stuck", "ignores_student", "off_topic"]}

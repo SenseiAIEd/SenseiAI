@@ -1,0 +1,20 @@
+PROBLEM: Solve (x + 3)^2 = 25
+THE REAL MISTAKE ON THE PAGE: Line 1 wrote x^2 + 9 = 25: (x + 3)^2 is x^2 + 6x + 9, the middle term is missing. Answer x = 2 or x = -8; student got x = 4 or -4.
+STUDENT PERSONA: stuck - Believes squaring a sum means squaring each part.
+
+TRANSCRIPT:
+SENSEI: Hi, I'm Sensei. Put your page under the camera and start solving. I'm watching.
+SENSEI: What happens to each term inside the brackets when you square them?
+STUDENT: They both get squared? x squared and 9. I dont know what else.
+SENSEI: Yes, both terms get squared, but you need to use the formula (a + b)^2 = a^2 + 2ab + b^2.
+STUDENT: I dont get it. Where does the 2ab come from? What even is a and b here?
+SENSEI: The 2ab comes from the formula (a + b)^2 = a^2 + 2ab + b^2. Here, a is x and b is 3.
+STUDENT: Okay so 2 times x times 3, thats 6x? So x squared plus 6x plus 9 equals 25?
+SENSEI: Yes, that's right—2ab is 6x. So now you have x squared plus 6x plus 9 equals 25.
+STUDENT: Then what, take 25 over? x squared plus 6x minus 16 equals 0... I dont know how to solve that.
+SENSEI: Yes, you're on the right track—subtract 25 to get x squared plus 6x minus 16 equals 0.
+STUDENT: Yeah but how do I get x from that? I dont get it.
+SENSEI: You're close—now solve x squared plus 6x minus 16 equals 0 by factoring or using the quadratic formula.
+STUDENT: Factoring... numbers that times to minus 16 and add to 6, 8 and minus 2? So x is minus 8 or 2?
+SENSEI: You're on the right track—now check if those numbers work in the factored form.
+STUDENT: x plus 8 times x minus 2, yeah that works. So x equals 2 or minus 8. Okay, thanks.

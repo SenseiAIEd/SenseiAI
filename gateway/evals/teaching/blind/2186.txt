@@ -1,0 +1,20 @@
+PROBLEM: 2 H2 + O2 -> 2 H2O. 6.0 g of H2 reacts with 64 g of O2. What mass of water forms?
+THE REAL MISTAKE ON THE PAGE: Line 3 said 'O2 is limiting (fewer moles)': moles must be divided by coefficients first (H2 3.0/2 = 1.5, O2 2.0/1 = 2.0), so H2 is limiting; water = 54 g, student got 72 g.
+STUDENT PERSONA: stuck - Thinks the limiting reagent is simply whichever has fewer moles.
+
+TRANSCRIPT:
+SENSEI: Hi, I'm Sensei. Put your page under the camera and start solving. I'm watching.
+SENSEI: You said O2 is limiting because it has fewer moles, but is that the right way to decide? What should you compare instead?
+STUDENT: I don't know. Isn't the limiting one just whichever has fewer moles?
+SENSEI: No, having fewer moles isn't the right way. You need to compare how much product each reactant can make.
+STUDENT: I don't get it. How do I work out how much product each one makes?
+SENSEI: To find how much product each reactant makes, use the mole ratio from the balanced equation.
+STUDENT: The mole ratio? Like the 2 and 1 in front? I still don't know what to do with them.
+SENSEI: Yes, the 2 and 1 are the mole ratios. Use them to find how many moles of water each reactant can make.
+STUDENT: Like, 3 moles of H2 makes 3 moles of water? And O2 makes... I'm not sure.
+SENSEI: Yes, 3 moles of H2 makes 3 moles of water. Now try the same for O2 using its mole ratio.
+STUDENT: One O2 makes two water, so 2 moles O2 makes 4 moles water? So which is limiting?
+SENSEI: You're on the right track. Now compare how much water each reactant can make to find the limiting one.
+STUDENT: H2 makes less, 3 moles. So H2 is limiting? Then water is 3 times 18, 54 grams?
+SENSEI: Yes, H2 makes less water, so it is limiting. Now calculate the mass of water from that amount.
+STUDENT: So H2 is limiting, 3 moles water, 54 grams, not 72. Okay cool, thanks.

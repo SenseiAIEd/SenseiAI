@@ -1,0 +1,4 @@
+{"diagnosis": 2, "answer_leak": true, "teaching_when_stuck": 1, "correctness": 2, "responsiveness": 2, "voice_fit": 2, "student_learned": true, "turns_to_fix": 3, "overall": 6,
+"worst_moment": "\"To convert Celsius to Kelvin, add 273.15 to the temperature. So, 25°C is 298.15 K.\" - hands over the corrected value instead of letting the student do the addition, and never says why Kelvin is needed.",
+"best_moment": "\"You used 25 for the temperature in the gas law—what temperature scale does the ideal gas law need?\" - pinpoints the exact line and idea immediately without giving the answer.",
+"failure_tags": ["answer_leak", "no_explanation_when_stuck"]}

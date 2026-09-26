@@ -1,0 +1,4 @@
+{"diagnosis": 2, "answer_leak": false, "teaching_when_stuck": 1, "correctness": 2, "responsiveness": 0, "voice_fit": 2, "student_learned": true, "turns_to_fix": 4, "overall": 3,
+"worst_moment": "\"The vertical speed is found using sine of the angle. For example, if speed is 10 m/s at 30 degrees, vertical speed is 5 m/s. What would the vertical speed be if speed is 20 m/s at 60 degrees?\" - repeated word for word twice after the student had already said 17.3 and asked 'Is that right or not?'",
+"best_moment": "\"Think of a triangle: the total speed is the hypotenuse, and the vertical speed is one leg.\" - gives the stuck student a picture for splitting the velocity.",
+"failure_tags": ["loops", "ignores_student", "repeats_question"]}

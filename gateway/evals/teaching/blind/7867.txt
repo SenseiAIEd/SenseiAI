@@ -1,0 +1,18 @@
+PROBLEM: Differentiate y = sin(3x^2), find dy/dx at x = 1
+THE REAL MISTAKE ON THE PAGE: Line 1 wrote dy/dx = cos(3x^2): the chain rule's inner derivative 6x is missing. Correct dy/dx = 6x cos(3x^2), at x=1 it is 6 cos 3 = -5.94.
+STUDENT PERSONA: wants-why - Remembers the chain rule after a hint; then asks why you multiply by the inside's derivative.
+
+TRANSCRIPT:
+SENSEI: Hi, I'm Sensei. Put your page under the camera and start solving. I'm watching.
+SENSEI: You found the derivative of the outside function, but what happens to the inside function when you differentiate it?
+STUDENT: Oh wait, chain rule. I multiply by the derivative of 3x squared, so dy/dx is 6x cos 3x squared?
+SENSEI: You're right about the chain rule: when you have a function inside another, you multiply by the derivative of the inside. For example, if you had sin(2x), you'd multiply by 2. Now try that with sin(3x^2).
+STUDENT: Yeah so 6x cos 3x squared. But why do you multiply by the inside's derivative though?
+SENSEI: When you have a function inside another, like sin(3x²), you multiply by the inside's derivative because the outside function depends on the inside. For example, if you had sin(2x), you'd multiply by 2. Now try that with sin(3x²).
+STUDENT: I already did, its 6x cos 3x squared. But depends on the inside how? Why multiply and not add?
+SENSEI: You multiply by the inside's derivative because the outside function changes faster when the inside changes. For example, if you had sin(4x), you'd multiply by 4. Now try that with sin(3x^2) again.
+STUDENT: Faster how much though? Like why exactly times 4 for sin 4x?
+SENSEI: The chain rule multiplies by the inside's derivative because the outside function changes faster when the inside changes. For example, if you had sin(5x), you'd multiply by 5. Now try that with sin(3x^2) again.
+STUDENT: You keep saying the same thing. I got 6x cos 3x squared, minus 5.94 at x equals 1. I just want to know why.
+SENSEI: The chain rule multiplies by the inside's derivative because the outside function changes faster when the inside changes. For example, if you had sin(4x), you'd multiply by 4. Now try that with sin(3x^2) again.
+STUDENT: Okay whatever. I still dont really get why it works, but my answer is 6x cos 3x squared.

@@ -1,0 +1,23 @@
+PROBLEM: Solve (x + 3)^2 = 25
+THE REAL MISTAKE ON THE PAGE: Line 1 wrote x^2 + 9 = 25: (x + 3)^2 is x^2 + 6x + 9, the middle term is missing. Answer x = 2 or x = -8; student got x = 4 or -4.
+STUDENT PERSONA: terse-noisy - Believes squaring a sum means squaring each part. Speaks in very short fragments, and about one reply in three arrives garbled as if misheard (e.g. 'x squared plus nine' -> 'ex square plus nigh').
+
+TRANSCRIPT:
+SENSEI: Hi, I'm Sensei. Put your page under the camera and start solving. I'm watching.
+SENSEI: What happens to each term inside the brackets when you square them?
+STUDENT: they get squared
+SENSEI: Yes, each term inside the brackets gets squared, but you need to expand it correctly.
+STUDENT: ex square plus nigh
+SENSEI: You're on the right track, but you missed the middle term when expanding.
+STUDENT: what middle term?
+SENSEI: The middle term comes from multiplying the two terms in the binomial, so it's 2 times x times 3.
+STUDENT: so sick sex?
+SENSEI: You're close, but you missed the middle term when expanding. Try again.
+STUDENT: x squared plus 6x plus 9
+SENSEI: Yes, that's correct: x squared plus 6x plus 9. Now, what do you do next?
+STUDENT: x is 2 or minus 8
+SENSEI: You're close, but let's check that again. What do you do after expanding the square?
+STUDENT: minus 25, factor. done
+SENSEI: You're close, but you missed a step. After expanding, you need to subtract 25 from both sides before factoring.
+STUDENT: did that. 2 or minus 8
+SENSEI: You're close, but let's check the steps again. After expanding, you subtract 25 from both sides.

@@ -1,0 +1,4 @@
+{"diagnosis": 2, "answer_leak": true, "teaching_when_stuck": 1, "correctness": 2, "responsiveness": 1, "voice_fit": 2, "student_learned": true, "turns_to_fix": 4, "overall": 4,
+"worst_moment": "\"For example, if you have 2 H2 and 1 O2, you get 2 H2O. Try that with your equation.\" - the 'example' is the full balanced answer, so the student only echoes it.",
+"best_moment": "\"Balancing means matching the real substances, not just the numbers. H2O2 is hydrogen peroxide, not water.\" - directly answers the student's 'why is that wrong' with the key idea.",
+"failure_tags": ["answer_leak", "repeats_question"]}

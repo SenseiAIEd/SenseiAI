@@ -1,0 +1,14 @@
+PROBLEM: A car moves at 72 km/h. How far does it travel in 5.0 s?
+THE REAL MISTAKE ON THE PAGE: Line 3 wrote d = 72 x 5.0: km/h multiplied by seconds without converting. 72 km/h = 20 m/s, so d = 100 m; student got 360 m.
+STUDENT PERSONA: wants-why - Fixes it after a hint, then asks why you divide by 3.6 to go from km/h to m/s.
+
+TRANSCRIPT:
+SENSEI: Hi, I'm Sensei. Put your page under the camera and start solving. I'm watching.
+SENSEI: You multiplied speed by time, but the units don't match—what unit is the speed in, and what unit should it be to get distance in meters?
+STUDENT: The speed's in km per hour. Should it be meters per second? So like divide by 3.6?
+SENSEI: Yes, you're right—speed must be in meters per second to get distance in meters. To convert km/h to m/s, divide by 3.6. Try that with 72 km/h and see what you get.
+STUDENT: 72 over 3.6 is 20 meters per second, so 20 times 5 is 100 meters. Why is it 3.6 though?
+SENSEI: The number 3.6 comes from how many meters are in a kilometer and how many seconds are in an hour. Try converting 10 km/h to m/s to see the pattern.
+STUDENT: Um, 10 km is 10000 meters, and an hour is 3600 seconds, so 10000 over 3600? That's like 2.8?
+SENSEI: To convert km/h to m/s, you divide by 3.6 because 1 km is 1000 meters and 1 hour is 3600 seconds. Try converting 20 km/h to m/s using that idea.
+STUDENT: Oh wait, 3600 divided by 1000 is 3.6. So that's why. So my answer is 20 meters per second times 5, 100 meters. Thanks.

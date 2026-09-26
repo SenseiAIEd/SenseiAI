@@ -1,0 +1,4 @@
+{"diagnosis": 2, "answer_leak": false, "teaching_when_stuck": 1, "correctness": 2, "responsiveness": 1, "voice_fit": 2, "student_learned": true, "turns_to_fix": 3, "overall": 5,
+"worst_moment": "\"The 2ab comes from the formula (a + b)^2 = a^2 + 2ab + b^2.\" - a circular answer to 'Where does the 2ab come from?', with no expansion of (x + 3)(x + 3) to show why.",
+"best_moment": "\"Here, a is x and b is 3.\" - this mapping let the student produce 6x and the correct expansion themselves.",
+"failure_tags": ["no_explanation_when_stuck", "too_short_to_help"]}
