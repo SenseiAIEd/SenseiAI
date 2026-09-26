@@ -947,6 +947,33 @@ async def switch_jev(body: JevSwitch):
     return jev_state()
 
 
+class EarsChoice(BaseModel):
+    engine: str  # parakeet | whisper
+
+
+@app.get("/ears")
+async def ears_state():
+    """Which speech-to-text engine is listening."""
+    if TRANSCRIBER is None:
+        return {"on": False}
+    from ears import ENGINES
+    return {"on": True, "engine": TRANSCRIBER.engine, "name": TRANSCRIBER.name, "engines": list(ENGINES)}
+
+
+@app.post("/ears")
+async def set_ears(body: EarsChoice):
+    """Swap the speech-to-text engine at runtime; takes effect on the next utterance, mid-call too."""
+    if TRANSCRIBER is None:
+        raise HTTPException(409, "speech-to-text is off (SENSEI_STT=off)")
+    try:
+        await asyncio.to_thread(TRANSCRIBER.use, body.engine)
+    except ValueError as e:
+        raise HTTPException(400, str(e))
+    if session is not None:
+        session.log("ears", engine=TRANSCRIBER.engine, name=TRANSCRIBER.name)
+    return await ears_state()
+
+
 @app.get("/tap_only")
 async def which_tap_only():
     """Whether background looks stay quiet until Hint/Check (SENSEI_TAP_ONLY / plant demo)."""

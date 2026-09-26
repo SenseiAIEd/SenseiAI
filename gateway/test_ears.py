@@ -32,7 +32,7 @@ def listen(audio: np.ndarray, listening=lambda: True, noise=None):
         heard.append((text, info))
 
     async def run():
-        transcriber = Transcriber()
+        transcriber = Transcriber("whisper")  # these tests pin Whisper's exact wording
         transcriber.load()  # the gateway loads the model at startup; don't time the load
         ears = Ears(transcriber, on_text, listening=listening, on_noise=(noise.append if noise is not None else None))
         silence = np.zeros(int(RATE * 1.5), np.float32)
@@ -156,3 +156,21 @@ def test_youtube_outros_are_never_a_student():
     assert is_phantom("Please don't forget to subscribe to our channel.", 0.05)   # 25 Sep session
     assert is_phantom("Thanks for watching!", 0.0)
     assert not is_phantom("Is the solution correct?", 0.3)
+
+
+def test_parakeet_understands_a_spoken_question(tmp_path):
+    pytest.importorskip("onnx_asr")
+    t = Transcriber("parakeet")
+    assert t.name.startswith("parakeet")
+    text = t(spoken("is my second line right", tmp_path) * 0.5)
+    assert "second line" in text.lower()
+
+
+def test_the_engine_can_be_swapped_at_runtime():
+    pytest.importorskip("onnx_asr")
+    t = Transcriber("whisper")
+    t.use("parakeet")
+    assert t.engine == "parakeet" and t.name.startswith("parakeet")
+    with pytest.raises(ValueError):
+        t.use("nonsense")
+    assert t.engine == "parakeet"                                     # a bad choice changes nothing

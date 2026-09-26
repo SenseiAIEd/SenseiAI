@@ -111,31 +111,73 @@ class NotSpeech(Exception):
 _MODELS: dict = {}  # loaded speech models, shared by every call in this process
 
 
-class Transcriber:
-    """Speech (16 kHz mono float32) -> text."""
+ENGINES = ("parakeet", "whisper")
+PARAKEET_MODEL = os.environ.get("SENSEI_PARAKEET_MODEL", "nemo-parakeet-tdt-0.6b-v2")
 
-    def __init__(self):
+
+class Transcriber:
+    """Speech (16 kHz mono float32) -> text, with a choice of engine:
+
+      parakeet  NVIDIA Parakeet TDT 0.6B v2 through ONNX Runtime on the CPU (the default). On the
+                25 Sep session it was as accurate as Whisper (every model lost the same words in
+                that audio), 6x faster (0.17 s against 1.1 s per utterance), and stayed silent on
+                noise where Whisper wrote "Be-". Near the top of the Open ASR leaderboard at 0.6 B.
+      whisper   faster-whisper (SENSEI_STT_MODEL, default small.en)
+
+    SENSEI_STT_ENGINE picks one at startup; use() switches at runtime (POST /ears), and every
+    Ears holding this transcriber picks the change up on its next utterance."""
+
+    def __init__(self, engine: Optional[str] = None):
         self.url = os.environ.get("SENSEI_STT_URL", "").rstrip("/")
         self.key = os.environ.get("SENSEI_STT_KEY", "")
         self.model_name = os.environ.get("SENSEI_STT_MODEL", "small.en")
         self.language = os.environ.get("SENSEI_STT_LANGUAGE") or None
+        self.engine = (engine or os.environ.get("SENSEI_STT_ENGINE", "parakeet")).lower()
+        if self.engine not in ENGINES:
+            raise ValueError(f"unknown speech engine {self.engine!r}; one of {ENGINES}")
         self._model = None
 
     @property
     def name(self) -> str:
-        return f"server {self.url}" if self.url else f"faster-whisper {self.model_name} (cpu)"
+        if self.url:
+            return f"server {self.url}"
+        if self.engine == "parakeet":
+            return f"parakeet {PARAKEET_MODEL.removeprefix('nemo-')} (cpu, onnx)"
+        return f"faster-whisper {self.model_name} (cpu)"
 
     def load(self):
-        if not self.url and self._model is None:
-            if self.model_name not in _MODELS:
+        if self.url or self._model is not None:
+            return
+        key = f"{self.engine}:{PARAKEET_MODEL if self.engine == 'parakeet' else self.model_name}"
+        if key not in _MODELS:
+            if self.engine == "parakeet":
+                import onnx_asr
+                _MODELS[key] = onnx_asr.load_model(PARAKEET_MODEL, quantization="int8")
+            else:
                 from faster_whisper import WhisperModel
-                _MODELS[self.model_name] = WhisperModel(self.model_name, device="cpu", compute_type="int8")
-            self._model = _MODELS[self.model_name]
+                _MODELS[key] = WhisperModel(self.model_name, device="cpu", compute_type="int8")
+        self._model = _MODELS[key]
+
+    def use(self, engine: str):
+        """Switch engine at runtime. Loads the new model first, so a failed load changes nothing."""
+        engine = engine.lower()
+        if engine not in ENGINES:
+            raise ValueError(f"unknown speech engine {engine!r}; one of {ENGINES}")
+        other = Transcriber(engine)
+        other.load()
+        self.engine, self._model = engine, other._model
 
     def __call__(self, audio: np.ndarray) -> str:
         if self.url:
             return self._via_server(audio)
         self.load()
+        if self.engine == "parakeet":
+            text = str(self._model.recognize(audio, sample_rate=RATE) or "").strip()
+            # Parakeet gives no no-speech probability; it rarely invents words from noise (it
+            # returns nothing), so only the empty result and the outro patterns count as phantoms.
+            if is_phantom(text, 0.0):
+                raise NotSpeech("stock phrase" if text else "no words", text)
+            return text
         segments, _ = self._model.transcribe(audio, language=self.language, beam_size=STT_BEAM,
                                              initial_prompt=STT_PROMPT or None,
                                              vad_filter=False, condition_on_previous_text=False)
