@@ -991,3 +991,17 @@ def test_the_same_problem_written_differently_does_not_move_focus():
     h.settle(page_with("a"))
     h.settle(page_with("ab"))
     assert h.tutor.problem == "x + 5 = 7" and "tutor_focus" in h.events and h.events.count("tutor_focus") == 1
+
+
+def test_a_correction_makes_sensei_look_again_not_quiz_the_student():
+    # 25 Sep: "you are missing something" was filed as "subject", whose rule forbids looking at
+    # the camera, so Sensei kept repeating its misreading "8KEd" and asking what the "d" meant.
+    assert tutor.corrects_sensei("But it is not 8k add, you are missing something")
+    assert tutor.corrects_sensei("You identified it as 8K ED, but that's not correct.")
+    assert not tutor.corrects_sensei("What does the d stand for?")
+    h, brain = with_jev(FakeJev(respond=0.9, about="subject", needs_page=0.1),
+                        Assessment(page="work", about="view", say="You're right, it says 8K Edu."))
+    h.run(h.tutor.hear("you are missing something", PAGE))
+    assert brain.images[-1] is True                                   # the image is kept
+    assert "Look at the image again" in brain.instructions[-1]
+    assert "it is about \"subject\"" not in brain.instructions[-1]     # Jev's label isn't passed on

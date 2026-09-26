@@ -254,7 +254,9 @@ Reply with ONE JSON object and nothing else:
 
 FIRST decide "about": what were their words about?
   view     what is in front of the camera - "is my second line right?", "check this",
-           "what do you see?", "does this look correct?"
+           "what do you see?", "does this look correct?" - AND any correction of what you
+           read or saw: "you misread it", "you're missing a letter", "that's not what it says",
+           "that's not correct" (after you described something)
   subject  the maths or the idea, not the picture - "why does subtracting work?",
            "what is a coefficient?", "what is x when e to the x is 39?"
   sensei   you, or the conversation - "what did you say?", "say that again", "stop",
@@ -272,6 +274,11 @@ with now. This is how they change the subject, and they are allowed to. A questi
 
 THEN answer, and let "about" decide what you talk about:
 - view: answer about what you can see. This is the ONLY case where you describe the view.
+  If they say you misread or missed something, LOOK AGAIN at the image, letter by letter and
+  line by line, and correct yourself plainly ("You're right, it says 8K Edu"). The image is
+  the truth; what you said earlier in the conversation may be a misreading, so never repeat an
+  earlier reading without checking it against the image. Correcting yourself is not a lesson:
+  don't answer their correction with a question back to them.
 - subject: answer the question itself, from the conversation and the problem in focus. Do NOT
   mention or describe what is in the camera. They asked about an idea, not a photo.
 - sensei: answer from the conversation so far, briefly.
@@ -498,6 +505,19 @@ FILLERS = {"okay", "ok", "yeah", "yes", "no", "mm", "mhm", "hmm", "uh", "um", "a
 SAY_AGAIN_RE = re.compile(
     r"\b(say (that|it) again|repeat (that|it|please)|can you repeat|what did you say|"
     r"i didn'?t (hear|catch) (that|you))\b", re.I)
+
+
+# "You're missing something", "that's not correct": the student is correcting what Sensei read
+# or said. Jev files these under "subject" (25 Sep), and the subject rule forbids looking at the
+# camera, so Sensei kept repeating its misreading ("8KEd" for "8K Edu") and quizzing the student.
+CORRECTION_RE = re.compile(
+    r"\b(you('re| are)? (missing|misread|wrong|mistaken)|not (correct|right|what it says)|"
+    r"that'?s not|you (read|identified|said) it (as|wrong)|missed (a|the|something)|look again|"
+    r"read it again|it'?s not)\b", re.I)
+
+
+def corrects_sensei(text: str) -> bool:
+    return bool(CORRECTION_RE.search(text or ""))
 
 
 def wants_repeat(text: str) -> bool:
@@ -843,7 +863,7 @@ class Tutor:
         extra = ""
         self._jev_turn = decision  # _react consults it before letting a reply move the focus
         if decision is not None:
-            img, extra = self._apply_jev(decision, img)
+            img, extra = self._apply_jev(decision, img, text)
         if self.brain is None:
             await self.speak(NO_BRAIN, "no_brain")
         elif self.thinking:
@@ -883,7 +903,7 @@ class Tutor:
         self.log_event("jev", on="utterance", said=said, **d.summary())
         return d
 
-    def _apply_jev(self, d, img: Optional[np.ndarray]) -> tuple[Optional[np.ndarray], str]:
+    def _apply_jev(self, d, img: Optional[np.ndarray], said: str = "") -> tuple[Optional[np.ndarray], str]:
         """Turn a decision into what the answer needs: which problem, whether to send the
         page, and a note to the writing model. Returns (image or None, note)."""
         notes = []
@@ -892,6 +912,10 @@ class Tutor:
                 and not _same_line(d.which_problem, self.problem)):
             self.switch_to(d.which_problem, who="student")
             notes.append(f"They have moved on to a new problem: {d.which_problem}. Help with that one.")
+        if corrects_sensei(said):
+            notes.append("They are correcting what you read or said: this is about \"view\". Look at the "
+                         "image again, letter by letter, and correct yourself.")
+            return img, " ".join(notes)  # keep the image, and don't pass on Jev's "about"
         if d.about_confidence >= self.JEV_ABOUT_MIN:
             notes.append(f"A quick read of what they said: it is about \"{d.about}\" "
                          "(use that for \"about\" unless you clearly see otherwise).")
