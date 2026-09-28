@@ -221,3 +221,31 @@ What it took to run each one on the GB10 (all reproducible from `~/projects/jev-
 - **CLM-v0.1-8B** is a different design: Qwen3-8B served as an embedding model (vLLM `--runner pooling`) plus small contrastive state/action heads, built to rank agent actions and cache them. `clm-serve` speaks `/v1/systemone` but rejects any `model` other than `clm-latest`/`clm-raw` (set `SENSEI_JEV_MODEL=clm-latest`), and the `contrastive-lm` package pins an old vLLM (install with `--no-deps`). It is very fast, 13 ms median with repeats served from its cache, but on our typed decisions it is not usable: its reply probability sat above every floor, so it answered all 16 non-questions, and "what is it about" was 12/37. That matches its JevBench rank (#47, intelligence 22.4). Its strength is ranking many candidate actions, not calibrated yes/no and small-choice decisions.
 
 **Lesson, again:** public benchmark rank predicts little. Plumb (#2) did worse than JevK5 (#5) on our decisions, and only our own utterance set separated Imajev from the rest. The next step beyond choosing among these is training our own (a LoRA on Qwen3.5-4B for tutoring decisions, labelled from real sessions and synthetic students), scored the same way.
+
+## 10. Update, 28 Sep (later): the JevBench v1.5.0 leaders — Cygnet, Winnow, Jev-Omni, decider-4b
+
+JevBench v1.5.0 reshuffled the top: Cygnet 73.7, Winnow-12B Q8 73.2, Jev 1.13 API 72.1, Jev-Omni 71.5, decider-4b v2 71.3. All four open systems were run on the Spark and scored on the same 48 utterances, same method as §9. decider-4b has no release newer than v2.1 (the Hub has v1, v2 and v2.1 on main), so v2 and v2.1 were re-scored for a like-for-like table.
+
+| model | should reply (best floor) | silent / unneeded | what it's about | needs the page | new problem | total /153 | median latency |
+|---|---|---|---|---|---|---|---|
+| **Cygnet** (frozen Gemma-4-12B-it + letter readout) | **45/47** (0.25-0.35) | 0 / 2 | 29/37 | **22/25** | 44/44 | **140** | **304 ms** * |
+| Imajev-4B (1 rotation, fast path; §9) | 43/47 (0.40) | 3 / 1 | 30/37 | 17/25 | 44/44 | 134 | 373 ms |
+| Winnow-12B Q8 (Gemma-4-12B fine-tune, llama.cpp) | 43/47 (0.45) | 0 / 4 | 27/37 | 20/25 | 43/44 | 133 | 554 ms |
+| decider-4b v2 | 41/47 (0.30) | 3 / 3 | 27/37 | 16/25 | 44/44 | 128 | 687 ms |
+| decider-4b v2.1 | 41/47 (0.35) | 1 / 5 | 26/37 | 14/25 | 44/44 | 125 | 690 ms |
+| JevK5 v0.2 (current default) | 42/47 (0.25) | 2 / 3 | 25/37 | 15/25 | 43/44 | 125 | 396 ms |
+| Jev-Omni (Gemma-4-12B + decision head) | 33/47 (0.25) | 4 / 10 | 29/37 | 20/25 | 42/44 | 124 | 950 ms ** |
+
+\* Cygnet's shim takes one question per request; Sensei asks six. Through a proxy sending them one after another it was 937 ms; sending them in parallel (vLLM batches concurrent requests) gave 304 ms at identical accuracy.
+\** Jev-Omni ships as a Python library, not a server; it ran through our own wrapper, one question per forward pass, with yes/no questions phrased as options Yes/No. Its reply decision may suffer from that mapping.
+
+Right when confident (respond, about, needs page, new problem): Cygnet 40/40, n/a (its choice answers carry no confidence field), 16/17, 43/43. Winnow 34/36, 25/32, 17/19, 43/44 — confident on far more cases than any 4B model. Jev-Omni 21/26, 28/35, 17/21, 36/36. decider v2 5/5, 21/26, 6/6, 38/38.
+
+**Cygnet is now the best system for Sensei**: the only one that matches hosted Jev on "should reply" (45/47, never silent on a real question), the best on "needs the page", and, with parallel calls, the fastest. The costs are memory and packaging: it serves full-precision Gemma-4-12B under vLLM (about 36 GB of GPU memory at the settings used, against ~10 GB for Imajev), it needs a small adapter for Sensei's multi-question calls, its tested vLLM is 0.30 (ours is 0.25.1), and Gemma's use policy applies. Winnow-12B is the alternative if confidence coverage matters most. Imajev-4B remains the light option.
+
+Notes for running them (commands in `~/projects/jev-local/README.md`):
+- **Cygnet** has no weights of its own: `vllm serve google/gemma-4-12B-it --revision 707f0a3b...` plus `shim/cygnet_shim.py` (standard library; `SHIM_TEMPERATURE=3.4`). The shim wants one question keyed `decision`, and noul criteria `{"true": ..., "false": ...}`; the proxy adds those.
+- **Winnow-12B** needs its own llama.cpp build (`EldanRing/winnow-inference`, pinned revision; built on the GB10 with `--cuda-arch 121` in a few minutes) and the Q8 GGUF (12 GB). It speaks `/v1/systemone` natively and expects the model name `Winnow-12B`.
+- **Jev-Omni** is a full Gemma-4-12B checkpoint (24 GB) plus `head.pt`; its loader calls the Hub downloader even for a local folder (patched in our wrapper).
+
+Across §8-§10 the pattern holds: public rank and our rank agree only loosely. The Gemma-4-12B systems (Cygnet, Winnow) are clearly stronger on our decisions than the 4B ones, at 3-4x the memory.
