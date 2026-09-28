@@ -195,3 +195,29 @@ than JevK5 on this set. With 47 cases a one- or two-case gap is within noise; th
 extra replies are the consistent differences. JevK5 stays the default; `decider` and `decider-v2`
 are selectable backends. General-purpose benchmarks measure a model; the utterance set measures it
 at our job, and is where a choice like this should be made.
+
+## 9. Update, 28 Sep: Imajev, Plumb, Hopper and CLM on Sensei's decisions
+
+Four newer System One models, three of them near the top of JevBench v1.4.2.2 (Imajev-4B #1, Plumb-4B #2, Hopper ~#7) plus Stanford/NVIDIA's CLM-v0.1-8B (#47, advertised as up to 9x faster than Jev). Each was run on the Spark next to the live JevK5 and scored with `gateway/jev_eval.py --sweep` on the same 48 real utterances. "Should reply" is at each model's own best reply floor (fewest silences plus unneeded replies); the other rows don't depend on the floor.
+
+| model | should reply (best floor) | silent / unneeded | what it's about | needs the page | moved to a new problem | median / max |
+|---|---|---|---|---|---|---|
+| JevK5 v0.2 (current default) | 42/47 (0.25) | 2 / 3 | 25/37 | 15/25 | 43/44 | 396 / 512 ms |
+| **Imajev-4B, 1 rotation, fast path** | **43/47** (0.40) | 3 / 1 | **30/37** | **17/25** | **44/44** | **373 / 527 ms** |
+| Imajev-4B, 4 rotations, fast path | 43/47 (0.40) | 3 / 1 | 31/37 | 17/25 | 44/44 | 1169 / 1535 ms |
+| Plumb-4B | 38/47 (0.20) | 5 / 4 | 24/37 | 13/25 | 44/44 | 387 / 578 ms |
+| Hopper (one question per call, via a splitter) | 41/47 (0.25) | 3 / 3 | 26/37 | 13/25 | 41/44 | 598 / 761 ms |
+| CLM-v0.1-8B | 31/47 (any floor) | 0 / 16 | 12/37 | 11/25 | 36/44 | 13 / 25 ms |
+
+When each model was confident, how often it was right (respond, about, needs_page, new_problem): JevK5 9/9, 22/29, 4/4, 17/17. Imajev (1 rotation) 15/15, 20/22, 13/13, 22/22. Imajev is confident far more often, and nearly always right when it is. That is the property Sensei branches on.
+
+**Imajev-4B is the best fit for Sensei.** It's as good or better on every decision at JevK5's latency, with the largest gain on "what is it about" (+5), which decides how Sensei answers. 47 cases is a small set: one- or two-case gaps are noise; the "about" gain and the confident-and-right pattern are the consistent differences. Switching needs an `imajev` backend (skip_below 0.40) and the server as a service. Not switched yet.
+
+What it took to run each one on the GB10 (all reproducible from `~/projects/jev-local/README.md`):
+
+- **Imajev-4B** (LoRA on the same pinned Qwen3.5-4B @ 851bf6e as `models/semif`; `/v1/systemone`, JSON or multipart). The default torch path took **9.9 s for two questions**; `--fast --merge-lora` (CUDA graphs, adapter folded in) brought 4 rotations to ~1.2 s and 1 rotation to ~0.37 s for the full six-question call, at the same accuracy. Use `calibration.json` with 1 rotation and `calibration-rot4.json` with 4.
+- **Plumb-4B** runs on the JevK5 runtime (`serve.py`, calibration T = 2.07 from its `jevk5_config.json`). The easiest to deploy; not better for us.
+- **Hopper** accepts **exactly one question per request** (Sensei asks six at once), refuses to start without the `causal_conv1d` kernel (no aarch64 build; `--allow-slow-kernels`, as the other models also run on the reference path), and is licensed for research and demo use only. Scored through a small proxy that splits and merges calls.
+- **CLM-v0.1-8B** is a different design: Qwen3-8B served as an embedding model (vLLM `--runner pooling`) plus small contrastive state/action heads, built to rank agent actions and cache them. `clm-serve` speaks `/v1/systemone` but rejects any `model` other than `clm-latest`/`clm-raw` (set `SENSEI_JEV_MODEL=clm-latest`), and the `contrastive-lm` package pins an old vLLM (install with `--no-deps`). It is very fast, 13 ms median with repeats served from its cache, but on our typed decisions it is not usable: its reply probability sat above every floor, so it answered all 16 non-questions, and "what is it about" was 12/37. That matches its JevBench rank (#47, intelligence 22.4). Its strength is ranking many candidate actions, not calibrated yes/no and small-choice decisions.
+
+**Lesson, again:** public benchmark rank predicts little. Plumb (#2) did worse than JevK5 (#5) on our decisions, and only our own utterance set separated Imajev from the rest. The next step beyond choosing among these is training our own (a LoRA on Qwen3.5-4B for tutoring decisions, labelled from real sessions and synthetic students), scored the same way.
