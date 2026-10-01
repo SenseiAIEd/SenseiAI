@@ -55,6 +55,10 @@ BACKENDS = {
     # runs `jev_eval.py --backend jevk8 --sweep`. Floors copy jevk5; port 8099 (8095–8098 taken).
     "jevk8": {"url": "http://127.0.0.1:8099/v1/systemone",
               "skip_below": 0.25, "skip_if_answer_below": 0.15, "no_page_below": 0.15},
+    # Imajev-4B (mohit67890/imajev), 1 rotation, --fast --merge-lora: best local backend on our
+    # utterances (docs/jev-report.md §9): reply 43/47 at 0.40, about 30/37, page 17/25, 373 ms.
+    "imajev": {"url": "http://127.0.0.1:8102/v1/systemone",
+               "skip_below": 0.40, "skip_if_answer_below": 0.30, "no_page_below": 0.15},
     "semif": {"url": "http://127.0.0.1:8096/v1/systemone",
               "skip_below": 0.15, "skip_if_answer_below": 0.05, "no_page_below": 0.15},
     "decider": {"url": "http://127.0.0.1:8097/v1/systemone",
