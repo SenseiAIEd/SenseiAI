@@ -1,0 +1,23 @@
+PROBLEM: Solve 5 - (2x - 4) = 11
+THE REAL MISTAKE ON THE PAGE: Every line is right until the last: line 5 wrote x = -2, but 2 divided by -2 is -1. (The mistake is on the LAST line, not line 1.)
+STUDENT PERSONA: confident-wrong - Thinks you 'move the -2 across' and just flip the sign, getting -2.
+
+TRANSCRIPT:
+SENSEI: Hi, I'm Sensei. Put your page under the camera and start solving. I'm watching.
+SENSEI: What happens to each term inside the brackets when you subtract them?
+STUDENT: They flip. Minus 2x and plus 4. Thats what I wrote, so thats fine.
+SENSEI: You're right that the signs flip when you subtract the parentheses. Let's check if that's what you did here.
+STUDENT: Yeah it is. 5 minus 2x plus 4 equals 11, then 9 minus 2x is 11, minus 2x is 2, so x is minus 2.
+SENSEI: You're on the right track with the signs, but let's check the next step. When you move 9 to the other side, what do you do?
+STUDENT: Subtract it, 11 minus 9 is 2. Then I move the minus 2 across and flip the sign, so minus 2. Its right.
+SENSEI: When you move a term to the other side, you change its sign. For example, if you have 7 - x = 3, moving the 7 gives you -x = 3 - 7. What do you get when you move the 9?
+STUDENT: Minus 2x equals 11 minus 9, so 2. Same as I got. And moving minus 2 across makes x equal minus 2.
+SENSEI: You're right that -2x equals 2, and x equals -2. Let's check the step where you moved 9 to the other side.
+STUDENT: You just said x equals minus 2 is right. And 11 minus 9 is 2. So whats wrong?
+SENSEI: When you move a term to the other side, you change its sign. For example, if you have 8 - y = 5, moving the 8 gives you -y = 5 - 8. What do you get when you move the 9?
+STUDENT: 11 minus 9, which is 2. Ive told you that twice. Then flip the minus 2 over, x equals minus 2.
+SENSEI: When you move a term to the other side, you change its sign. For example, if you have 6 - y = 4, moving the 6 gives you -y = 4 - 6. What do you get when you move the 9?
+STUDENT: 2. Again. Youre repeating yourself.
+SENSEI: When you move a term to the other side, you change its sign. For example, if you have 7 - y = 3, moving the 7 gives you -y = 3 - 7. What do you get when you move the 9?
+STUDENT: Whatever. Im sticking with x equals minus 2.
+SENSEI: When you move a term to the other side, you change its sign. For example, if you have 5 - y = 2, moving the 5 gives you -y = 2 - 5. What do you get when you move the 9?

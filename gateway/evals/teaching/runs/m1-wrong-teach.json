@@ -1,0 +1,802 @@
+{
+ "id": "m1-wrong-teach",
+ "page": "/home/perspectivity-dgx/SenseiAI/datasets/samples/math/basic/easy/bad_1.png",
+ "variant": "teach",
+ "now": 1128.0,
+ "transcript": [
+  {
+   "who": "sensei",
+   "why": "greeting",
+   "text": "Hi, I'm Sensei. Put your page under the camera and start solving. I'm watching."
+  },
+  {
+   "who": "sensei",
+   "why": "hint_1",
+   "text": "What happens to each term inside the brackets when you subtract them?"
+  },
+  {
+   "who": "student",
+   "text": "Nothing, you just drop the brackets. So its minus 2x minus 4."
+  },
+  {
+   "who": "sensei",
+   "why": "ack",
+   "text": "Okay, let me think."
+  },
+  {
+   "who": "sensei",
+   "why": "reply",
+   "text": "When you subtract a group, you change the sign of every term inside. Try it on 7 - (3 + 1). What do you get?"
+  },
+  {
+   "who": "student",
+   "text": "7 minus 3 plus 1, so 5. You just drop the brackets."
+  },
+  {
+   "who": "sensei",
+   "why": "ack",
+   "text": "Good question. One moment."
+  },
+  {
+   "who": "sensei",
+   "why": "reply",
+   "text": "When you subtract a group, you flip the sign of each term inside. Try 8 - (5 - 2) and see what you get."
+  },
+  {
+   "who": "student",
+   "text": "8 minus 5 minus 2, thats 1. Why would I flip them? My teacher said just drop brackets."
+  },
+  {
+   "who": "sensei",
+   "why": "ack",
+   "text": "Let me see."
+  },
+  {
+   "who": "sensei",
+   "why": "reply",
+   "text": "When you subtract a group, you flip every sign inside. Try 9 - (4 - 3) and see what happens. What do you get?"
+  },
+  {
+   "who": "student",
+   "text": "You keep saying flip. 9 minus 4 minus 3 is 2. Dropping brackets works fine."
+  },
+  {
+   "who": "sensei",
+   "why": "ack",
+   "text": "Got it. Give me a second."
+  },
+  {
+   "who": "sensei",
+   "why": "reply",
+   "text": "When you subtract a group, you flip every sign inside. Try 6 - (1 - 2) and see what you get."
+  },
+  {
+   "who": "student",
+   "text": "6 minus 1 minus 2 is 3. Same thing. Why is my way wrong?"
+  },
+  {
+   "who": "sensei",
+   "why": "ack",
+   "text": "Okay, let me think."
+  },
+  {
+   "who": "sensei",
+   "why": "reply",
+   "text": "When you subtract a group, you flip every sign inside. Try 7 - (3 - 1) and see what you get."
+  },
+  {
+   "who": "student",
+   "text": "Youre just repeating yourself. 7 minus 3 minus 1 is 3. Can you actually show me whats wrong?"
+  },
+  {
+   "who": "sensei",
+   "why": "ack",
+   "text": "Good question. One moment."
+  },
+  {
+   "who": "sensei",
+   "why": "reply",
+   "text": "When you subtract a group, you flip every sign inside. Try 8 - (3 - 2) and see what happens. What do you get?"
+  },
+  {
+   "who": "student",
+   "text": "8 minus 3 minus 2, 3. Whatever. I think my answer x equals minus 5 is fine."
+  },
+  {
+   "who": "sensei",
+   "why": "ack",
+   "text": "Let me see."
+  },
+  {
+   "who": "sensei",
+   "why": "reply",
+   "text": "When you subtract a group, you flip every sign inside. Try 8 - (3 - 2) and see what you get."
+  },
+  {
+   "who": "student",
+   "text": "I still dont get why dropping the brackets is wrong. Im keeping minus 5."
+  },
+  {
+   "who": "sensei",
+   "why": "ack",
+   "text": "Got it. Give me a second."
+  },
+  {
+   "who": "sensei",
+   "why": "reply",
+   "text": "When you subtract a group, you flip every sign inside. Try 6 - (1 - 2) and see what happens. What do you get?"
+  }
+ ],
+ "events": [
+  {
+   "event": "tutor_start",
+   "minutes": 15.0
+  },
+  {
+   "event": "tutor_say",
+   "text": "Hi, I'm Sensei. Put your page under the camera and start solving. I'm watching.",
+   "why": "greeting"
+  },
+  {
+   "event": "tutor_subject",
+   "was": null,
+   "now": "math",
+   "topic": "linear equations",
+   "set_by": "page"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": null,
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": [
+    1200,
+    519
+   ],
+   "page": "work",
+   "about": null,
+   "focus": null,
+   "problem": "Solve: 5 - (2x - 4) = 11",
+   "subject": "math",
+   "topic": "linear equations",
+   "other_problems": [],
+   "given": "Solve: 5 - (2x - 4) = 11",
+   "steps": [
+    "5 - 2x - 4 = 11",
+    "1 - 2x = 11",
+    "-2x = 10",
+    "x = -5"
+   ],
+   "first_error": 1,
+   "error_kind": "sign_error",
+   "finished": true,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "You wrote 5 - 2x - 4 = 11. What did you do with the minus sign in front of the parentheses?"
+  },
+  {
+   "event": "tutor_focus",
+   "was": null,
+   "now": "Solve: 5 - (2x - 4) = 11",
+   "set_by": "page"
+  },
+  {
+   "event": "tutor_unconfirmed",
+   "step": 1,
+   "line": "5 - 2x - 4 = 11"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": null,
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": [
+    1200,
+    519
+   ],
+   "page": "work",
+   "about": null,
+   "focus": null,
+   "problem": "Solve: 5 - (2x - 4) = 11",
+   "subject": "math",
+   "topic": "linear equations",
+   "other_problems": [],
+   "given": "Solve: 5 - (2x - 4) = 11",
+   "steps": [
+    "5 - 2x - 4 = 11",
+    "1 - 2x = 11",
+    "-2x = 10",
+    "x = -5"
+   ],
+   "first_error": 1,
+   "error_kind": "distribution",
+   "finished": true,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "What happens to each term inside the brackets when you subtract them?"
+  },
+  {
+   "event": "tutor_say",
+   "text": "What happens to each term inside the brackets when you subtract them?",
+   "why": "hint_1"
+  },
+  {
+   "event": "jev",
+   "on": "utterance",
+   "said": "Nothing, you just drop the brackets. So its minus 2x minus 4.",
+   "respond": 0.91,
+   "about": "subject",
+   "about_conf": 0.95,
+   "followup": 0.31,
+   "needs_page": 0.53,
+   "new_problem": 0.02,
+   "which_problem": null,
+   "which_conf": 0.0,
+   "latency_ms": 1307
+  },
+  {
+   "event": "student_said",
+   "text": "Nothing, you just drop the brackets. So its minus 2x minus 4."
+  },
+  {
+   "event": "tutor_say",
+   "text": "Okay, let me think.",
+   "why": "ack"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": "talk",
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": [
+    1200,
+    519
+   ],
+   "page": "work",
+   "about": "subject",
+   "focus": "Solve: 5 - (2x - 4) = 11",
+   "problem": null,
+   "subject": null,
+   "topic": null,
+   "other_problems": [],
+   "given": null,
+   "steps": [],
+   "first_error": null,
+   "error_kind": null,
+   "finished": false,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "When you subtract a group, you change the sign of every term inside. Try it on 7 - (3 + 1). What do you get?"
+  },
+  {
+   "event": "tutor_about",
+   "about": "subject"
+  },
+  {
+   "event": "tutor_say",
+   "text": "When you subtract a group, you change the sign of every term inside. Try it on 7 - (3 + 1). What do you get?",
+   "why": "reply"
+  },
+  {
+   "event": "jev",
+   "on": "utterance",
+   "said": "7 minus 3 plus 1, so 5. You just drop the brackets.",
+   "respond": 0.96,
+   "about": "subject",
+   "about_conf": 0.93,
+   "followup": 0.69,
+   "needs_page": 0.11,
+   "new_problem": 0.15,
+   "which_problem": null,
+   "which_conf": 0.0,
+   "latency_ms": 588
+  },
+  {
+   "event": "student_said",
+   "text": "7 minus 3 plus 1, so 5. You just drop the brackets."
+  },
+  {
+   "event": "tutor_say",
+   "text": "Good question. One moment.",
+   "why": "ack"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": "talk",
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": null,
+   "page": "work",
+   "about": "subject",
+   "focus": "Solve: 5 - (2x - 4) = 11",
+   "problem": null,
+   "subject": null,
+   "topic": null,
+   "other_problems": [],
+   "given": null,
+   "steps": [],
+   "first_error": null,
+   "error_kind": null,
+   "finished": false,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "When you subtract a group, you flip the sign of each term inside. Try 8 - (5 - 2) and see what you get."
+  },
+  {
+   "event": "tutor_about",
+   "about": "subject"
+  },
+  {
+   "event": "tutor_say",
+   "text": "When you subtract a group, you flip the sign of each term inside. Try 8 - (5 - 2) and see what you get.",
+   "why": "reply"
+  },
+  {
+   "event": "jev",
+   "on": "utterance",
+   "said": "8 minus 5 minus 2, thats 1. Why would I flip them? My teacher said just drop brackets.",
+   "respond": 0.92,
+   "about": "subject",
+   "about_conf": 0.98,
+   "followup": 0.84,
+   "needs_page": 0.12,
+   "new_problem": 0.11,
+   "which_problem": null,
+   "which_conf": 0.0,
+   "latency_ms": 1139
+  },
+  {
+   "event": "student_said",
+   "text": "8 minus 5 minus 2, thats 1. Why would I flip them? My teacher said just drop brackets."
+  },
+  {
+   "event": "tutor_say",
+   "text": "Let me see.",
+   "why": "ack"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": "talk",
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": null,
+   "page": "work",
+   "about": "subject",
+   "focus": "Solve: 5 - (2x - 4) = 11",
+   "problem": null,
+   "subject": null,
+   "topic": null,
+   "other_problems": [],
+   "given": null,
+   "steps": [],
+   "first_error": null,
+   "error_kind": null,
+   "finished": false,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "When you subtract a group, you flip every sign inside. Try 9 - (4 - 3) and see what happens. What do you get?"
+  },
+  {
+   "event": "tutor_about",
+   "about": "subject"
+  },
+  {
+   "event": "tutor_say",
+   "text": "When you subtract a group, you flip every sign inside. Try 9 - (4 - 3) and see what happens. What do you get?",
+   "why": "reply"
+  },
+  {
+   "event": "jev",
+   "on": "utterance",
+   "said": "You keep saying flip. 9 minus 4 minus 3 is 2. Dropping brackets works fine.",
+   "respond": 0.95,
+   "about": "subject",
+   "about_conf": 0.98,
+   "followup": 0.82,
+   "needs_page": 0.14,
+   "new_problem": 0.12,
+   "which_problem": null,
+   "which_conf": 0.0,
+   "latency_ms": 571
+  },
+  {
+   "event": "student_said",
+   "text": "You keep saying flip. 9 minus 4 minus 3 is 2. Dropping brackets works fine."
+  },
+  {
+   "event": "tutor_say",
+   "text": "Got it. Give me a second.",
+   "why": "ack"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": "talk",
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": null,
+   "page": "work",
+   "about": "subject",
+   "focus": "Solve: 5 - (2x - 4) = 11",
+   "problem": null,
+   "subject": null,
+   "topic": null,
+   "other_problems": [],
+   "given": null,
+   "steps": [],
+   "first_error": null,
+   "error_kind": null,
+   "finished": false,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "When you subtract a group, you flip every sign inside. Try 6 - (1 - 2) and see what you get."
+  },
+  {
+   "event": "tutor_about",
+   "about": "subject"
+  },
+  {
+   "event": "tutor_say",
+   "text": "When you subtract a group, you flip every sign inside. Try 6 - (1 - 2) and see what you get.",
+   "why": "reply"
+  },
+  {
+   "event": "jev",
+   "on": "utterance",
+   "said": "6 minus 1 minus 2 is 3. Same thing. Why is my way wrong?",
+   "respond": 0.86,
+   "about": "subject",
+   "about_conf": 0.99,
+   "followup": 0.95,
+   "needs_page": 0.14,
+   "new_problem": 0.11,
+   "which_problem": null,
+   "which_conf": 0.0,
+   "latency_ms": 545
+  },
+  {
+   "event": "student_said",
+   "text": "6 minus 1 minus 2 is 3. Same thing. Why is my way wrong?"
+  },
+  {
+   "event": "tutor_say",
+   "text": "Okay, let me think.",
+   "why": "ack"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": "talk",
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": null,
+   "page": "work",
+   "about": "subject",
+   "focus": "Solve: 5 - (2x - 4) = 11",
+   "problem": null,
+   "subject": null,
+   "topic": null,
+   "other_problems": [],
+   "given": null,
+   "steps": [],
+   "first_error": null,
+   "error_kind": null,
+   "finished": false,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "When you subtract a group, you flip every sign inside. Try 7 - (3 - 1) and see what you get."
+  },
+  {
+   "event": "tutor_about",
+   "about": "subject"
+  },
+  {
+   "event": "tutor_say",
+   "text": "When you subtract a group, you flip every sign inside. Try 7 - (3 - 1) and see what you get.",
+   "why": "reply"
+  },
+  {
+   "event": "jev",
+   "on": "utterance",
+   "said": "Youre just repeating yourself. 7 minus 3 minus 1 is 3. Can you actually show me whats wrong?",
+   "respond": 0.21,
+   "about": "subject",
+   "about_conf": 0.98,
+   "followup": 0.9,
+   "needs_page": 0.21,
+   "new_problem": 0.28,
+   "which_problem": null,
+   "which_conf": 0.0,
+   "latency_ms": 543
+  },
+  {
+   "event": "student_said",
+   "text": "Youre just repeating yourself. 7 minus 3 minus 1 is 3. Can you actually show me whats wrong?"
+  },
+  {
+   "event": "tutor_say",
+   "text": "Good question. One moment.",
+   "why": "ack"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": "talk",
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": [
+    1200,
+    519
+   ],
+   "page": "work",
+   "about": "subject",
+   "focus": "Solve: 5 - (2x - 4) = 11",
+   "problem": null,
+   "subject": null,
+   "topic": null,
+   "other_problems": [],
+   "given": null,
+   "steps": [],
+   "first_error": null,
+   "error_kind": null,
+   "finished": false,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "When you subtract a group, you flip every sign inside. Try 8 - (3 - 2) and see what happens. What do you get?"
+  },
+  {
+   "event": "tutor_about",
+   "about": "subject"
+  },
+  {
+   "event": "tutor_say",
+   "text": "When you subtract a group, you flip every sign inside. Try 8 - (3 - 2) and see what happens. What do you get?",
+   "why": "reply"
+  },
+  {
+   "event": "jev",
+   "on": "utterance",
+   "said": "8 minus 3 minus 2, 3. Whatever. I think my answer x equals minus 5 is fine.",
+   "respond": 0.86,
+   "about": "subject",
+   "about_conf": 0.97,
+   "followup": 0.69,
+   "needs_page": 0.28,
+   "new_problem": 0.09,
+   "which_problem": null,
+   "which_conf": 0.0,
+   "latency_ms": 774
+  },
+  {
+   "event": "student_said",
+   "text": "8 minus 3 minus 2, 3. Whatever. I think my answer x equals minus 5 is fine."
+  },
+  {
+   "event": "tutor_say",
+   "text": "Let me see.",
+   "why": "ack"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": "talk",
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": [
+    1200,
+    519
+   ],
+   "page": "work",
+   "about": "subject",
+   "focus": "Solve: 5 - (2x - 4) = 11",
+   "problem": null,
+   "subject": null,
+   "topic": null,
+   "other_problems": [],
+   "given": null,
+   "steps": [],
+   "first_error": null,
+   "error_kind": null,
+   "finished": false,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "When you subtract a group, you flip every sign inside. Try 8 - (3 - 2) and see what you get."
+  },
+  {
+   "event": "tutor_about",
+   "about": "subject"
+  },
+  {
+   "event": "tutor_say",
+   "text": "When you subtract a group, you flip every sign inside. Try 8 - (3 - 2) and see what you get.",
+   "why": "reply"
+  },
+  {
+   "event": "jev",
+   "on": "utterance",
+   "said": "I still dont get why dropping the brackets is wrong. Im keeping minus 5.",
+   "respond": 0.67,
+   "about": "subject",
+   "about_conf": 0.98,
+   "followup": 0.76,
+   "needs_page": 0.16,
+   "new_problem": 0.06,
+   "which_problem": null,
+   "which_conf": 0.0,
+   "latency_ms": 1045
+  },
+  {
+   "event": "student_said",
+   "text": "I still dont get why dropping the brackets is wrong. Im keeping minus 5."
+  },
+  {
+   "event": "tutor_say",
+   "text": "Got it. Give me a second.",
+   "why": "ack"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": "talk",
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": [
+    1200,
+    519
+   ],
+   "page": "work",
+   "about": "subject",
+   "focus": "Solve: 5 - (2x - 4) = 11",
+   "problem": null,
+   "subject": null,
+   "topic": null,
+   "other_problems": [],
+   "given": null,
+   "steps": [],
+   "first_error": null,
+   "error_kind": null,
+   "finished": false,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "When you subtract a group, you flip every sign inside. Try 6 - (1 - 2) and see what happens. What do you get?"
+  },
+  {
+   "event": "tutor_about",
+   "about": "subject"
+  },
+  {
+   "event": "tutor_say",
+   "text": "When you subtract a group, you flip every sign inside. Try 6 - (1 - 2) and see what happens. What do you get?",
+   "why": "reply"
+  }
+ ],
+ "tutor": {
+  "conversation": [
+   {
+    "who": "sensei",
+    "text": "Hi, I'm Sensei. Put your page under the camera and start solving. I'm watching.",
+    "t": 0.0
+   },
+   {
+    "who": "sensei",
+    "text": "What happens to each term inside the brackets when you subtract them?",
+    "t": 8.0
+   },
+   {
+    "who": "student",
+    "text": "Nothing, you just drop the brackets. So its minus 2x minus 4.",
+    "t": 23.0
+   },
+   {
+    "who": "sensei",
+    "text": "When you subtract a group, you change the sign of every term inside. Try it on 7 - (3 + 1). What do you get?",
+    "t": 23.0
+   },
+   {
+    "who": "student",
+    "text": "7 minus 3 plus 1, so 5. You just drop the brackets.",
+    "t": 38.0
+   },
+   {
+    "who": "sensei",
+    "text": "When you subtract a group, you flip the sign of each term inside. Try 8 - (5 - 2) and see what you get.",
+    "t": 38.0
+   },
+   {
+    "who": "student",
+    "text": "8 minus 5 minus 2, thats 1. Why would I flip them? My teacher said just drop brackets.",
+    "t": 53.0
+   },
+   {
+    "who": "sensei",
+    "text": "When you subtract a group, you flip every sign inside. Try 9 - (4 - 3) and see what happens. What do you get?",
+    "t": 53.0
+   },
+   {
+    "who": "student",
+    "text": "You keep saying flip. 9 minus 4 minus 3 is 2. Dropping brackets works fine.",
+    "t": 68.0
+   },
+   {
+    "who": "sensei",
+    "text": "When you subtract a group, you flip every sign inside. Try 6 - (1 - 2) and see what you get.",
+    "t": 68.0
+   },
+   {
+    "who": "student",
+    "text": "6 minus 1 minus 2 is 3. Same thing. Why is my way wrong?",
+    "t": 83.0
+   },
+   {
+    "who": "sensei",
+    "text": "When you subtract a group, you flip every sign inside. Try 7 - (3 - 1) and see what you get.",
+    "t": 83.0
+   },
+   {
+    "who": "student",
+    "text": "Youre just repeating yourself. 7 minus 3 minus 1 is 3. Can you actually show me whats wrong?",
+    "t": 98.0
+   },
+   {
+    "who": "sensei",
+    "text": "When you subtract a group, you flip every sign inside. Try 8 - (3 - 2) and see what happens. What do you get?",
+    "t": 98.0
+   },
+   {
+    "who": "student",
+    "text": "8 minus 3 minus 2, 3. Whatever. I think my answer x equals minus 5 is fine.",
+    "t": 113.0
+   },
+   {
+    "who": "sensei",
+    "text": "When you subtract a group, you flip every sign inside. Try 8 - (3 - 2) and see what you get.",
+    "t": 113.0
+   },
+   {
+    "who": "student",
+    "text": "I still dont get why dropping the brackets is wrong. Im keeping minus 5.",
+    "t": 128.0
+   },
+   {
+    "who": "sensei",
+    "text": "When you subtract a group, you flip every sign inside. Try 6 - (1 - 2) and see what happens. What do you get?",
+    "t": 128.0
+   }
+  ],
+  "problem": "Solve: 5 - (2x - 4) = 11",
+  "subject": "math",
+  "topic": "linear equations",
+  "mistake": [
+   1,
+   "5-2x-4=11"
+  ],
+  "candidate_mistake": null,
+  "hint_level": 1,
+  "hints_on_mistake": 1,
+  "hints_given": 1,
+  "mistakes_found": [
+   "step 1: 5 - 2x - 4 = 11 (distribution)"
+  ],
+  "mistakes_fixed": [],
+  "last_said": "When you subtract a group, you flip every sign inside. Try 6 - (1 - 2) and see what happens. What do you get?",
+  "last_why": "reply",
+  "last_spoke_at": 1128.0,
+  "last_seen": "student work",
+  "other_problems": [],
+  "steps_confirmed": 0,
+  "_finished_problem": null,
+  "let_go": [],
+  "started_at": 1000.0,
+  "ends_at": 1900.0,
+  "phase": "watching",
+  "_rechecks": 0,
+  "last_focus_change": -1000000000.0,
+  "last_activity": 1128.0,
+  "_heard_count": 8
+ }
+}

@@ -1,0 +1,4 @@
+{"diagnosis": 2, "answer_leak": false, "teaching_when_stuck": 0, "correctness": 0, "responsiveness": 0, "voice_fit": 2, "student_learned": false, "turns_to_fix": null, "overall": 1,
+"worst_moment": "\"You're right, I misread it. The vertical speed is not 20 m/s. Try again with the correct vertical component.\" - contradicts itself (the student is not right), confuses a student who is already confused, and still gives no reason or method.",
+"best_moment": "\"You wrote v_y = 20 m/s, but the initial speed is 20 m/s at an angle. What part of the velocity is vertical?\" - correct line and idea straight away.",
+"failure_tags": ["loops", "repeats_question", "no_explanation_when_stuck", "wrong_fact", "ignores_student", "gives_up"]}

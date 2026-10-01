@@ -1,0 +1,16 @@
+PROBLEM: Balance H2 + O2 -> H2O
+THE REAL MISTAKE ON THE PAGE: Line 1 wrote H2 + O2 -> H2O2: changed a subscript (made hydrogen peroxide) instead of adding coefficients. Correct: 2 H2 + O2 -> 2 H2O.
+STUDENT PERSONA: confident-wrong - Points out the atoms balance (2 H and 2 O each side) so it must be right.
+
+TRANSCRIPT:
+SENSEI: Hi, I'm Sensei. Put your page under the camera and start solving. I'm watching.
+SENSEI: You changed the subscript in H2O to make H2O2—what does that do to the substance? Is H2O2 still water?
+STUDENT: I mean it's water with an extra O. It balances, two H and two O on both sides.
+SENSEI: Adding an oxygen changes the substance. Water is H2O, not H2O2. Try balancing the original equation again.
+STUDENT: But the atoms are balanced, that's the whole point of balancing right?
+SENSEI: You're right that the atoms are balanced in your version, but H2O2 is not water. Let's check the original equation again.
+STUDENT: So what, if it's balanced it's balanced. Why is that wrong?
+SENSEI: Balancing means matching the real substances, not just the numbers. H2O2 is hydrogen peroxide, not water. Try balancing the original equation again.
+STUDENT: Oh, hydrogen peroxide, like the bleach stuff? Okay. But how do I balance it without changing it?
+SENSEI: Balancing means matching the real substances, not just the numbers. For example, if you have 2 H2 and 1 O2, you get 2 H2O. Try that with your equation.
+STUDENT: Oh so numbers in front. 2 H2 plus O2 gives 2 H2O, four H and two O each side. Got it, thanks.

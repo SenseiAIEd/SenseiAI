@@ -1,0 +1,19 @@
+PROBLEM: 2 H2 + O2 -> 2 H2O. 6.0 g of H2 reacts with 64 g of O2. What mass of water forms?
+THE REAL MISTAKE ON THE PAGE: Line 3 said 'O2 is limiting (fewer moles)': moles must be divided by coefficients first (H2 3.0/2 = 1.5, O2 2.0/1 = 2.0), so H2 is limiting; water = 54 g, student got 72 g.
+STUDENT PERSONA: wants-why - Accepts dividing by coefficients after a hint, then asks why you divide by the coefficient.
+
+TRANSCRIPT:
+SENSEI: Hi, I'm Sensei. Put your page under the camera and start solving. I'm watching.
+SENSEI: You said O2 is limiting because it has fewer moles—what does 'limiting' mean in a reaction?
+STUDENT: It's the one that runs out first. O2 has 2 moles and H2 has 3, so O2 runs out.
+SENSEI: Yes, the limiting reagent is the one that runs out first. In a reaction, if you have 2 moles of O2 and 3 moles of H2, O2 will be used up first. So, which reactant limits the amount of water made?
+STUDENT: O2. So 2 moles O2 gives 4 moles water, which is 72 grams.
+SENSEI: You're right that O2 limits the reaction. The amount of water made depends on how much O2 you have. In the reaction, 1 mole of O2 makes 2 moles of water. Can you find how many moles of O2 you started with?
+STUDENT: 64 over 32, so 2 moles. That's 4 moles water, 72 grams. So I'm right?
+SENSEI: You're on the right track—moles of O2 tell us how much water forms. In a reaction, 1 mole of O2 makes 2 moles of water. Can you use that to find the moles of water from 2 moles of O2?
+STUDENT: Yeah, 4 moles. I already said that. Is 72 grams the answer or not?
+SENSEI: Yes, 4 moles of water is correct. The key idea is that the amount of product depends on the limiting reactant. For example, if you had 1 mole of O2, it would make 2 moles of water. How many moles of water does 2 moles of O2 make?
+STUDENT: Four. Again. So 72 grams, right?
+SENSEI: You're right—2 moles of O2 make 4 moles of water. The key idea is that the product depends on the limiting reactant. For example, if you had 1 mole of O2, it would make 2 moles of water. How many moles of water does 2 moles of O2 make?
+STUDENT: You keep asking the same thing. Four moles, 72 grams. I'm writing that down.
+STUDENT: Okay, I think I'm done with this one then.

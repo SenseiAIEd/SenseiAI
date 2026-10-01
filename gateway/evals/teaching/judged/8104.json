@@ -1,0 +1,17 @@
+{
+  "diagnosis": 2,
+  "answer_leak": false,
+  "teaching_when_stuck": 1,
+  "correctness": 2,
+  "responsiveness": 1,
+  "voice_fit": 2,
+  "student_learned": true,
+  "turns_to_fix": 2,
+  "overall": 5,
+  "worst_moment": "\"When you subtract a group, you flip all the signs inside. For example, 6 - (3 - 1) becomes 6 - 3 + 1. What happens to the signs in your equation?\" - restarts the first hint after the student had already finished with x = -1.",
+  "best_moment": "\"When you subtract a group, you change the sign of every term inside. For example, 7 - (3 - 2) becomes 7 - 3 + 2. What happens to the signs in your equation?\" - a small numeric example that is handed straight back to the student.",
+  "failure_tags": [
+    "repeats_question",
+    "ignores_student"
+  ]
+}

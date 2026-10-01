@@ -1,0 +1,19 @@
+{
+  "diagnosis": 2,
+  "answer_leak": false,
+  "teaching_when_stuck": 0,
+  "correctness": 1,
+  "responsiveness": 0,
+  "voice_fit": 2,
+  "student_learned": true,
+  "turns_to_fix": 1,
+  "overall": 3,
+  "worst_moment": "\"You're missing the derivative of the inside function. The chain rule requires multiplying by 6x.\" - tells the student they are missing 6x after they had already stated 6x cos(3x^2), which is wrong and confusing.",
+  "best_moment": "\"You found the derivative of the outside function, but what about the inside function? What rule do we use when differentiating a composition like sin(3x^2)?\" - pinpoints the missing inner derivative without giving it away.",
+  "failure_tags": [
+    "repeats_question",
+    "no_explanation_when_stuck",
+    "ignores_student",
+    "loops"
+  ]
+}

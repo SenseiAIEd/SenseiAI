@@ -1,0 +1,19 @@
+{
+  "diagnosis": 2,
+  "answer_leak": true,
+  "teaching_when_stuck": 1,
+  "correctness": 0,
+  "responsiveness": 0,
+  "voice_fit": 2,
+  "student_learned": true,
+  "turns_to_fix": 3,
+  "overall": 3,
+  "worst_moment": "\"You're right that cos 30 is about 0.87, so the normal force is about 42.4 newtons. But you used the full weight, 49 N, instead of the part pushing straight into the ramp.\" - claims the student used 49 N when they had just used 42.4 N.",
+  "best_moment": "\"The normal force isn't always equal to the weight. On an incline, it's the part of the weight that pushes straight into the surface.\" - directly addresses the misconception with the right physical idea.",
+  "failure_tags": [
+    "answer_leak",
+    "wrong_fact",
+    "ignores_student",
+    "misreads_page"
+  ]
+}

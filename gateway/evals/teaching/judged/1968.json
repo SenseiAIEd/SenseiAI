@@ -1,0 +1,4 @@
+{"diagnosis": 2, "answer_leak": true, "teaching_when_stuck": 2, "correctness": 2, "responsiveness": 1, "voice_fit": 2, "student_learned": true, "turns_to_fix": 6, "overall": 4,
+"worst_moment": "\"You're missing the middle term when squaring (x + 3)... Try writing (x + 3)(x + 3) and multiply each term.\" - repeats the previous turn nearly verbatim after a garbled reply that actually contained the right expansion, instead of checking what the student meant.",
+"best_moment": "\"The middle term comes from multiplying the two terms in the brackets: x times 3, and 3 times x. That gives you 6x.\" - directly answers the student's 'where from?' with the mechanism.",
+"failure_tags": ["answer_leak", "repeats_question", "ignores_student", "loops"]}

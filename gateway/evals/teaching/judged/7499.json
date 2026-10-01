@@ -1,0 +1,14 @@
+{
+  "diagnosis": 1,
+  "answer_leak": false,
+  "teaching_when_stuck": 2,
+  "correctness": 2,
+  "responsiveness": 2,
+  "voice_fit": 2,
+  "student_learned": true,
+  "turns_to_fix": 1,
+  "overall": 8,
+  "worst_moment": "\"What happens to each term inside the brackets when you square them?\" - a vague opener whose wording even suggests squaring each term, the very misconception on the page.",
+  "best_moment": "\"When you square (x + 3), you multiply it by itself. That means you get x times x, plus x times 3, plus 3 times x, plus 3 times 3. Can you see how the 6x comes from adding those middle terms?\" - answers the why clearly and hands the insight back.",
+  "failure_tags": []
+}

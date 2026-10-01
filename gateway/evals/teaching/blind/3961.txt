@@ -1,0 +1,19 @@
+PROBLEM: A car moves at 72 km/h. How far does it travel in 5.0 s?
+THE REAL MISTAKE ON THE PAGE: Line 3 wrote d = 72 x 5.0: km/h multiplied by seconds without converting. 72 km/h = 20 m/s, so d = 100 m; student got 360 m.
+STUDENT PERSONA: stuck - Doesn't see why units matter if the formula is right.
+
+TRANSCRIPT:
+SENSEI: Hi, I'm Sensei. Put your page under the camera and start solving. I'm watching.
+SENSEI: You multiplied speed by time, but the units don't match—what unit is the speed in, and what unit should it be for this calculation?
+STUDENT: Its in km per hour. I dont know, does that matter? Distance is speed times time, right?
+SENSEI: Yes, distance is speed times time, but the units must match. What unit should the speed be in?
+STUDENT: I dont get why they have to match. The formula is still the same, isnt it?
+SENSEI: The formula works only if units match—like hours with hours, not hours with seconds. Let's fix that.
+STUDENT: But I dont understand how. What do I actually change?
+SENSEI: You need to change km/h to m/s so the units match. Try converting 72 km/h to meters per second.
+STUDENT: I dont know how to convert it. Do I just divide by 60?
+SENSEI: Dividing by 60 won't work—try multiplying by 1000 and dividing by 3600 instead.
+STUDENT: Okay 72 times 1000 over 3600 is 20 meters per second. So d is 20 times 5, 100 meters?
+STUDENT: Hello? Is 100 meters right?
+SENSEI: You're on the right track—let's check your calculation step by step.
+STUDENT: Okay I changed it to 20 m/s times 5 s equals 100 m. Im going with that, thanks.

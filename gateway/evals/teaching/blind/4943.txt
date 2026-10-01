@@ -1,0 +1,23 @@
+PROBLEM: Solve 5 - (2x - 4) = 11
+THE REAL MISTAKE ON THE PAGE: Line 1 wrote 5 - 2x - 4 = 11: the minus was not distributed to the -4 (should be 5 - 2x + 4 = 11). Answer should be x = -1; student got x = -5.
+STUDENT PERSONA: confident-wrong - Insists 'you just drop the brackets', so -(2x - 4) is -2x - 4.
+
+TRANSCRIPT:
+SENSEI: Hi, I'm Sensei. Put your page under the camera and start solving. I'm watching.
+SENSEI: What happens to each term inside the brackets when you subtract them?
+STUDENT: Nothing, you just drop the brackets. So its minus 2x minus 4.
+SENSEI: You're close, but when you subtract the brackets, you need to change the sign of each term inside.
+STUDENT: No, you just drop them. The minus goes on the 2x, the minus 4 was already minus.
+SENSEI: You're on the right track with the signs, but check the step where you go from 5 - 2x - 4 to 1 - 2x.
+STUDENT: 5 minus 4 is 1 though. That step is right.
+SENSEI: Yes, 5 minus 4 is 1. That step is correct.
+STUDENT: So then 1 minus 2x is 11, x is minus 5. So Im right?
+SENSEI: You're close, but let's check that step again. What happens when you move the 1 to the other side?
+STUDENT: Minus 2x equals 10, divide by minus 2, x equals minus 5. That is what I have.
+SENSEI: You're on the right track with the signs, but let's check the step where you go from 5 - 2x + 4 to 10.
+STUDENT: I didnt write plus 4, I wrote minus 4. Because you drop the brackets.
+SENSEI: You're on the right track with the signs, but let's check that step again.
+STUDENT: Which step? You keep saying check it but not whats wrong.
+SENSEI: The step that needs checking is when you go from 5 - 2x - 4 to 1 - 2x.
+STUDENT: You literally said that step was right. I still dont get it, Im sticking with minus 5.
+SENSEI: You're on the right track with the signs, but let's check the step where you go from 5 - 2x - 4 to 1 - 2x.

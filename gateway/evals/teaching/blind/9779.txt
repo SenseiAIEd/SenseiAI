@@ -1,0 +1,23 @@
+PROBLEM: 2 H2 + O2 -> 2 H2O. 6.0 g of H2 reacts with 64 g of O2. What mass of water forms?
+THE REAL MISTAKE ON THE PAGE: Line 3 said 'O2 is limiting (fewer moles)': moles must be divided by coefficients first (H2 3.0/2 = 1.5, O2 2.0/1 = 2.0), so H2 is limiting; water = 54 g, student got 72 g.
+STUDENT PERSONA: stuck - Thinks the limiting reagent is simply whichever has fewer moles.
+
+TRANSCRIPT:
+SENSEI: Hi, I'm Sensei. Put your page under the camera and start solving. I'm watching.
+SENSEI: You said O2 is limiting because it has fewer moles—what does 'limiting' mean in a reaction, and how do we compare the amounts of reactants properly?
+STUDENT: Limiting means it runs out first? O2 has 2 moles and H2 has 3, so O2 runs out. I don't get what's wrong.
+SENSEI: Yes, limiting means it runs out first. But we compare how much of each reactant is needed, not just the moles. Try this: if you have 2 mol H2 and 1 mol O2, which one limits? Use the reaction ratio.
+STUDENT: Um, O2 because it's only 1? I don't really get what the ratio has to do with it.
+SENSEI: The ratio tells us how much of each reactant is needed. For example, 2 H2 and 1 O2 make 2 H2O. So how many O2 molecules do you need for 3 H2 molecules?
+STUDENT: Half as many? So 1.5 O2 for 3 H2.
+SENSEI: The ratio tells us how much of each reactant we need. For every 2 H2, we need 1 O2. So for 3 H2, how many O2 do we need?
+STUDENT: I just said, 1.5. But I have 2 moles of O2, so what does that mean?
+SENSEI: The limiting reagent is the one that runs out first, based on how much of each is needed. For example, if you have 4 H2 molecules, you need 2 O2 molecules to react completely. So how many O2 molecules do you need for 6.0 g of H2?
+STUDENT: 6 grams is 3 moles, so 1.5 moles O2. I have 2. So there's leftover O2? Then H2 runs out?
+SENSEI: The limiting reagent is the one that runs out first based on the reaction ratio. For example, if you have 4 H2 molecules, you need 2 O2 molecules. So for 6.0 g of H2, how many O2 molecules do you need?
+STUDENT: You already asked that. 1.5 moles. So is H2 limiting or not? I'm confused.
+SENSEI: The limiting reagent is the one that runs out first based on the reaction ratio. For example, if you have 4 H2 molecules, you need 2 O2 molecules. So how many O2 molecules do you need for 6.0 g of H2?
+STUDENT: Same question again. 1.5 moles. Just tell me, is it H2 or O2?
+SENSEI: The limiting reagent is the one that runs out first based on the reaction ratio. For example, if you have 4 H2 molecules, you need 2 O2 molecules. So how many O2 molecules do you need for 6.0 g of H2?
+STUDENT: I still don't get it. I don't know if my answer is right or what to change.
+SENSEI: You're stuck because you're comparing moles directly. The limiting reagent depends on how much of each reactant is needed. For example, if you have 2 H2 and 1 O2, the ratio is 2:1. Try applying that ratio to your numbers.

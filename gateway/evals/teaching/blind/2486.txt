@@ -1,0 +1,23 @@
+PROBLEM: Solve 5 - (2x - 4) = 11
+THE REAL MISTAKE ON THE PAGE: Line 1 wrote 5 - 2x - 4 = 11: the minus was not distributed to the -4 (should be 5 - 2x + 4 = 11). Answer should be x = -1; student got x = -5.
+STUDENT PERSONA: confident-wrong - Insists 'you just drop the brackets', so -(2x - 4) is -2x - 4.
+
+TRANSCRIPT:
+SENSEI: Hi, I'm Sensei. Put your page under the camera and start solving. I'm watching.
+SENSEI: What happens to each term inside the brackets when you subtract them?
+STUDENT: Nothing, you just drop the brackets. So its minus 2x minus 4.
+SENSEI: When you subtract a group, you change the sign of every term inside. Try it on 7 - (3 + 1). What do you get?
+STUDENT: 7 minus 3 plus 1, so 5. You just drop the brackets.
+SENSEI: When you subtract a group, you flip the sign of each term inside. Try 8 - (5 - 2) and see what you get.
+STUDENT: 8 minus 5 minus 2, thats 1. Why would I flip them? My teacher said just drop brackets.
+SENSEI: When you subtract a group, you flip every sign inside. Try 9 - (4 - 3) and see what happens. What do you get?
+STUDENT: You keep saying flip. 9 minus 4 minus 3 is 2. Dropping brackets works fine.
+SENSEI: When you subtract a group, you flip every sign inside. Try 6 - (1 - 2) and see what you get.
+STUDENT: 6 minus 1 minus 2 is 3. Same thing. Why is my way wrong?
+SENSEI: When you subtract a group, you flip every sign inside. Try 7 - (3 - 1) and see what you get.
+STUDENT: Youre just repeating yourself. 7 minus 3 minus 1 is 3. Can you actually show me whats wrong?
+SENSEI: When you subtract a group, you flip every sign inside. Try 8 - (3 - 2) and see what happens. What do you get?
+STUDENT: 8 minus 3 minus 2, 3. Whatever. I think my answer x equals minus 5 is fine.
+SENSEI: When you subtract a group, you flip every sign inside. Try 8 - (3 - 2) and see what you get.
+STUDENT: I still dont get why dropping the brackets is wrong. Im keeping minus 5.
+SENSEI: When you subtract a group, you flip every sign inside. Try 6 - (1 - 2) and see what happens. What do you get?

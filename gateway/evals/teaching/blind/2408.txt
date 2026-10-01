@@ -1,0 +1,20 @@
+PROBLEM: Solve 5 - (2x - 4) = 11
+THE REAL MISTAKE ON THE PAGE: Line 1 wrote 5 - 2x - 4 = 11: the minus was not distributed to the -4 (should be 5 - 2x + 4 = 11). Answer should be x = -1; student got x = -5.
+STUDENT PERSONA: stuck - Thinks the minus in front of the brackets only applies to the first term.
+
+TRANSCRIPT:
+SENSEI: Hi, I'm Sensei. Put your page under the camera and start solving. I'm watching.
+SENSEI: What happens to each term inside the brackets when you subtract them?
+STUDENT: Um, I dont know. I just took the brackets off?
+SENSEI: You're right that you need to remove the brackets, but you missed the sign change when subtracting the whole group.
+STUDENT: But I did change it, the 2x is minus now. I dont get what else changes.
+SENSEI: You changed the sign of 2x, but you also need to change the sign of -4 when you remove the brackets.
+STUDENT: Why the minus 4 too though? I dont understand, the minus is only next to the 2x.
+SENSEI: When you subtract a group, you change every sign inside the brackets. So - (2x - 4) becomes -2x + 4.
+STUDENT: Oh okay. So its 5 minus 2x plus 4 equals 11, so 9 minus 2x is 11, minus 2x is 2, x is minus 1?
+SENSEI: You're on the right track—good job changing the signs. Now, solve for x from 9 - 2x = 11.
+STUDENT: I did, take 9 from both sides, minus 2x equals 2, so x equals minus 1.
+SENSEI: You're very close—just check your last step. What do you get when you divide -2x by -2?
+STUDENT: x. And 2 divided by minus 2 is minus 1. So x is minus 1, right?
+SENSEI: You're very close—just check your last step. What do you get when you divide -2x by -2?
+STUDENT: I already said, you get x. x equals minus 1. Okay, Im writing that down, thanks.

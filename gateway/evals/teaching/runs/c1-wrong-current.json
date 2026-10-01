@@ -1,0 +1,793 @@
+{
+ "id": "c1-wrong-current",
+ "page": "/home/perspectivity-dgx/SenseiAI/datasets/samples/chemistry/basic/easy/bad_1.png",
+ "variant": "current",
+ "now": 1128.0,
+ "transcript": [
+  {
+   "who": "sensei",
+   "why": "greeting",
+   "text": "Hi, I'm Sensei. Put your page under the camera and start solving. I'm watching."
+  },
+  {
+   "who": "sensei",
+   "why": "hint_1",
+   "text": "You changed the subscript in H2O to make H2O2\u2014what substance is that, and is it still water?"
+  },
+  {
+   "who": "student",
+   "text": "It's still water, just with two oxygens. And it balances, two H and two O on each side."
+  },
+  {
+   "who": "sensei",
+   "why": "ack",
+   "text": "Okay, let me think."
+  },
+  {
+   "who": "sensei",
+   "why": "reply",
+   "text": "It's not water\u2014it's hydrogen peroxide. Water is H2O. Try balancing the original equation again."
+  },
+  {
+   "who": "student",
+   "text": "Okay but the atoms are balanced though. Why does it matter what it's called?"
+  },
+  {
+   "who": "sensei",
+   "why": "ack",
+   "text": "Good question. One moment."
+  },
+  {
+   "who": "sensei",
+   "why": "reply",
+   "text": "It matters because H2O2 is a different substance with different properties, even if the atoms balance."
+  },
+  {
+   "who": "student",
+   "text": "Hmm okay, so I can't change the little numbers. Then how do I balance it?"
+  },
+  {
+   "who": "sensei",
+   "why": "ack",
+   "text": "Let me see."
+  },
+  {
+   "who": "sensei",
+   "why": "reply",
+   "text": "You're right, you can't change the little numbers. Let's find a way to balance it without changing them."
+  },
+  {
+   "who": "student",
+   "text": "Yeah but how? If I keep H2O there's only one O on the right."
+  },
+  {
+   "who": "sensei",
+   "why": "ack",
+   "text": "Got it. Give me a second."
+  },
+  {
+   "who": "sensei",
+   "why": "reply",
+   "text": "You're right, H2O has only one oxygen on the right. Let's find a way to fix that without changing the formula."
+  },
+  {
+   "who": "student",
+   "text": "You keep saying that. Like what way? Do I put a number in front or something?"
+  },
+  {
+   "who": "sensei",
+   "why": "ack",
+   "text": "Okay, let me think."
+  },
+  {
+   "who": "sensei",
+   "why": "reply",
+   "text": "You can't change the formula. Try putting a number in front of H2O instead."
+  },
+  {
+   "who": "student",
+   "text": "So H2 plus O2 gives 2 H2O? Now there's two O each side but four H on the right."
+  },
+  {
+   "who": "sensei",
+   "why": "ack",
+   "text": "Good question. One moment."
+  },
+  {
+   "who": "sensei",
+   "why": "reply",
+   "text": "You're on the right track\u2014now check how many hydrogen atoms are on each side."
+  },
+  {
+   "who": "student",
+   "text": "Two on the left, four on the right. So 2 H2 plus O2 gives 2 H2O. That's balanced."
+  },
+  {
+   "who": "sensei",
+   "why": "ack",
+   "text": "Let me see."
+  },
+  {
+   "who": "sensei",
+   "why": "reply",
+   "text": "You're close\u2014now check how many oxygen atoms are on each side."
+  },
+  {
+   "who": "student",
+   "text": "Two O each side, four H each side. Done, 2 H2 plus O2 to 2 H2O. Thanks."
+  },
+  {
+   "who": "sensei",
+   "why": "ack",
+   "text": "Got it. Give me a second."
+  },
+  {
+   "who": "sensei",
+   "why": "reply",
+   "text": "You've got it\u20142 H2 plus O2 gives 2 H2O, and it's balanced. Great job!"
+  }
+ ],
+ "events": [
+  {
+   "event": "tutor_start",
+   "minutes": 15.0
+  },
+  {
+   "event": "tutor_say",
+   "text": "Hi, I'm Sensei. Put your page under the camera and start solving. I'm watching.",
+   "why": "greeting"
+  },
+  {
+   "event": "tutor_subject",
+   "was": null,
+   "now": "chemistry",
+   "topic": "balancing equations",
+   "set_by": "page"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": null,
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": [
+    1200,
+    445
+   ],
+   "page": "work",
+   "about": null,
+   "focus": null,
+   "problem": "Balance: H2 + O2 -> H2O",
+   "subject": "chemistry",
+   "topic": "balancing equations",
+   "other_problems": [],
+   "given": "Balance: H2 + O2 -> H2O",
+   "steps": [
+    "H2 + O2 -> H2O2",
+    "Check: H: 2 = 2, O: 2 = 2",
+    "Balanced."
+   ],
+   "first_error": 1,
+   "error_kind": "incorrect_formula",
+   "finished": true,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "You wrote H2O2 as the product\u2014what molecule did you mean to write?"
+  },
+  {
+   "event": "tutor_focus",
+   "was": null,
+   "now": "Balance: H2 + O2 -> H2O",
+   "set_by": "page"
+  },
+  {
+   "event": "tutor_unconfirmed",
+   "step": 1,
+   "line": "H2 + O2 -> H2O2"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": null,
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": [
+    1200,
+    445
+   ],
+   "page": "work",
+   "about": null,
+   "focus": null,
+   "problem": "Balance: H2 + O2 -> H2O",
+   "subject": "chemistry",
+   "topic": "balancing equations",
+   "other_problems": [],
+   "given": "Balance: H2 + O2 -> H2O",
+   "steps": [
+    "H2 + O2 -> H2O2",
+    "Check: H: 2 = 2, O: 2 = 2",
+    "Balanced."
+   ],
+   "first_error": 1,
+   "error_kind": "subscript_changed",
+   "finished": true,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "You changed the subscript in H2O to make H2O2\u2014what substance is that, and is it still water?"
+  },
+  {
+   "event": "tutor_say",
+   "text": "You changed the subscript in H2O to make H2O2\u2014what substance is that, and is it still water?",
+   "why": "hint_1"
+  },
+  {
+   "event": "jev",
+   "on": "utterance",
+   "said": "It's still water, just with two oxygens. And it balances, two H and two O on each side.",
+   "respond": 0.93,
+   "about": "subject",
+   "about_conf": 0.92,
+   "followup": 0.37,
+   "needs_page": 0.82,
+   "new_problem": 0.02,
+   "which_problem": null,
+   "which_conf": 0.0,
+   "latency_ms": 519
+  },
+  {
+   "event": "student_said",
+   "text": "It's still water, just with two oxygens. And it balances, two H and two O on each side."
+  },
+  {
+   "event": "tutor_say",
+   "text": "Okay, let me think.",
+   "why": "ack"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": "talk",
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": [
+    1200,
+    445
+   ],
+   "page": "work",
+   "about": "subject",
+   "focus": "Balance: H2 + O2 -> H2O",
+   "problem": null,
+   "subject": null,
+   "topic": null,
+   "other_problems": [],
+   "given": null,
+   "steps": [],
+   "first_error": null,
+   "error_kind": null,
+   "finished": false,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "It's not water\u2014it's hydrogen peroxide. Water is H2O. Try balancing the original equation again."
+  },
+  {
+   "event": "tutor_about",
+   "about": "subject"
+  },
+  {
+   "event": "tutor_say",
+   "text": "It's not water\u2014it's hydrogen peroxide. Water is H2O. Try balancing the original equation again.",
+   "why": "reply"
+  },
+  {
+   "event": "jev",
+   "on": "utterance",
+   "said": "Okay but the atoms are balanced though. Why does it matter what it's called?",
+   "respond": 0.63,
+   "about": "subject",
+   "about_conf": 0.98,
+   "followup": 0.9,
+   "needs_page": 0.33,
+   "new_problem": 0.02,
+   "which_problem": null,
+   "which_conf": 0.0,
+   "latency_ms": 1431
+  },
+  {
+   "event": "student_said",
+   "text": "Okay but the atoms are balanced though. Why does it matter what it's called?"
+  },
+  {
+   "event": "tutor_say",
+   "text": "Good question. One moment.",
+   "why": "ack"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": "talk",
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": [
+    1200,
+    445
+   ],
+   "page": "work",
+   "about": "subject",
+   "focus": "Balance: H2 + O2 -> H2O",
+   "problem": null,
+   "subject": null,
+   "topic": null,
+   "other_problems": [],
+   "given": null,
+   "steps": [],
+   "first_error": null,
+   "error_kind": null,
+   "finished": false,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "It matters because H2O2 is a different substance with different properties, even if the atoms balance."
+  },
+  {
+   "event": "tutor_about",
+   "about": "subject"
+  },
+  {
+   "event": "tutor_say",
+   "text": "It matters because H2O2 is a different substance with different properties, even if the atoms balance.",
+   "why": "reply"
+  },
+  {
+   "event": "jev",
+   "on": "utterance",
+   "said": "Hmm okay, so I can't change the little numbers. Then how do I balance it?",
+   "respond": 0.89,
+   "about": "subject",
+   "about_conf": 0.98,
+   "followup": 0.86,
+   "needs_page": 0.18,
+   "new_problem": 0.0,
+   "which_problem": null,
+   "which_conf": 0.0,
+   "latency_ms": 517
+  },
+  {
+   "event": "student_said",
+   "text": "Hmm okay, so I can't change the little numbers. Then how do I balance it?"
+  },
+  {
+   "event": "tutor_say",
+   "text": "Let me see.",
+   "why": "ack"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": "talk",
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": [
+    1200,
+    445
+   ],
+   "page": "work",
+   "about": "subject",
+   "focus": "Balance: H2 + O2 -> H2O",
+   "problem": null,
+   "subject": null,
+   "topic": null,
+   "other_problems": [],
+   "given": null,
+   "steps": [],
+   "first_error": null,
+   "error_kind": null,
+   "finished": false,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "You're right, you can't change the little numbers. Let's find a way to balance it without changing them."
+  },
+  {
+   "event": "tutor_about",
+   "about": "subject"
+  },
+  {
+   "event": "tutor_say",
+   "text": "You're right, you can't change the little numbers. Let's find a way to balance it without changing them.",
+   "why": "reply"
+  },
+  {
+   "event": "jev",
+   "on": "utterance",
+   "said": "Yeah but how? If I keep H2O there's only one O on the right.",
+   "respond": 0.84,
+   "about": "subject",
+   "about_conf": 0.98,
+   "followup": 0.88,
+   "needs_page": 0.19,
+   "new_problem": 0.01,
+   "which_problem": null,
+   "which_conf": 0.0,
+   "latency_ms": 519
+  },
+  {
+   "event": "student_said",
+   "text": "Yeah but how? If I keep H2O there's only one O on the right."
+  },
+  {
+   "event": "tutor_say",
+   "text": "Got it. Give me a second.",
+   "why": "ack"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": "talk",
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": [
+    1200,
+    445
+   ],
+   "page": "work",
+   "about": "subject",
+   "focus": "Balance: H2 + O2 -> H2O",
+   "problem": null,
+   "subject": null,
+   "topic": null,
+   "other_problems": [],
+   "given": null,
+   "steps": [],
+   "first_error": null,
+   "error_kind": null,
+   "finished": false,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "You're right, H2O has only one oxygen on the right. Let's find a way to fix that without changing the formula."
+  },
+  {
+   "event": "tutor_about",
+   "about": "subject"
+  },
+  {
+   "event": "tutor_say",
+   "text": "You're right, H2O has only one oxygen on the right. Let's find a way to fix that without changing the formula.",
+   "why": "reply"
+  },
+  {
+   "event": "jev_error",
+   "error": "timed out"
+  },
+  {
+   "event": "student_said",
+   "text": "You keep saying that. Like what way? Do I put a number in front or something?"
+  },
+  {
+   "event": "tutor_say",
+   "text": "Okay, let me think.",
+   "why": "ack"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": "talk",
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": [
+    1200,
+    445
+   ],
+   "page": "work",
+   "about": "subject",
+   "focus": "Balance: H2 + O2 -> H2O",
+   "problem": null,
+   "subject": null,
+   "topic": null,
+   "other_problems": [],
+   "given": null,
+   "steps": [],
+   "first_error": null,
+   "error_kind": null,
+   "finished": false,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "You can't change the formula. Try putting a number in front of H2O instead."
+  },
+  {
+   "event": "tutor_about",
+   "about": "subject"
+  },
+  {
+   "event": "tutor_say",
+   "text": "You can't change the formula. Try putting a number in front of H2O instead.",
+   "why": "reply"
+  },
+  {
+   "event": "jev",
+   "on": "utterance",
+   "said": "So H2 plus O2 gives 2 H2O? Now there's two O each side but four H on the right.",
+   "respond": 0.77,
+   "about": "subject",
+   "about_conf": 0.97,
+   "followup": 0.9,
+   "needs_page": 0.09,
+   "new_problem": 0.01,
+   "which_problem": null,
+   "which_conf": 0.0,
+   "latency_ms": 522
+  },
+  {
+   "event": "student_said",
+   "text": "So H2 plus O2 gives 2 H2O? Now there's two O each side but four H on the right."
+  },
+  {
+   "event": "tutor_say",
+   "text": "Good question. One moment.",
+   "why": "ack"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": "talk",
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": null,
+   "page": "work",
+   "about": "subject",
+   "focus": "Balance: H2 + O2 -> H2O",
+   "problem": null,
+   "subject": null,
+   "topic": null,
+   "other_problems": [],
+   "given": null,
+   "steps": [],
+   "first_error": null,
+   "error_kind": null,
+   "finished": false,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "You're on the right track\u2014now check how many hydrogen atoms are on each side."
+  },
+  {
+   "event": "tutor_about",
+   "about": "subject"
+  },
+  {
+   "event": "tutor_say",
+   "text": "You're on the right track\u2014now check how many hydrogen atoms are on each side.",
+   "why": "reply"
+  },
+  {
+   "event": "jev",
+   "on": "utterance",
+   "said": "Two on the left, four on the right. So 2 H2 plus O2 gives 2 H2O. That's balanced.",
+   "respond": 0.63,
+   "about": "subject",
+   "about_conf": 0.96,
+   "followup": 0.85,
+   "needs_page": 0.07,
+   "new_problem": 0.01,
+   "which_problem": null,
+   "which_conf": 0.0,
+   "latency_ms": 1139
+  },
+  {
+   "event": "student_said",
+   "text": "Two on the left, four on the right. So 2 H2 plus O2 gives 2 H2O. That's balanced."
+  },
+  {
+   "event": "tutor_say",
+   "text": "Let me see.",
+   "why": "ack"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": "talk",
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": null,
+   "page": "work",
+   "about": "subject",
+   "focus": "Balance: H2 + O2 -> H2O",
+   "problem": null,
+   "subject": null,
+   "topic": null,
+   "other_problems": [],
+   "given": null,
+   "steps": [],
+   "first_error": null,
+   "error_kind": null,
+   "finished": false,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "You're close\u2014now check how many oxygen atoms are on each side."
+  },
+  {
+   "event": "tutor_about",
+   "about": "subject"
+  },
+  {
+   "event": "tutor_say",
+   "text": "You're close\u2014now check how many oxygen atoms are on each side.",
+   "why": "reply"
+  },
+  {
+   "event": "jev",
+   "on": "utterance",
+   "said": "Two O each side, four H each side. Done, 2 H2 plus O2 to 2 H2O. Thanks.",
+   "respond": 0.47,
+   "about": "subject",
+   "about_conf": 0.79,
+   "followup": 0.55,
+   "needs_page": 0.15,
+   "new_problem": 0.01,
+   "which_problem": null,
+   "which_conf": 0.0,
+   "latency_ms": 929
+  },
+  {
+   "event": "student_said",
+   "text": "Two O each side, four H each side. Done, 2 H2 plus O2 to 2 H2O. Thanks."
+  },
+  {
+   "event": "tutor_say",
+   "text": "Got it. Give me a second.",
+   "why": "ack"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": "talk",
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": null,
+   "page": "work",
+   "about": "subject",
+   "focus": "Balance: H2 + O2 -> H2O",
+   "problem": null,
+   "subject": null,
+   "topic": null,
+   "other_problems": [],
+   "given": null,
+   "steps": [],
+   "first_error": null,
+   "error_kind": null,
+   "finished": false,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "You've got it\u20142 H2 plus O2 gives 2 H2O, and it's balanced. Great job!"
+  },
+  {
+   "event": "tutor_about",
+   "about": "subject"
+  },
+  {
+   "event": "tutor_say",
+   "text": "You've got it\u20142 H2 plus O2 gives 2 H2O, and it's balanced. Great job!",
+   "why": "reply"
+  }
+ ],
+ "tutor": {
+  "conversation": [
+   {
+    "who": "sensei",
+    "text": "Hi, I'm Sensei. Put your page under the camera and start solving. I'm watching.",
+    "t": 0.0
+   },
+   {
+    "who": "sensei",
+    "text": "You changed the subscript in H2O to make H2O2\u2014what substance is that, and is it still water?",
+    "t": 8.0
+   },
+   {
+    "who": "student",
+    "text": "It's still water, just with two oxygens. And it balances, two H and two O on each side.",
+    "t": 23.0
+   },
+   {
+    "who": "sensei",
+    "text": "It's not water\u2014it's hydrogen peroxide. Water is H2O. Try balancing the original equation again.",
+    "t": 23.0
+   },
+   {
+    "who": "student",
+    "text": "Okay but the atoms are balanced though. Why does it matter what it's called?",
+    "t": 38.0
+   },
+   {
+    "who": "sensei",
+    "text": "It matters because H2O2 is a different substance with different properties, even if the atoms balance.",
+    "t": 38.0
+   },
+   {
+    "who": "student",
+    "text": "Hmm okay, so I can't change the little numbers. Then how do I balance it?",
+    "t": 53.0
+   },
+   {
+    "who": "sensei",
+    "text": "You're right, you can't change the little numbers. Let's find a way to balance it without changing them.",
+    "t": 53.0
+   },
+   {
+    "who": "student",
+    "text": "Yeah but how? If I keep H2O there's only one O on the right.",
+    "t": 68.0
+   },
+   {
+    "who": "sensei",
+    "text": "You're right, H2O has only one oxygen on the right. Let's find a way to fix that without changing the formula.",
+    "t": 68.0
+   },
+   {
+    "who": "student",
+    "text": "You keep saying that. Like what way? Do I put a number in front or something?",
+    "t": 83.0
+   },
+   {
+    "who": "sensei",
+    "text": "You can't change the formula. Try putting a number in front of H2O instead.",
+    "t": 83.0
+   },
+   {
+    "who": "student",
+    "text": "So H2 plus O2 gives 2 H2O? Now there's two O each side but four H on the right.",
+    "t": 98.0
+   },
+   {
+    "who": "sensei",
+    "text": "You're on the right track\u2014now check how many hydrogen atoms are on each side.",
+    "t": 98.0
+   },
+   {
+    "who": "student",
+    "text": "Two on the left, four on the right. So 2 H2 plus O2 gives 2 H2O. That's balanced.",
+    "t": 113.0
+   },
+   {
+    "who": "sensei",
+    "text": "You're close\u2014now check how many oxygen atoms are on each side.",
+    "t": 113.0
+   },
+   {
+    "who": "student",
+    "text": "Two O each side, four H each side. Done, 2 H2 plus O2 to 2 H2O. Thanks.",
+    "t": 128.0
+   },
+   {
+    "who": "sensei",
+    "text": "You've got it\u20142 H2 plus O2 gives 2 H2O, and it's balanced. Great job!",
+    "t": 128.0
+   }
+  ],
+  "problem": "Balance: H2 + O2 -> H2O",
+  "subject": "chemistry",
+  "topic": "balancing equations",
+  "mistake": [
+   1,
+   "h2+o2->h2o2"
+  ],
+  "candidate_mistake": null,
+  "hint_level": 1,
+  "hints_on_mistake": 1,
+  "hints_given": 1,
+  "mistakes_found": [
+   "step 1: H2 + O2 -> H2O2 (subscript_changed)"
+  ],
+  "mistakes_fixed": [],
+  "last_said": "You've got it\u20142 H2 plus O2 gives 2 H2O, and it's balanced. Great job!",
+  "last_why": "reply",
+  "last_spoke_at": 1128.0,
+  "last_seen": "student work",
+  "other_problems": [],
+  "steps_confirmed": 0,
+  "_finished_problem": null,
+  "let_go": [],
+  "started_at": 1000.0,
+  "ends_at": 1900.0,
+  "phase": "watching",
+  "_rechecks": 0,
+  "last_focus_change": -1000000000.0,
+  "last_activity": 1128.0,
+  "_heard_count": 8
+ }
+}

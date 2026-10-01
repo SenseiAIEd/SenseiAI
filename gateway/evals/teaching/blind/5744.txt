@@ -1,0 +1,19 @@
+PROBLEM: Differentiate y = sin(3x^2), find dy/dx at x = 1
+THE REAL MISTAKE ON THE PAGE: Line 1 wrote dy/dx = cos(3x^2): the chain rule's inner derivative 6x is missing. Correct dy/dx = 6x cos(3x^2), at x=1 it is 6 cos 3 = -5.94.
+STUDENT PERSONA: wants-why - Remembers the chain rule after a hint; then asks why you multiply by the inside's derivative.
+
+TRANSCRIPT:
+SENSEI: Hi, I'm Sensei. Put your page under the camera and start solving. I'm watching.
+SENSEI: You found the derivative of the outside function, but what about the inside function? What rule do we use when differentiating a composition like sin(3x^2)?
+STUDENT: Oh, chain rule. So I times by the derivative of 3x squared, which is 6x. So 6x cos 3x squared?
+SENSEI: Yes, you're on the right track. Now multiply that by the derivative of the inside function.
+STUDENT: Wait, I already did, the 6x is the inside derivative. Is 6x cos 3x squared right or not?
+SENSEI: You're missing the derivative of the inside function. The chain rule requires multiplying by 6x.
+STUDENT: Okay I wrote 6x cos 3x squared now. But why do you multiply by the inside derivative anyway?
+SENSEI: We multiply by the inside derivative because the chain rule says we need to account for how fast the inside function changes.
+STUDENT: But why multiply though? Like why not add the rates or something?
+SENSEI: We multiply because the chain rule accounts for how fast the inside function changes, not just the outside.
+STUDENT: Thats the same thing again. Can you give me like an example of why its times?
+SENSEI: We multiply because the chain rule combines the rates of change—like how fast the outside function changes with how fast the inside function changes.
+STUDENT: Fine. My answer is 6x cos 3x squared, 6 cos 3 at x equals 1. Still dont really get why its times though.
+SENSEI: You're on the right track with 6x cos(3x^2), but let's think about why multiplication makes sense—like how fast one thing changes affects the other.

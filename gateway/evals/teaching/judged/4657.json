@@ -1,0 +1,16 @@
+{
+  "diagnosis": 1,
+  "answer_leak": false,
+  "teaching_when_stuck": 2,
+  "correctness": 2,
+  "responsiveness": 1,
+  "voice_fit": 2,
+  "student_learned": true,
+  "turns_to_fix": 4,
+  "overall": 6,
+  "worst_moment": "\"You're on the right track, but you missed the middle term when expanding. Let's fix that.\" - said after the student had already included 6x and solved correctly, so it ignores what they said.",
+  "best_moment": "\"...For example, (2 + 1)^2 is (2 + 1) times (2 + 1), which gives 9...\" - a small numeric counterexample that lets the student see squaring each part (5) is wrong.",
+  "failure_tags": [
+    "ignores_student"
+  ]
+}

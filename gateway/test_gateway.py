@@ -407,7 +407,7 @@ def test_a_desk_sees_every_event_and_the_live_video(gateway):
         return width
 
     width = asyncio.run(run())
-    assert width > 0                                                  # the desk got live video
+    assert 0 < width <= server.DESK_LONG_SIDE                         # live video, sized for a desk
     hello = next(m for m in seen if m["type"] == "hello")
     assert hello["status"]["connected"] and any(e["event"] == "started" for e in hello["history"])
     assert any(m.get("event") == "desk_watch" for m in seen)

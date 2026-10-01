@@ -1,0 +1,16 @@
+{
+  "diagnosis": 2,
+  "answer_leak": true,
+  "teaching_when_stuck": 1,
+  "correctness": 2,
+  "responsiveness": 2,
+  "voice_fit": 2,
+  "student_learned": true,
+  "turns_to_fix": 5,
+  "overall": 6,
+  "worst_moment": "\"Absolute means starting from zero, like Kelvin, not from a point like Celsius. Your answer is off because you used 25 instead of 298.\" - hands the student the corrected value 298 instead of letting them convert, and the 'starting from zero' definition is muddy.",
+  "best_moment": "\"Because the formula assumes zero means no molecular motion, and Celsius zero isn't that—Kelvin is.\" - finally gives a real physical reason that lets the student make the fix themselves.",
+  "failure_tags": [
+    "answer_leak"
+  ]
+}

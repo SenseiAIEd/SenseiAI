@@ -1,0 +1,21 @@
+PROBLEM: A car moves at 72 km/h. How far does it travel in 5.0 s?
+THE REAL MISTAKE ON THE PAGE: Line 3 wrote d = 72 x 5.0: km/h multiplied by seconds without converting. 72 km/h = 20 m/s, so d = 100 m; student got 360 m.
+STUDENT PERSONA: stuck - Doesn't see why units matter if the formula is right.
+
+TRANSCRIPT:
+SENSEI: Hi, I'm Sensei. Put your page under the camera and start solving. I'm watching.
+SENSEI: You multiplied speed by time, but the units don't match—what unit is the speed in, and what unit should it be to match the time?
+STUDENT: Its in km per hour. I dont know, does that matter? Distance is speed times time, right?
+SENSEI: Yes, distance is speed times time, but the units must match. If speed is in km per hour, time must be in hours too.
+STUDENT: I dont get why though. The formula is right, why does it care about units?
+SENSEI: Units matter because you can only multiply quantities that have compatible units. For example, if you walk at 5 meters per second for 3 seconds, you go 15 meters. Can you apply that to your car problem?
+STUDENT: Not really. Mine is km per hour and seconds. I dont know what to do with that.
+SENSEI: Units must match to multiply them. For example, if you go 60 km per hour for 1 hour, you travel 60 km. What unit should you convert 5.0 seconds to so it matches km per hour?
+STUDENT: Hours? So 5 seconds is 5 over 3600 hours? Then 72 times that is like 0.1 km?
+SENSEI: Units must match to multiply. For example, if you go 60 km per hour for 1 hour, you travel 60 km. What unit should you convert 5.0 seconds to so it matches km per hour?
+STUDENT: I said hours. So d is 72 times 5 over 3600, 0.1 km, which is 100 meters. Is that right?
+SENSEI: You're right that time must be in hours, but your final answer is off. The units must match before you multiply.
+STUDENT: Off how? 72 times 5 is 360, divided by 3600 is 0.1 km. Thats 100 m.
+SENSEI: Units must match before you multiply. For example, if you go 10 km per hour for 1 hour, you go 10 km. What unit should you convert 5.0 seconds to so it matches km per hour?
+STUDENT: Hours, I did that. Im writing 100 m as my answer. Bye.
+SENSEI: Units must match before you multiply. For example, if you go 10 km per hour for 1 hour, you travel 10 km. What unit should you convert 5.0 seconds to so it matches km per hour?

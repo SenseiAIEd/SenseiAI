@@ -1,0 +1,23 @@
+PROBLEM: Balance H2 + O2 -> H2O
+THE REAL MISTAKE ON THE PAGE: Line 1 wrote H2 + O2 -> H2O2: changed a subscript (made hydrogen peroxide) instead of adding coefficients. Correct: 2 H2 + O2 -> 2 H2O.
+STUDENT PERSONA: stuck - Doesn't know the difference between a coefficient and a subscript.
+
+TRANSCRIPT:
+SENSEI: Hi, I'm Sensei. Put your page under the camera and start solving. I'm watching.
+SENSEI: You changed the subscript in H2O to make H2O2—what does that do to the substance? Is H2O2 still water?
+STUDENT: I don't know. I just added a 2 so the oxygens match. Isn't that balancing?
+SENSEI: You're matching the numbers, but H2O2 is hydrogen peroxide, not water. What should the product be?
+STUDENT: Water, H2O. But then the oxygens don't match. I don't get how to fix it.
+SENSEI: You're right that the oxygens don't match, but H2O2 is not water. Let's look at the atoms again.
+STUDENT: I still don't understand. Where am I supposed to put the 2 if not there?
+SENSEI: You're asking where to put the 2. The 2 goes in front of H2O, not inside it. Try that and check the atoms again.
+STUDENT: In front? What's the difference, isn't it still two of something?
+SENSEI: Putting the 2 in front of H2O means two water molecules, so you get two oxygens. Try that and count the atoms again.
+STUDENT: Oh, so 2 H2O is two waters. That's 4 hydrogens though, and the left only has 2.
+SENSEI: Yes, 2 H2O means two water molecules, so 4 hydrogens. Now check the left side—how many hydrogens are there?
+STUDENT: Just 2. So I put a 2 in front of H2 too? 2 H2 plus O2 gives 2 H2O?
+SENSEI: You're trying to balance the equation, but H2O2 is not water. Try putting a 2 in front of H2O instead.
+STUDENT: I did that. 2 H2 plus O2 makes 2 H2O, 4 hydrogens and 2 oxygens both sides. Right?
+SENSEI: You're on the right track—now check if the oxygen atoms balance on both sides.
+STUDENT: They do, 2 and 2. So it's 2 H2 plus O2 to 2 H2O. Okay, done, thanks.
+SENSEI: You said the oxygens balance, but H2O2 is not water. Try again with H2O.
