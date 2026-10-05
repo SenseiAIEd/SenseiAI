@@ -174,3 +174,24 @@ def test_the_engine_can_be_swapped_at_runtime():
     with pytest.raises(ValueError):
         t.use("nonsense")
     assert t.engine == "parakeet"                                     # a bad choice changes nothing
+
+
+def test_letting_go_of_push_to_talk_ends_the_utterance_instead_of_dropping_it():
+    # Hold to talk: listening switches off right after the student stops, before the usual
+    # end-of-turn silence has passed. What they said must still be transcribed.
+    heard, state = [], {"on": True}
+
+    async def on_text(text, info):
+        heard.append(text)
+
+    async def run():
+        ears = Ears(lambda a: "is my second line right?", on_text, listening=lambda: state["on"],
+                    voiced=lambda a: 1.0)
+        tone = (0.3 * np.sin(2 * np.pi * 220 * np.arange(int(RATE * 0.8)) / RATE)).astype(np.float32)
+        await ears.feed(np.concatenate([np.zeros(RATE // 2, np.float32), tone, np.zeros(RATE // 5, np.float32)]))
+        state["on"] = False                                   # released 0.2 s after speaking
+        await ears.feed(np.zeros(RATE, np.float32))
+        await asyncio.sleep(0.5)
+
+    asyncio.run(run())
+    assert heard == ["is my second line right?"]

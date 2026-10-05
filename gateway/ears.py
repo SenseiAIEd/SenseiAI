@@ -252,6 +252,10 @@ class Ears:
 
     async def _frame(self, chunk: np.ndarray):
         if not self.listening():
+            # Push-to-talk: the student lets go of the button while (or just after) speaking.
+            # That ends the utterance; it doesn't throw it away.
+            if self.speech:
+                self._finish()
             self._reset()
             return
         level = float(np.sqrt(np.mean(chunk ** 2)))
@@ -270,12 +274,16 @@ class Ears:
         self.silence_s = 0.0 if voiced else self.silence_s + FRAME_S
         length = len(self.speech) * FRAME_S
         if self.silence_s >= END_SILENCE_S or length >= MAX_SPEECH_S:
-            audio = np.concatenate(self.speech)
-            spoken_s = length - self.silence_s
-            self._reset()
-            if spoken_s >= MIN_SPEECH_S:
-                self.inflight += 1
-                asyncio.ensure_future(self._transcribe(audio, spoken_s))
+            self._finish()
+
+    def _finish(self):
+        """End the current utterance and transcribe it (in the background)."""
+        audio = np.concatenate(self.speech)
+        spoken_s = len(self.speech) * FRAME_S - self.silence_s
+        self._reset()
+        if spoken_s >= MIN_SPEECH_S:
+            self.inflight += 1
+            asyncio.ensure_future(self._transcribe(audio, spoken_s))
 
     async def flush(self):
         """The audio ended: transcribe what was being said, if anything."""

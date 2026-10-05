@@ -120,6 +120,7 @@ const saved = {
     server: (await SecureStore.getItemAsync("server")) ?? DEFAULT_SERVER,
     key: (await SecureStore.getItemAsync("key")) ?? "",
     minutes: Number((await SecureStore.getItemAsync("minutes")) ?? 10) || 10,
+    holdToTalk: ((await SecureStore.getItemAsync("holdToTalk")) ?? "1") === "1",
   }),
   save: (server: string, key: string, minutes: number) =>
     Promise.all([
@@ -127,6 +128,7 @@ const saved = {
       SecureStore.setItemAsync("key", key),
       SecureStore.setItemAsync("minutes", String(minutes)),
     ]).catch(() => {}),
+  saveHoldToTalk: (on: boolean) => SecureStore.setItemAsync("holdToTalk", on ? "1" : "0").catch(() => {}),
 };
 
 const clock = (s: number) => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, "0")}`;
@@ -161,6 +163,11 @@ function SenseiApp() {
   const micRef = useRef<ReturnType<MediaStream["getAudioTracks"]>[number] | null>(null);
   const [voice, setVoice] = useState(false); // voice mode: the mic only carries sound when on
   const voiceRef = useRef(false);
+  // Hold to talk (the default): the mic is live only while the student holds the button, so a
+  // noisy room can't set Sensei off. Off: the mic button toggles an open-mic voice mode.
+  const [holdToTalk, setHoldToTalk] = useState(true);
+  const holdRef = useRef(true);
+  const releaseTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [heard, setHeard] = useState<string | null>(null);
   const [showControls, setShowControls] = useState(true);
   const pausedRef = useRef(false);
@@ -190,6 +197,37 @@ function SenseiApp() {
     });
   }
 
+  function setVoiceMode(on: boolean) {
+    voiceRef.current = on;
+    setVoice(on);
+    setMic(on && !pausedRef.current);
+    send({ type: "voice", on });
+  }
+
+  // Press: listen. Release: keep the mic open a moment so the last word isn't clipped, then
+  // stop; the Spark finishes the utterance the moment listening stops.
+  function talkStart() {
+    if (releaseTimer.current) clearTimeout(releaseTimer.current);
+    releaseTimer.current = null;
+    Speech.stop(); // talking over Sensei interrupts it
+    setVoiceMode(true);
+  }
+
+  function talkEnd() {
+    if (releaseTimer.current) clearTimeout(releaseTimer.current);
+    releaseTimer.current = setTimeout(() => {
+      releaseTimer.current = null;
+      setVoiceMode(false);
+    }, 400);
+  }
+
+  function toggleHoldToTalk() {
+    const on = !holdRef.current;
+    holdRef.current = on;
+    setHoldToTalk(on);
+    saved.saveHoldToTalk(on);
+  }
+
   function toggleVoice() {
     const on = !voiceRef.current;
     voiceRef.current = on;
@@ -203,6 +241,8 @@ function SenseiApp() {
       setServer(v.server);
       setKey(v.key);
       setMinutes(v.minutes);
+      setHoldToTalk(v.holdToTalk);
+      holdRef.current = v.holdToTalk;
       if (!v.key) setShowSettings(true);
     }).catch(() => {});
     return () => hangUp();
@@ -283,9 +323,9 @@ function SenseiApp() {
       // Voice mode starts on: students talk to Sensei. The mic stays muted until the call is up,
       // and whenever Sensei is speaking. One tap turns it off.
       micRef.current = local.getAudioTracks()[0] ?? null;
-      voiceRef.current = true;
+      voiceRef.current = !holdRef.current; // hold to talk: silent until the button is held
       pausedRef.current = false;
-      setVoice(true);
+      setVoice(!holdRef.current);
       setHeard(null);
       setMic(false);
 
@@ -455,8 +495,13 @@ function SenseiApp() {
                 <Action icon="repeat" label="Repeat" onPress={() => press("repeat")} disabled={!said} />
               </View>
               <View style={styles.mainRow}>
-                <RoundIcon icon={voice ? "mic" : "mic-off"} size={60} active={voice && !paused}
-                           onPress={toggleVoice} disabled={!live} label={voice ? "Voice on" : "Voice off"} />
+                {holdToTalk ? (
+                  <RoundIcon icon="mic" size={60} active={voice && !paused} onPressIn={talkStart} onPressOut={talkEnd}
+                             disabled={!live || paused} label="Hold to talk" />
+                ) : (
+                  <RoundIcon icon={voice ? "mic" : "mic-off"} size={60} active={voice && !paused}
+                             onPress={toggleVoice} disabled={!live} label={voice ? "Voice on" : "Voice off"} />
+                )}
                 {screen === "session" && (
                   <RoundIcon icon={paused ? "play" : "pause"} size={72} primary
                              onPress={() => press(paused ? "resume" : "pause")} label={paused ? "Resume" : "Pause"} />
@@ -524,6 +569,11 @@ function SenseiApp() {
               placeholder="Access key (from the Spark's sensei.env)"
               placeholderTextColor="#6F8580"
             />
+            <Pressable style={styles.linkRow} onPress={toggleHoldToTalk} accessibilityRole="switch"
+                       accessibilityState={{ checked: holdToTalk }}>
+              <Ionicons name={holdToTalk ? "checkbox" : "square-outline"} size={18} color={CHALK} />
+              <Text style={styles.link}>Hold the mic button to talk (best in a noisy room)</Text>
+            </Pressable>
           </>
         )}
       </View>
@@ -541,14 +591,15 @@ function Pill({ icon, color, text }: { icon: IconName; color: string; text: stri
 }
 
 function RoundIcon(props: {
-  icon: IconName; size: number; onPress: () => void; label: string;
+  icon: IconName; size: number; onPress?: () => void; onPressIn?: () => void; onPressOut?: () => void; label: string;
   disabled?: boolean; active?: boolean; primary?: boolean; danger?: boolean;
 }) {
-  const { icon, size, onPress, label, disabled, active, primary, danger } = props;
+  const { icon, size, onPress, onPressIn, onPressOut, label, disabled, active, primary, danger } = props;
   const bg = primary ? PENCIL : active ? RED : danger ? "rgba(224,122,95,0.18)" : "rgba(23,37,42,0.72)";
   const fg = primary ? SLATE : danger ? RED : CHALK;
   return (
-    <Pressable onPress={onPress} disabled={disabled} accessibilityLabel={label} accessibilityRole="button"
+    <Pressable onPress={onPress} onPressIn={onPressIn} onPressOut={onPressOut} disabled={disabled}
+               accessibilityLabel={label} accessibilityRole="button"
                style={[styles.round, { width: size, height: size, borderRadius: size / 2, backgroundColor: bg },
                        danger && styles.roundDanger, disabled && styles.disabled]}>
       <Ionicons name={icon} size={size * 0.46} color={fg} />
