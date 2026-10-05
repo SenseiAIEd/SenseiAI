@@ -156,6 +156,7 @@ class Assessment:
     subject: Optional[str] = None       # one of SUBJECTS, when the view shows study work
     topic: Optional[str] = None         # e.g. "linear equations", "balancing equations"
     say: Optional[str] = None           # what Sensei could say now
+    student_fixed: bool = False         # (talk) the student just stated the correct fix out loud
 
     @property
     def mistake(self) -> Optional[tuple[int, str]]:
@@ -249,8 +250,13 @@ Reply with ONE JSON object and nothing else:
   "page": "work" | "other" | "unreadable" | "none",
   "about": "view" | "subject" | "sensei" | "social" | "steer" | "unclear",
   "focus": "the problem they want to work on now, written out, or null",
+  "student_fixed": true | false,
   "say": "what you say to the student now, spoken aloud"
 }
+
+"student_fixed": true only if, just now, the student stated the correct fix for the mistake you
+asked them about (the user message gives the private answer key when there is one). Any correct
+wording counts; a guess that is still wrong, or a question, does not.
 
 FIRST decide "about": what were their words about?
   view     what is in front of the camera - "is my second line right?", "check this",
@@ -290,6 +296,10 @@ THEN answer, and let "about" decide what you talk about:
   question to find out what they meant.
 
 The student decides what you work on. You decide how to help them with it.
+
+If they ask WHY a rule works, give the reason in plain words (what the operation actually means,
+or a tiny example that shows it), not the rule again, then ask one short question to check.
+If they got it right, say so plainly and move them on; never tell a correct answer it is wrong.
 
 "say" is ONE short sentence, two at most, about 25 words. Simple words, nothing awkward to read
 aloud: say "x squared", "minus", "equals". Never give away an answer they are working towards.
@@ -379,6 +389,7 @@ def parse_assessment(text: str) -> Assessment:
         subject=subject,
         topic=(str(data.get("topic")).strip() or None) if data.get("topic") else None,
         say=str(say).strip() if say and str(say).strip() else None,
+        student_fixed=bool(data.get("student_fixed")),
     )
 
 
@@ -447,6 +458,25 @@ class Brain:
             {"role": "user", "content": content},
         ], max_tokens=self.max_tokens)
         return parse_assessment(reply)
+
+    def solve(self, problem: str, steps: list[str], wrong_step: Optional[int]) -> dict:
+        """The private answer key for a problem: the correct version of the student's first wrong
+        line and the final answer, worked out once so every reply can be checked against it."""
+        lines = "\n".join(f"{i}. {t}" for i, t in enumerate(steps, 1))
+        ask = (f"Problem: {problem}\nThe student's working, line by line:\n{lines or '(none yet)'}\n"
+               + (f"Line {wrong_step} is the first wrong line.\n" if wrong_step else "")
+               + "Solve the problem correctly yourself, carefully. Reply with ONE JSON object and nothing else: "
+                 '{"correct_line": "the correct version of the first wrong line, written the way the student '
+                 'would write it, or null", "answer": "the final answer", "check": "one sentence: how to check '
+                 'the answer"}')
+        reply = strip_reasoning(self._chat([
+            {"role": "system", "content": "You are a careful maths and science teacher. Work it out step by step "
+                                          "in your head, then reply with the JSON only."},
+            {"role": "user", "content": ask}], max_tokens=self.max_tokens))
+        start, end = reply.find("{"), reply.rfind("}")
+        data = json.loads(reply[start:end + 1]) if start >= 0 and end > start else {}
+        return {"correct_line": data.get("correct_line") or None, "answer": data.get("answer") or None,
+                "check": data.get("check") or None}
 
     def list_models(self) -> list[str]:
         """What the endpoint can serve, so a model can be picked without a restart."""
@@ -627,6 +657,11 @@ class Tutor:
         self.hint_level = 0
         self.hints_on_mistake = 0        # asked about this one mistake this many times
         self.let_go: set = set()         # mistakes we stopped asking about: don't start over
+        # The private answer key for the mistake being taught (Brain.solve), made in the background
+        # when a mistake is confirmed: {"problem", "mistake", "wrong_line", "correct_line", "answer", "check"}.
+        self.answer_key: Optional[dict] = None
+        self.key_brain: Optional[Brain] = None  # the careful model for keys; defaults to self.brain
+        self._background: set = set()    # tasks still running (the key), so a harness can wait for them
         self.last_focus_change = -1e9    # when the student last moved us to another problem
         self.mistakes_found: list[str] = []
         self.mistakes_fixed: list[str] = []
@@ -701,6 +736,69 @@ class Tutor:
             self.subject = subject
         if topic:
             self.topic = topic
+
+    def _ensure_key(self, a: Assessment):
+        """Make the answer key for the current mistake, in the background (the hint isn't delayed)."""
+        if not self.mistake or not self.problem or self.brain is None:
+            return
+        if self.answer_key and self.answer_key.get("mistake") == list(self.mistake) \
+                and _same_line(self.answer_key.get("problem"), self.problem):
+            return
+        wrong_idx = self.mistake[0]
+        steps = list(a.steps)
+        wrong_line = steps[wrong_idx - 1] if 1 <= wrong_idx <= len(steps) else None
+        problem, mistake = self.problem, self.mistake
+        brain = self.key_brain or self.brain
+
+        async def make():
+            try:
+                key = await asyncio.to_thread(brain.solve, problem, steps, wrong_idx)
+            except Exception as e:  # the key is a help, never a blocker
+                log.warning("answer key failed: %s", e)
+                self.log_event("tutor_answer_key_failed", error=str(e)[:200])
+                return
+            if self.mistake == mistake and _same_line(self.problem, problem):
+                self.answer_key = {"problem": problem, "mistake": list(mistake), "wrong_line": wrong_line, **key}
+                self.log_event("tutor_answer_key", **self.answer_key)
+
+        task = asyncio.ensure_future(make())
+        self._background.add(task)
+        task.add_done_callback(self._background.discard)
+
+    def _key_note(self, talk: bool) -> str:
+        k = self.answer_key
+        if not k or not self.mistake or k.get("mistake") != list(self.mistake):
+            return ""
+        parts = [f"PRIVATE ANSWER KEY (never say it, never reveal the final value): the first wrong line is "
+                 f"\"{k.get('wrong_line')}\"; its correct version is \"{k.get('correct_line')}\"; the final "
+                 f"answer is \"{k.get('answer')}\"."]
+        if talk:
+            parts.append("Judge what the student says against it. If they state the correct fix in any wording, "
+                         "set student_fixed true, confirm it warmly in one sentence and ask them to write it and "
+                         "carry on. If what they say is still wrong, say so gently; never agree with a wrong line.")
+        else:
+            parts.append("If the page now shows the correct version (or an equivalent line) where the wrong line "
+                         "was, the mistake is fixed: do not flag it.")
+        return " ".join(parts)
+
+    def _repeats(self, text: str) -> Optional[str]:
+        """One of Sensei's last three lines that `text` nearly repeats (word overlap), or None."""
+        words = lambda t: set(re.findall(r"[a-z0-9']+", (t or "").lower()))
+        new = words(text)
+        for c in [c for c in self.conversation if c["who"] == "sensei"][-3:]:
+            old = words(c["text"])
+            if new and old and len(new & old) / len(new | old) >= 0.6:
+                return c["text"]
+        return None
+
+    def _recent_lines_note(self) -> str:
+        said = [c["text"] for c in self.conversation if c["who"] == "sensei"][-3:]
+        if not said:
+            return ""
+        return ("Your last lines were: " + " | ".join(f"\"{t}\"" for t in said)
+                + ". Do not repeat them or their idea in other words. If they did not help, try a different "
+                  "approach: a simpler example with small numbers, a counterexample, or ask them to work out one "
+                  "tiny case.")
 
     async def speak(self, text: str, why: str):
         # Saying the same sentence for the same reason is how a person sounds when they aren't
@@ -994,7 +1092,9 @@ class Tutor:
                     "honestly whether it's on the right track, without giving away the final answer."
                     + (f" Earlier you asked them about step {self.mistake[0]} of their work."
                        if self.mistake else "")
-                    + (TEACH_RULES if self.teach else ""))
+                    + (TEACH_RULES if self.teach else "")
+                    + ("\n" + self._key_note(talk=True) if self._key_note(talk=True) else "")
+                    + ("\n" + self._recent_lines_note() if self._recent_lines_note() else ""))
         parts = [self._face_note().strip()] if self._face_note() else []
         if self.subject in PLAYBOOKS and request != "look":
             parts.append(PLAYBOOKS[self.subject] + " For \"error_kind\" use one of: "
@@ -1009,6 +1109,8 @@ class Tutor:
                          "If it shows a different problem (a new sheet, or they moved on), report THAT one as "
                          "\"problem\" and judge it. If several problems are on the page, judge the one written "
                          "last and put the others in \"other_problems\".")
+        if self._key_note(talk=False):
+            parts.append(self._key_note(talk=False))
         if self.mistake:
             parts.append(f"Earlier you flagged step {self.mistake[0]} as the first mistake and gave a "
                          f"level {self.hint_level} hint. If that same mistake is still there, use hint level "
@@ -1050,6 +1152,14 @@ class Tutor:
         system = CHAT_SYSTEM_PROMPT if request in ("talk", "look") else SYSTEM_PROMPT
         try:
             a = await asyncio.to_thread(brain.assess, img, self._instructions(request, said) + (f"\n{extra}" if extra else ""), system)
+            if request == "talk" and a.say and (twin := self._repeats(a.say)):
+                # Saying the same thing again doesn't teach; ask once more for a different approach.
+                self.log_event("tutor_repeat_retry", said=a.say, earlier=twin)
+                again = (f"\nYou were about to say \"{a.say}\", which repeats what you already said. Say something "
+                         "different that moves them forward (a simpler example, a counterexample, or a tiny case "
+                         "to work out).")
+                a = await asyncio.to_thread(brain.assess, img, self._instructions(request, said)
+                                            + (f"\n{extra}" if extra else "") + again, system)
         except Exception as e:
             log.warning("assessment failed: %s", e)
             self.log_event("tutor_error", error=str(e)[:300], frame=frame_file, frame_size=frame_size)
@@ -1105,6 +1215,13 @@ class Tutor:
             if (a.focus and not _same_line(a.focus, self.problem)
                     and (jev is None or jev.new_problem >= self.JEV_NEW_PROBLEM_MIN)):
                 self.switch_to(a.focus, who="student")
+            if a.student_fixed and self.mistake:
+                # Fixed out loud. Count it, and don't let the next look at the unchanged page
+                # re-hint the same line: the student has the idea; writing it down is next.
+                self.log_event("tutor_fixed_by_voice", step=self.mistake[0])
+                self.mistakes_fixed.append(f"step {self.mistake[0]} (said aloud)")
+                self.let_go.add(self.mistake)
+                self.mistake, self.candidate_mistake, self.hint_level, self.hints_on_mistake = None, None, 0, 0
             await self.speak(a.say or SAY_AGAIN, "reply")
             return
         if request == "look":  # "What do you see?": just describe it
@@ -1182,6 +1299,7 @@ class Tutor:
                         f"step {mistake[0]}: {a.steps[mistake[0] - 1]} ({a.error_kind or 'error'})")
                     self.log_event("tutor_detected", step=mistake[0],
                                    line=a.steps[mistake[0] - 1], tap_only=True)
+                    self._ensure_key(a)
                 # Same mistake already pinned: still quiet — no hint_2 / let_it_go from looks.
             elif mistake == self.mistake:
                 self.hints_on_mistake += 1
@@ -1202,6 +1320,7 @@ class Tutor:
                 self.mistakes_found.append(f"step {mistake[0]}: {a.steps[mistake[0] - 1]} ({a.error_kind or 'error'})")
                 why = "hint_1"
                 self.hints_given += 1
+                self._ensure_key(a)
         elif self.mistake:
             self.mistakes_fixed.append(f"step {self.mistake[0]}")
             self.mistake, self.hint_level = None, 0
