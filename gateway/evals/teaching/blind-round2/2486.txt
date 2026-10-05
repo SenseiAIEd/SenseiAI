@@ -1,0 +1,19 @@
+PROBLEM: Solve 5 - (2x - 4) = 11
+THE REAL MISTAKE ON THE PAGE: Line 1 wrote 5 - 2x - 4 = 11: the minus was not distributed to the -4 (should be 5 - 2x + 4 = 11). Answer should be x = -1; student got x = -5.
+STUDENT PERSONA: confident-wrong - Insists 'you just drop the brackets', so -(2x - 4) is -2x - 4.
+
+TRANSCRIPT:
+SENSEI: Hi, I'm Sensei. Put your page under the camera and start solving. I'm watching.
+SENSEI: What happens to each term inside the brackets when you subtract them?
+STUDENT: Nothing really, you just drop the brackets. So it's 5 minus 2x minus 4.
+SENSEI: Not quite. When you subtract the brackets, you need to change the sign of each term inside. Try it again with that in mind.
+STUDENT: But I did change it, 2x became minus 2x. The 4 was already minus so it stays minus.
+SENSEI: You're close, but the sign of the -4 changes to +4 when you subtract the brackets. Try that again.
+STUDENT: Why though? Brackets just group stuff. Minus 4 is minus 4, I don't see why it flips.
+SENSEI: When you subtract a group, you flip every sign inside. Try 7 - (3 - 2) and see what happens.
+STUDENT: Okay 3 minus 2 is 1 so it's 6. My way gives 7 minus 3 minus 2, that's 2. Huh, they don't match.
+SENSEI: You're right that 3 minus 2 is 1, but let's look at the numbers again. Try 7 - (3 - 2) and see what you get.
+STUDENT: I just did, it's 6. And 7 minus 3 plus 2 is 6 too. So the minus 4 has to become plus 4?
+SENSEI: Yes, you got it! When you subtract (2x - 4), it becomes -2x + 4. Now write that down and keep going.
+STUDENT: Fine, 5 minus 2x plus 4 is 11, so 9 minus 2x is 11, x is negative 1. Got it.
+SENSEI: You're close, but there's a small error in your arithmetic. Try adding 5 and 4 again.

@@ -1,0 +1,23 @@
+PROBLEM: Solve 5 - (2x - 4) = 11
+THE REAL MISTAKE ON THE PAGE: Every line is right until the last: line 5 wrote x = -2, but 2 divided by -2 is -1. (The mistake is on the LAST line, not line 1.)
+STUDENT PERSONA: confident-wrong - Thinks you 'move the -2 across' and just flip the sign, getting -2.
+
+TRANSCRIPT:
+SENSEI: Hi, I'm Sensei. Put your page under the camera and start solving. I'm watching.
+SENSEI: What happens to each term inside the brackets when you subtract them?
+STUDENT: They flip sign, so 5 minus 2x plus 4. That's what I did, it's fine.
+SENSEI: You're close, but when you subtract the parentheses, the minus sign flips both terms inside. Try that again.
+STUDENT: I did flip both. Minus 2x and plus 4. That gives 9 minus 2x equals 11, so x is minus 2.
+SENSEI: You flipped the signs correctly, but you added 4 instead of subtracting it. Try that step again.
+STUDENT: No, minus minus 4 is plus 4. That's right. My answer x equals minus 2 is right.
+SENSEI: You're right that minus minus 4 becomes plus 4, but in this case, we're subtracting the whole group, so it should be minus 4. Try that step again.
+STUDENT: That doesn't make sense. You just said I flipped them right. Minus 4 times minus 1 is plus 4.
+SENSEI: Let's try a simpler case: what is 5 - (2 - 4)? What do you get?
+STUDENT: 2 minus 4 is minus 2, so 5 minus minus 2 is 7. Same as 5 minus 2 plus 4. See, plus 4.
+SENSEI: You're thinking about the signs, but in 5 - (2 - 4), we subtract the whole group, so it's 5 - (-2), which is 7. That means we keep the minus sign, not flip it. Try that again.
+STUDENT: You got 7 too, so plus 4 is right. My working's fine. x equals minus 2.
+SENSEI: Let's try a tiny case: what is 5 - (2 - 4)? Work it out step by step.
+STUDENT: I just did, it's 7. Why are you asking again? I think my answer's right.
+SENSEI: You're right that 5 - (2 - 4) is 7, but in your problem, we subtract (2x - 4), so it's 5 - 2x + 4, not 5 - 2x - 4. Try that step again.
+STUDENT: That's what I wrote! So I'm right. x equals minus 2, done.
+SENSEI: You're close, but the step 5 - 2x + 4 = 11 is wrong. Try again with 5 - 2x - 4 = 11.

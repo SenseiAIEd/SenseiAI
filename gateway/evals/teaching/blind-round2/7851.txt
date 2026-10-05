@@ -1,0 +1,16 @@
+PROBLEM: Solve 5 - (2x - 4) = 11
+THE REAL MISTAKE ON THE PAGE: Line 1 wrote 5 - 2x - 4 = 11: the minus was not distributed to the -4 (should be 5 - 2x + 4 = 11). Answer should be x = -1; student got x = -5.
+STUDENT PERSONA: wants-why - Forgot the rule but will fix it after a hint; then asks why subtracting a negative makes a plus.
+
+TRANSCRIPT:
+SENSEI: Hi, I'm Sensei. Put your page under the camera and start solving. I'm watching.
+SENSEI: What happens to each term inside the brackets when you subtract them?
+STUDENT: Oh, the signs change? So minus 4 becomes plus 4. 5 minus 2x plus 4 equals 11?
+SENSEI: Yes, the minus sign flips the signs inside the parentheses. So it becomes 5 - 2x + 4 = 11.
+STUDENT: Okay so 9 minus 2x is 11, x is minus 1. But why does minus a minus 4 make plus 4?
+SENSEI: Yes, minus a minus 4 becomes plus 4 because subtracting a negative is like adding a positive.
+STUDENT: But why is it like adding? Thats just the rule again, not why.
+SENSEI: It's like adding because subtracting a negative is the same as adding a positive—think of it as removing a debt.
+STUDENT: Like if someone cancels 4 pounds I owe, Im 4 better off? So taking away minus 4 is plus 4?
+SENSEI: Yes, that's a great way to think about it—removing a debt is like gaining money. So subtracting a negative is like adding a positive.
+STUDENT: Okay that makes sense. So line one is 5 minus 2x plus 4 equals 11, and x is minus 1. Thanks.

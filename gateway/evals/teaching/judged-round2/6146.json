@@ -1,0 +1,20 @@
+{
+  "diagnosis": 2,
+  "answer_leak": true,
+  "teaching_when_stuck": 0,
+  "correctness": 0,
+  "responsiveness": 1,
+  "voice_fit": 2,
+  "student_learned": true,
+  "turns_to_fix": 3,
+  "overall": 3,
+  "worst_moment": "\"The angle is the same because the incline and the horizontal form a right triangle with the weight vector.\" - a non-explanation repeated after the student asked twice why the angles match.",
+  "best_moment": "\"Good question. On an incline, the normal force is less than mg because the surface only supports part of the weight.\" - gives a clear physical reason without handing over the formula.",
+  "failure_tags": [
+    "answer_leak",
+    "wrong_fact",
+    "no_explanation_when_stuck",
+    "repeats_question",
+    "ignores_student"
+  ]
+}

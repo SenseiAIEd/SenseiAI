@@ -1,0 +1,19 @@
+{
+  "diagnosis": 2,
+  "answer_leak": false,
+  "teaching_when_stuck": 0,
+  "correctness": 1,
+  "responsiveness": 0,
+  "voice_fit": 2,
+  "student_learned": true,
+  "turns_to_fix": 3,
+  "overall": 3,
+  "worst_moment": "\"You're asking why coefficients matter\u2014let's try a simple case: 2 mol H2 and 100 mol O2. How much water can H2 make?\" - repeats for the third time an example the student already said does not answer their question.",
+  "best_moment": "\"You're right that O2 has fewer moles, but we can't just pick the one with fewer moles\u2014let's check the ratio from the balanced equation.\" - targets the faulty rule directly without giving the answer.",
+  "failure_tags": [
+    "repeats_question",
+    "loops",
+    "no_explanation_when_stuck",
+    "ignores_student"
+  ]
+}

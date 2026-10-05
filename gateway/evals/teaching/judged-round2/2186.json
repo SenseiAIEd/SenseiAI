@@ -1,0 +1,16 @@
+{
+  "diagnosis": 2,
+  "answer_leak": false,
+  "teaching_when_stuck": 1,
+  "correctness": 2,
+  "responsiveness": 1,
+  "voice_fit": 2,
+  "student_learned": true,
+  "turns_to_fix": 6,
+  "overall": 6,
+  "worst_moment": "\"Yes, H2 makes less water, so it is limiting. Now calculate the mass of water from that amount.\" - the student had already given 54 g in the same turn.",
+  "best_moment": "\"No, having fewer moles isn't the right way. You need to compare how much product each reactant can make.\" - it names the correct comparison method without doing the work for the student.",
+  "failure_tags": [
+    "ignores_student"
+  ]
+}

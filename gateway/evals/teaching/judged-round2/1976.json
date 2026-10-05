@@ -1,0 +1,17 @@
+{
+  "diagnosis": 2,
+  "answer_leak": true,
+  "teaching_when_stuck": 1,
+  "correctness": 2,
+  "responsiveness": 1,
+  "voice_fit": 1,
+  "student_learned": true,
+  "turns_to_fix": 4,
+  "overall": 5,
+  "worst_moment": "\"You're on the right track with the angle, but v_y isn't 20 m/s\u2014what's the correct way to find the vertical part?\" - the student had just said 20 sin 60 = 17.3, and Sensei answered as if they still had 20.",
+  "best_moment": "\"Think of it like a triangle: the total speed is the hypotenuse, and the vertical part is one side. What trig function gives the opposite side?\" - a clear picture for a student who had no idea of components, and it hands a question back.",
+  "failure_tags": [
+    "answer_leak",
+    "ignores_student"
+  ]
+}

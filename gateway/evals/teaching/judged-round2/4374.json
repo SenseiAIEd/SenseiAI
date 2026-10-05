@@ -1,0 +1,20 @@
+{
+  "diagnosis": 2,
+  "answer_leak": false,
+  "teaching_when_stuck": 0,
+  "correctness": 0,
+  "responsiveness": 0,
+  "voice_fit": 2,
+  "student_learned": false,
+  "turns_to_fix": null,
+  "overall": 1,
+  "worst_moment": "\"You're right, I misread it. The vertical speed is not 20 m/s.\" - telling the student they are right while saying they are wrong confuses them, and Sensei never explains components.",
+  "best_moment": "\"Not quite. The 20 m/s is the total speed, not just the vertical part.\" - it states the real mistake correctly, but Sensei never builds on it.",
+  "failure_tags": [
+    "repeats_question",
+    "no_explanation_when_stuck",
+    "loops",
+    "ignores_student",
+    "wrong_fact"
+  ]
+}

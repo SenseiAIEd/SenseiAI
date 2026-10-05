@@ -1,0 +1,665 @@
+{
+ "id": "m1-why-state",
+ "page": "/home/perspectivity-dgx/SenseiAI/datasets/samples/math/basic/easy/bad_1.png",
+ "variant": "state",
+ "now": 1098.0,
+ "transcript": [
+  {
+   "who": "sensei",
+   "why": "greeting",
+   "text": "Hi, I'm Sensei. Put your page under the camera and start solving. I'm watching."
+  },
+  {
+   "who": "sensei",
+   "why": "hint_1",
+   "text": "What happens to each term inside the brackets when you subtract them?"
+  },
+  {
+   "who": "student",
+   "text": "Oh, they both change sign? So it's 5 minus 2x plus 4, not minus 4."
+  },
+  {
+   "who": "sensei",
+   "why": "ack",
+   "text": "Okay, let me think."
+  },
+  {
+   "who": "sensei",
+   "why": "reply",
+   "text": "Yes, when you subtract a bracket, both terms inside change sign. Write that corrected line and keep going."
+  },
+  {
+   "who": "student",
+   "text": "Okay, so 9 minus 2x is 11, x is negative 1. But why does minus a minus 4 become plus 4?"
+  },
+  {
+   "who": "sensei",
+   "why": "ack",
+   "text": "Good question. One moment."
+  },
+  {
+   "who": "sensei",
+   "why": "reply",
+   "text": "When you subtract a negative, it's like adding. So minus negative 4 becomes plus 4. Try it with 5 - (-4)."
+  },
+  {
+   "who": "student",
+   "text": "I know that's the rule, 5 minus negative 4 is 9. But why is taking away a negative the same as adding?"
+  },
+  {
+   "who": "sensei",
+   "why": "ack",
+   "text": "Let me see."
+  },
+  {
+   "who": "sensei",
+   "why": "reply",
+   "text": "Because subtracting a negative is like adding a positive. Try 5 - (-4) and see what you get."
+  },
+  {
+   "who": "student",
+   "text": "You just said the same thing again. I get 9, but I want to know why it works."
+  },
+  {
+   "who": "sensei",
+   "why": "ack",
+   "text": "Got it. Give me a second."
+  },
+  {
+   "who": "sensei",
+   "why": "reply",
+   "text": "Let's try a simpler case: 5 - (-4). What do you get?"
+  },
+  {
+   "who": "student",
+   "text": "9. I already said 9. Why though, like what does taking away a negative actually mean?"
+  },
+  {
+   "who": "sensei",
+   "why": "ack",
+   "text": "Okay, let me think."
+  },
+  {
+   "who": "sensei",
+   "why": "reply",
+   "text": "Taking away a negative means you're removing a debt, so it's like gaining. Try 5 - (-4) and see what happens."
+  },
+  {
+   "who": "student",
+   "text": "Oh, so if someone takes away 4 pounds I owe, I'm 4 better off. That makes sense. So x is negative 1, thanks."
+  },
+  {
+   "who": "sensei",
+   "why": "ack",
+   "text": "Good question. One moment."
+  },
+  {
+   "who": "sensei",
+   "why": "reply",
+   "text": "You're right about the idea, but the final answer is wrong. Try solving 1 - 2x = 11 again."
+  }
+ ],
+ "events": [
+  {
+   "event": "tutor_start",
+   "minutes": 15.0
+  },
+  {
+   "event": "tutor_say",
+   "text": "Hi, I'm Sensei. Put your page under the camera and start solving. I'm watching.",
+   "why": "greeting"
+  },
+  {
+   "event": "tutor_subject",
+   "was": null,
+   "now": "math",
+   "topic": "linear equations",
+   "set_by": "page"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": null,
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": [
+    1200,
+    519
+   ],
+   "page": "work",
+   "about": null,
+   "focus": null,
+   "problem": "Solve: 5 - (2x - 4) = 11",
+   "subject": "math",
+   "topic": "linear equations",
+   "other_problems": [],
+   "given": "Solve: 5 - (2x - 4) = 11",
+   "steps": [
+    "5 - 2x - 4 = 11",
+    "1 - 2x = 11",
+    "-2x = 10",
+    "x = -5"
+   ],
+   "first_error": 1,
+   "error_kind": "sign_error",
+   "finished": true,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "What did you do with the minus sign in front of the parentheses?"
+  },
+  {
+   "event": "tutor_focus",
+   "was": null,
+   "now": "Solve: 5 - (2x - 4) = 11",
+   "set_by": "page"
+  },
+  {
+   "event": "tutor_unconfirmed",
+   "step": 1,
+   "line": "5 - 2x - 4 = 11"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": null,
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": [
+    1200,
+    519
+   ],
+   "page": "work",
+   "about": null,
+   "focus": null,
+   "problem": "Solve: 5 - (2x - 4) = 11",
+   "subject": "math",
+   "topic": "linear equations",
+   "other_problems": [],
+   "given": "Solve: 5 - (2x - 4) = 11",
+   "steps": [
+    "5 - 2x - 4 = 11",
+    "1 - 2x = 11",
+    "-2x = 10",
+    "x = -5"
+   ],
+   "first_error": 1,
+   "error_kind": "distribution",
+   "finished": true,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "What happens to each term inside the brackets when you subtract them?"
+  },
+  {
+   "event": "tutor_say",
+   "text": "What happens to each term inside the brackets when you subtract them?",
+   "why": "hint_1"
+  },
+  {
+   "event": "tutor_answer_key",
+   "problem": "Solve: 5 - (2x - 4) = 11",
+   "mistake": [
+    1,
+    "5-2x-4=11"
+   ],
+   "wrong_line": "5 - 2x - 4 = 11",
+   "correct_line": "5 - 2x + 4 = 11",
+   "answer": "-1",
+   "check": "Substitute x = -1 into the original equation: 5 - (2(-1) - 4) = 5 - (-2 - 4) = 5 - (-6) = 5 + 6 = 11, which matches the right-hand side."
+  },
+  {
+   "event": "jev",
+   "on": "utterance",
+   "said": "Oh, they both change sign? So it's 5 minus 2x plus 4, not minus 4.",
+   "respond": 0.94,
+   "about": "subject",
+   "about_conf": 0.89,
+   "followup": 0.85,
+   "needs_page": 0.44,
+   "new_problem": 0.01,
+   "which_problem": null,
+   "which_conf": 0.0,
+   "latency_ms": 814
+  },
+  {
+   "event": "student_said",
+   "text": "Oh, they both change sign? So it's 5 minus 2x plus 4, not minus 4."
+  },
+  {
+   "event": "tutor_say",
+   "text": "Okay, let me think.",
+   "why": "ack"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": "talk",
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": [
+    1200,
+    519
+   ],
+   "page": "work",
+   "about": "subject",
+   "focus": "Solve: 5 - (2x - 4) = 11",
+   "problem": null,
+   "subject": null,
+   "topic": null,
+   "other_problems": [],
+   "given": null,
+   "steps": [],
+   "first_error": null,
+   "error_kind": null,
+   "finished": false,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "Yes, when you subtract a bracket, both terms inside change sign. Write that corrected line and keep going."
+  },
+  {
+   "event": "tutor_about",
+   "about": "subject"
+  },
+  {
+   "event": "tutor_fixed_by_voice",
+   "step": 1
+  },
+  {
+   "event": "tutor_say",
+   "text": "Yes, when you subtract a bracket, both terms inside change sign. Write that corrected line and keep going.",
+   "why": "reply"
+  },
+  {
+   "event": "jev",
+   "on": "utterance",
+   "said": "Okay, so 9 minus 2x is 11, x is negative 1. But why does minus a minus 4 become plus 4?",
+   "respond": 0.94,
+   "about": "subject",
+   "about_conf": 0.96,
+   "followup": 0.89,
+   "needs_page": 0.06,
+   "new_problem": 0.02,
+   "which_problem": null,
+   "which_conf": 0.0,
+   "latency_ms": 762
+  },
+  {
+   "event": "student_said",
+   "text": "Okay, so 9 minus 2x is 11, x is negative 1. But why does minus a minus 4 become plus 4?"
+  },
+  {
+   "event": "tutor_say",
+   "text": "Good question. One moment.",
+   "why": "ack"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": "talk",
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": null,
+   "page": "work",
+   "about": "subject",
+   "focus": "Solve: 5 - (2x - 4) = 11",
+   "problem": null,
+   "subject": null,
+   "topic": null,
+   "other_problems": [],
+   "given": null,
+   "steps": [],
+   "first_error": null,
+   "error_kind": null,
+   "finished": false,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "When you subtract a negative, it's like adding. So minus negative 4 becomes plus 4. Try it with 5 - (-4)."
+  },
+  {
+   "event": "tutor_about",
+   "about": "subject"
+  },
+  {
+   "event": "tutor_say",
+   "text": "When you subtract a negative, it's like adding. So minus negative 4 becomes plus 4. Try it with 5 - (-4).",
+   "why": "reply"
+  },
+  {
+   "event": "jev_error",
+   "error": "timed out"
+  },
+  {
+   "event": "student_said",
+   "text": "I know that's the rule, 5 minus negative 4 is 9. But why is taking away a negative the same as adding?"
+  },
+  {
+   "event": "tutor_say",
+   "text": "Let me see.",
+   "why": "ack"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": "talk",
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": [
+    1200,
+    519
+   ],
+   "page": "work",
+   "about": "subject",
+   "focus": "Solve: 5 - (2x - 4) = 11",
+   "problem": null,
+   "subject": null,
+   "topic": null,
+   "other_problems": [],
+   "given": null,
+   "steps": [],
+   "first_error": null,
+   "error_kind": null,
+   "finished": false,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "Because subtracting a negative is like adding a positive. Try 5 - (-4) and see what you get."
+  },
+  {
+   "event": "tutor_about",
+   "about": "subject"
+  },
+  {
+   "event": "tutor_say",
+   "text": "Because subtracting a negative is like adding a positive. Try 5 - (-4) and see what you get.",
+   "why": "reply"
+  },
+  {
+   "event": "jev",
+   "on": "utterance",
+   "said": "You just said the same thing again. I get 9, but I want to know why it works.",
+   "respond": 0.95,
+   "about": "subject",
+   "about_conf": 0.96,
+   "followup": 0.96,
+   "needs_page": 0.16,
+   "new_problem": 0.04,
+   "which_problem": null,
+   "which_conf": 0.0,
+   "latency_ms": 537
+  },
+  {
+   "event": "student_said",
+   "text": "You just said the same thing again. I get 9, but I want to know why it works."
+  },
+  {
+   "event": "tutor_say",
+   "text": "Got it. Give me a second.",
+   "why": "ack"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": "talk",
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": [
+    1200,
+    519
+   ],
+   "page": "work",
+   "about": "subject",
+   "focus": "Solve: 5 - (2x - 4) = 11",
+   "problem": null,
+   "subject": null,
+   "topic": null,
+   "other_problems": [],
+   "given": null,
+   "steps": [],
+   "first_error": null,
+   "error_kind": null,
+   "finished": false,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "Let's try a simpler case: 5 - (-4). What do you get?"
+  },
+  {
+   "event": "tutor_about",
+   "about": "subject"
+  },
+  {
+   "event": "tutor_say",
+   "text": "Let's try a simpler case: 5 - (-4). What do you get?",
+   "why": "reply"
+  },
+  {
+   "event": "jev",
+   "on": "utterance",
+   "said": "9. I already said 9. Why though, like what does taking away a negative actually mean?",
+   "respond": 0.96,
+   "about": "subject",
+   "about_conf": 0.95,
+   "followup": 0.93,
+   "needs_page": 0.07,
+   "new_problem": 0.04,
+   "which_problem": null,
+   "which_conf": 0.0,
+   "latency_ms": 919
+  },
+  {
+   "event": "student_said",
+   "text": "9. I already said 9. Why though, like what does taking away a negative actually mean?"
+  },
+  {
+   "event": "tutor_say",
+   "text": "Okay, let me think.",
+   "why": "ack"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": "talk",
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": null,
+   "page": "work",
+   "about": "subject",
+   "focus": "Solve: 5 - (2x - 4) = 11",
+   "problem": null,
+   "subject": null,
+   "topic": null,
+   "other_problems": [],
+   "given": null,
+   "steps": [],
+   "first_error": null,
+   "error_kind": null,
+   "finished": false,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "Taking away a negative means you're removing a debt, so it's like gaining. Try 5 - (-4) and see what happens."
+  },
+  {
+   "event": "tutor_about",
+   "about": "subject"
+  },
+  {
+   "event": "tutor_say",
+   "text": "Taking away a negative means you're removing a debt, so it's like gaining. Try 5 - (-4) and see what happens.",
+   "why": "reply"
+  },
+  {
+   "event": "jev",
+   "on": "utterance",
+   "said": "Oh, so if someone takes away 4 pounds I owe, I'm 4 better off. That makes sense. So x is negative 1, thanks.",
+   "respond": 0.31,
+   "about": "subject",
+   "about_conf": 0.85,
+   "followup": 0.9,
+   "needs_page": 0.15,
+   "new_problem": 0.05,
+   "which_problem": null,
+   "which_conf": 0.0,
+   "latency_ms": 769
+  },
+  {
+   "event": "student_said",
+   "text": "Oh, so if someone takes away 4 pounds I owe, I'm 4 better off. That makes sense. So x is negative 1, thanks."
+  },
+  {
+   "event": "tutor_say",
+   "text": "Good question. One moment.",
+   "why": "ack"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": "talk",
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": [
+    1200,
+    519
+   ],
+   "page": "work",
+   "about": "subject",
+   "focus": "Solve: 5 - (2x - 4) = 11",
+   "problem": null,
+   "subject": null,
+   "topic": null,
+   "other_problems": [],
+   "given": null,
+   "steps": [],
+   "first_error": null,
+   "error_kind": null,
+   "finished": false,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "You're right about the idea, but the final answer is wrong. Try solving 1 - 2x = 11 again."
+  },
+  {
+   "event": "tutor_about",
+   "about": "subject"
+  },
+  {
+   "event": "tutor_say",
+   "text": "You're right about the idea, but the final answer is wrong. Try solving 1 - 2x = 11 again.",
+   "why": "reply"
+  }
+ ],
+ "tutor": {
+  "conversation": [
+   {
+    "who": "sensei",
+    "text": "Hi, I'm Sensei. Put your page under the camera and start solving. I'm watching.",
+    "t": 0.0
+   },
+   {
+    "who": "sensei",
+    "text": "What happens to each term inside the brackets when you subtract them?",
+    "t": 8.0
+   },
+   {
+    "who": "student",
+    "text": "Oh, they both change sign? So it's 5 minus 2x plus 4, not minus 4.",
+    "t": 23.0
+   },
+   {
+    "who": "sensei",
+    "text": "Yes, when you subtract a bracket, both terms inside change sign. Write that corrected line and keep going.",
+    "t": 23.0
+   },
+   {
+    "who": "student",
+    "text": "Okay, so 9 minus 2x is 11, x is negative 1. But why does minus a minus 4 become plus 4?",
+    "t": 38.0
+   },
+   {
+    "who": "sensei",
+    "text": "When you subtract a negative, it's like adding. So minus negative 4 becomes plus 4. Try it with 5 - (-4).",
+    "t": 38.0
+   },
+   {
+    "who": "student",
+    "text": "I know that's the rule, 5 minus negative 4 is 9. But why is taking away a negative the same as adding?",
+    "t": 53.0
+   },
+   {
+    "who": "sensei",
+    "text": "Because subtracting a negative is like adding a positive. Try 5 - (-4) and see what you get.",
+    "t": 53.0
+   },
+   {
+    "who": "student",
+    "text": "You just said the same thing again. I get 9, but I want to know why it works.",
+    "t": 68.0
+   },
+   {
+    "who": "sensei",
+    "text": "Let's try a simpler case: 5 - (-4). What do you get?",
+    "t": 68.0
+   },
+   {
+    "who": "student",
+    "text": "9. I already said 9. Why though, like what does taking away a negative actually mean?",
+    "t": 83.0
+   },
+   {
+    "who": "sensei",
+    "text": "Taking away a negative means you're removing a debt, so it's like gaining. Try 5 - (-4) and see what happens.",
+    "t": 83.0
+   },
+   {
+    "who": "student",
+    "text": "Oh, so if someone takes away 4 pounds I owe, I'm 4 better off. That makes sense. So x is negative 1, thanks.",
+    "t": 98.0
+   },
+   {
+    "who": "sensei",
+    "text": "You're right about the idea, but the final answer is wrong. Try solving 1 - 2x = 11 again.",
+    "t": 98.0
+   }
+  ],
+  "problem": "Solve: 5 - (2x - 4) = 11",
+  "subject": "math",
+  "topic": "linear equations",
+  "mistake": null,
+  "candidate_mistake": null,
+  "hint_level": 0,
+  "hints_on_mistake": 0,
+  "hints_given": 1,
+  "mistakes_found": [
+   "step 1: 5 - 2x - 4 = 11 (distribution)"
+  ],
+  "mistakes_fixed": [
+   "step 1 (said aloud)"
+  ],
+  "last_said": "You're right about the idea, but the final answer is wrong. Try solving 1 - 2x = 11 again.",
+  "last_why": "reply",
+  "last_spoke_at": 1098.0,
+  "last_seen": "student work",
+  "other_problems": [],
+  "steps_confirmed": 0,
+  "_finished_problem": null,
+  "let_go": [
+   [
+    1,
+    "5-2x-4=11"
+   ]
+  ],
+  "started_at": 1000.0,
+  "ends_at": 1900.0,
+  "phase": "watching",
+  "_rechecks": 0,
+  "last_focus_change": -1000000000.0,
+  "last_activity": 1098.0,
+  "_heard_count": 6,
+  "answer_key": {
+   "problem": "Solve: 5 - (2x - 4) = 11",
+   "mistake": [
+    1,
+    "5-2x-4=11"
+   ],
+   "wrong_line": "5 - 2x - 4 = 11",
+   "correct_line": "5 - 2x + 4 = 11",
+   "answer": "-1",
+   "check": "Substitute x = -1 into the original equation: 5 - (2(-1) - 4) = 5 - (-2 - 4) = 5 - (-6) = 5 + 6 = 11, which matches the right-hand side."
+  }
+ }
+}

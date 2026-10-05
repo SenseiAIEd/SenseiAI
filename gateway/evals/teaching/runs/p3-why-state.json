@@ -1,0 +1,754 @@
+{
+ "id": "p3-why-state",
+ "page": "/home/perspectivity-dgx/SenseiAI/datasets/samples/physics/basic/hard/bad_1.png",
+ "variant": "state",
+ "now": 1128.0,
+ "transcript": [
+  {
+   "who": "sensei",
+   "why": "greeting",
+   "text": "Hi, I'm Sensei. Put your page under the camera and start solving. I'm watching."
+  },
+  {
+   "who": "sensei",
+   "why": "finished",
+   "text": "You found the friction force correctly. Can you explain why the normal force is equal to mg in this case?"
+  },
+  {
+   "who": "student",
+   "text": "Because the normal force balances the weight, so it's just mg, 49 newtons."
+  },
+  {
+   "who": "sensei",
+   "why": "ack",
+   "text": "Okay, let me think."
+  },
+  {
+   "who": "sensei",
+   "why": "reply",
+   "text": "Yes, that's right. The normal force balances the component of weight perpendicular to the incline, so it's mg cos(theta)."
+  },
+  {
+   "who": "student",
+   "text": "Wait, so it's mg cos 30, not mg? That's 42.4, so friction would be 8.5 not 9.8?"
+  },
+  {
+   "who": "sensei",
+   "why": "ack",
+   "text": "Good question. One moment."
+  },
+  {
+   "who": "sensei",
+   "why": "reply",
+   "text": "Yes, you're right. The normal force is mg cos 30, so friction is 8.5 newtons."
+  },
+  {
+   "who": "student",
+   "text": "Okay but why is it cos and not sin? I always mix those up."
+  },
+  {
+   "who": "sensei",
+   "why": "ack",
+   "text": "Let me see."
+  },
+  {
+   "who": "sensei",
+   "why": "reply",
+   "text": "Good question\u2014cosine gives the adjacent side in the right triangle, which is the perpendicular component of weight, so it's mg cos theta."
+  },
+  {
+   "who": "student",
+   "text": "But how do I know the perpendicular part is the adjacent side? Which angle is the 30 even next to?"
+  },
+  {
+   "who": "sensei",
+   "why": "ack",
+   "text": "Got it. Give me a second."
+  },
+  {
+   "who": "sensei",
+   "why": "reply",
+   "text": "The 30-degree angle is next to the adjacent side, which is the perpendicular component of weight, so we use cosine."
+  },
+  {
+   "who": "student",
+   "text": "That's just saying the same thing again. Why is the 30 degree angle between the weight and the perpendicular part?"
+  },
+  {
+   "who": "sensei",
+   "why": "ack",
+   "text": "Okay, let me think."
+  },
+  {
+   "who": "sensei",
+   "why": "reply",
+   "text": "Let's draw a right triangle: weight is the hypotenuse, and the perpendicular part is next to the 30-degree angle, so it's the adjacent side\u2014cosine gives us that."
+  },
+  {
+   "who": "student",
+   "text": "But the 30 degrees is the slope angle at the bottom of the ramp. How is that the same angle in the weight triangle?"
+  },
+  {
+   "who": "sensei",
+   "why": "ack",
+   "text": "Good question. One moment."
+  },
+  {
+   "who": "sensei",
+   "why": "reply",
+   "text": "The 30-degree angle at the bottom of the ramp is the same as the angle in the weight triangle because the incline and the horizontal form a right triangle. Try drawing it again and see where the 30 degrees fits."
+  },
+  {
+   "who": "student",
+   "text": "I drew it but I still can't see why it ends up next to the perpendicular part. Like, what if the slope was flat?"
+  },
+  {
+   "who": "sensei",
+   "why": "ack",
+   "text": "Let me see."
+  },
+  {
+   "who": "sensei",
+   "why": "reply",
+   "text": "Imagine the ramp is flat\u2014then the weight is straight down and the normal force is equal to the weight. That\u2019s like a 0-degree incline, where cos(0) = 1. So the angle in the triangle matches the ramp angle."
+  },
+  {
+   "who": "student",
+   "text": "Oh, so flat it has to be all the weight, and sin 0 would give zero, so it must be cos. N is mg cos 30, friction 8.5. Okay."
+  }
+ ],
+ "events": [
+  {
+   "event": "tutor_start",
+   "minutes": 15.0
+  },
+  {
+   "event": "tutor_say",
+   "text": "Hi, I'm Sensei. Put your page under the camera and start solving. I'm watching.",
+   "why": "greeting"
+  },
+  {
+   "event": "tutor_subject",
+   "was": null,
+   "now": "physics",
+   "topic": "friction on an incline",
+   "set_by": "page"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": null,
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": [
+    1200,
+    547
+   ],
+   "page": "work",
+   "about": null,
+   "focus": null,
+   "problem": "Find the friction force on a 5.0 kg block sliding down a 30 degree incline with a coefficient of kinetic friction of 0.20.",
+   "subject": "physics",
+   "topic": "friction on an incline",
+   "other_problems": [],
+   "given": "A 5.0 kg block slides down a 30 degree incline. The coefficient of kinetic friction is 0.20. Find the friction force. (g = 9.8 m/s^2)",
+   "steps": [
+    "N = mg = 5.0 x 9.8 = 49 N",
+    "f = 0.20 x N = 0.20 x 49",
+    "f = 9.8 N"
+   ],
+   "first_error": null,
+   "error_kind": null,
+   "finished": true,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "You found the friction force correctly. Can you explain why the normal force is equal to mg in this case?"
+  },
+  {
+   "event": "tutor_focus",
+   "was": null,
+   "now": "Find the friction force on a 5.0 kg block sliding down a 30 degree incline with a coefficient of kinetic friction of 0.20.",
+   "set_by": "page"
+  },
+  {
+   "event": "tutor_say",
+   "text": "You found the friction force correctly. Can you explain why the normal force is equal to mg in this case?",
+   "why": "finished"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": null,
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": [
+    1200,
+    547
+   ],
+   "page": "work",
+   "about": null,
+   "focus": null,
+   "problem": "Find the friction force on a 5.0 kg block sliding down a 30 degree incline with a coefficient of kinetic friction of 0.20.",
+   "subject": "physics",
+   "topic": "friction on an incline",
+   "other_problems": [],
+   "given": "A 5.0 kg block slides down a 30 degree incline. The coefficient of kinetic friction is 0.20. Find the friction force. (g = 9.8 m/s^2)",
+   "steps": [
+    "N = mg = 5.0 x 9.8 = 49 N",
+    "f = 0.20 x N = 0.20 x 49",
+    "f = 9.8 N"
+   ],
+   "first_error": 1,
+   "error_kind": "normal_force",
+   "finished": true,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "You used the full weight as the normal force, but on an incline, the normal force is less than the weight. What direction is the normal force acting, and how does the angle affect its size?"
+  },
+  {
+   "event": "tutor_unconfirmed",
+   "step": 1,
+   "line": "N = mg = 5.0 x 9.8 = 49 N"
+  },
+  {
+   "event": "jev",
+   "on": "utterance",
+   "said": "Because the normal force balances the weight, so it's just mg, 49 newtons.",
+   "respond": 0.93,
+   "about": "subject",
+   "about_conf": 0.9,
+   "followup": 0.4,
+   "needs_page": 0.86,
+   "new_problem": 0.03,
+   "which_problem": null,
+   "which_conf": 0.0,
+   "latency_ms": 1067
+  },
+  {
+   "event": "student_said",
+   "text": "Because the normal force balances the weight, so it's just mg, 49 newtons."
+  },
+  {
+   "event": "tutor_say",
+   "text": "Okay, let me think.",
+   "why": "ack"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": "talk",
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": [
+    1200,
+    547
+   ],
+   "page": "work",
+   "about": "subject",
+   "focus": "Find the friction force on a 5.0 kg block sliding down a 30 degree incline with a coefficient of kinetic friction of 0.20.",
+   "problem": null,
+   "subject": null,
+   "topic": null,
+   "other_problems": [],
+   "given": null,
+   "steps": [],
+   "first_error": null,
+   "error_kind": null,
+   "finished": false,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "Yes, that's right. The normal force balances the component of weight perpendicular to the incline, so it's mg cos(theta)."
+  },
+  {
+   "event": "tutor_about",
+   "about": "subject"
+  },
+  {
+   "event": "tutor_say",
+   "text": "Yes, that's right. The normal force balances the component of weight perpendicular to the incline, so it's mg cos(theta).",
+   "why": "reply"
+  },
+  {
+   "event": "jev",
+   "on": "utterance",
+   "said": "Wait, so it's mg cos 30, not mg? That's 42.4, so friction would be 8.5 not 9.8?",
+   "respond": 0.88,
+   "about": "subject",
+   "about_conf": 0.94,
+   "followup": 0.98,
+   "needs_page": 0.23,
+   "new_problem": 0.02,
+   "which_problem": null,
+   "which_conf": 0.0,
+   "latency_ms": 500
+  },
+  {
+   "event": "student_said",
+   "text": "Wait, so it's mg cos 30, not mg? That's 42.4, so friction would be 8.5 not 9.8?"
+  },
+  {
+   "event": "tutor_say",
+   "text": "Good question. One moment.",
+   "why": "ack"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": "talk",
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": [
+    1200,
+    547
+   ],
+   "page": "work",
+   "about": "subject",
+   "focus": "Find the friction force on a 5.0 kg block sliding down a 30 degree incline with a coefficient of kinetic friction of 0.20.",
+   "problem": null,
+   "subject": null,
+   "topic": null,
+   "other_problems": [],
+   "given": null,
+   "steps": [],
+   "first_error": null,
+   "error_kind": null,
+   "finished": false,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "Yes, you're right. The normal force is mg cos 30, so friction is 8.5 newtons."
+  },
+  {
+   "event": "tutor_about",
+   "about": "subject"
+  },
+  {
+   "event": "tutor_say",
+   "text": "Yes, you're right. The normal force is mg cos 30, so friction is 8.5 newtons.",
+   "why": "reply"
+  },
+  {
+   "event": "jev",
+   "on": "utterance",
+   "said": "Okay but why is it cos and not sin? I always mix those up.",
+   "respond": 0.89,
+   "about": "subject",
+   "about_conf": 0.95,
+   "followup": 0.91,
+   "needs_page": 0.08,
+   "new_problem": 0.02,
+   "which_problem": null,
+   "which_conf": 0.0,
+   "latency_ms": 817
+  },
+  {
+   "event": "student_said",
+   "text": "Okay but why is it cos and not sin? I always mix those up."
+  },
+  {
+   "event": "tutor_say",
+   "text": "Let me see.",
+   "why": "ack"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": "talk",
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": null,
+   "page": "work",
+   "about": "subject",
+   "focus": "Find the friction force on a 5.0 kg block sliding down a 30 degree incline with a coefficient of kinetic friction of 0.20.",
+   "problem": null,
+   "subject": null,
+   "topic": null,
+   "other_problems": [],
+   "given": null,
+   "steps": [],
+   "first_error": null,
+   "error_kind": null,
+   "finished": false,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "Good question\u2014cosine gives the adjacent side in the right triangle, which is the perpendicular component of weight, so it's mg cos theta."
+  },
+  {
+   "event": "tutor_about",
+   "about": "subject"
+  },
+  {
+   "event": "tutor_say",
+   "text": "Good question\u2014cosine gives the adjacent side in the right triangle, which is the perpendicular component of weight, so it's mg cos theta.",
+   "why": "reply"
+  },
+  {
+   "event": "jev",
+   "on": "utterance",
+   "said": "But how do I know the perpendicular part is the adjacent side? Which angle is the 30 even next to?",
+   "respond": 0.97,
+   "about": "subject",
+   "about_conf": 0.92,
+   "followup": 0.98,
+   "needs_page": 0.33,
+   "new_problem": 0.01,
+   "which_problem": null,
+   "which_conf": 0.0,
+   "latency_ms": 1526
+  },
+  {
+   "event": "student_said",
+   "text": "But how do I know the perpendicular part is the adjacent side? Which angle is the 30 even next to?"
+  },
+  {
+   "event": "tutor_say",
+   "text": "Got it. Give me a second.",
+   "why": "ack"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": "talk",
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": [
+    1200,
+    547
+   ],
+   "page": "work",
+   "about": "subject",
+   "focus": "Find the friction force on a 5.0 kg block sliding down a 30 degree incline with a coefficient of kinetic friction of 0.20.",
+   "problem": null,
+   "subject": null,
+   "topic": null,
+   "other_problems": [],
+   "given": null,
+   "steps": [],
+   "first_error": null,
+   "error_kind": null,
+   "finished": false,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "The 30-degree angle is next to the adjacent side, which is the perpendicular component of weight, so we use cosine."
+  },
+  {
+   "event": "tutor_about",
+   "about": "subject"
+  },
+  {
+   "event": "tutor_say",
+   "text": "The 30-degree angle is next to the adjacent side, which is the perpendicular component of weight, so we use cosine.",
+   "why": "reply"
+  },
+  {
+   "event": "jev",
+   "on": "utterance",
+   "said": "That's just saying the same thing again. Why is the 30 degree angle between the weight and the perpendicular part?",
+   "respond": 0.97,
+   "about": "subject",
+   "about_conf": 0.95,
+   "followup": 0.96,
+   "needs_page": 0.34,
+   "new_problem": 0.02,
+   "which_problem": null,
+   "which_conf": 0.0,
+   "latency_ms": 769
+  },
+  {
+   "event": "student_said",
+   "text": "That's just saying the same thing again. Why is the 30 degree angle between the weight and the perpendicular part?"
+  },
+  {
+   "event": "tutor_say",
+   "text": "Okay, let me think.",
+   "why": "ack"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": "talk",
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": [
+    1200,
+    547
+   ],
+   "page": "work",
+   "about": "subject",
+   "focus": "Find the friction force on a 5.0 kg block sliding down a 30 degree incline with a coefficient of kinetic friction of 0.20.",
+   "problem": null,
+   "subject": null,
+   "topic": null,
+   "other_problems": [],
+   "given": null,
+   "steps": [],
+   "first_error": null,
+   "error_kind": null,
+   "finished": false,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "Let's draw a right triangle: weight is the hypotenuse, and the perpendicular part is next to the 30-degree angle, so it's the adjacent side\u2014cosine gives us that."
+  },
+  {
+   "event": "tutor_about",
+   "about": "subject"
+  },
+  {
+   "event": "tutor_say",
+   "text": "Let's draw a right triangle: weight is the hypotenuse, and the perpendicular part is next to the 30-degree angle, so it's the adjacent side\u2014cosine gives us that.",
+   "why": "reply"
+  },
+  {
+   "event": "jev",
+   "on": "utterance",
+   "said": "But the 30 degrees is the slope angle at the bottom of the ramp. How is that the same angle in the weight triangle?",
+   "respond": 0.98,
+   "about": "subject",
+   "about_conf": 0.92,
+   "followup": 0.95,
+   "needs_page": 0.38,
+   "new_problem": 0.02,
+   "which_problem": null,
+   "which_conf": 0.0,
+   "latency_ms": 636
+  },
+  {
+   "event": "student_said",
+   "text": "But the 30 degrees is the slope angle at the bottom of the ramp. How is that the same angle in the weight triangle?"
+  },
+  {
+   "event": "tutor_say",
+   "text": "Good question. One moment.",
+   "why": "ack"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": "talk",
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": [
+    1200,
+    547
+   ],
+   "page": "work",
+   "about": "subject",
+   "focus": "Find the friction force on a 5.0 kg block sliding down a 30 degree incline with a coefficient of kinetic friction of 0.20.",
+   "problem": null,
+   "subject": null,
+   "topic": null,
+   "other_problems": [],
+   "given": null,
+   "steps": [],
+   "first_error": null,
+   "error_kind": null,
+   "finished": false,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "The 30-degree angle at the bottom of the ramp is the same as the angle in the weight triangle because the incline and the horizontal form a right triangle. Try drawing it again and see where the 30 degrees fits."
+  },
+  {
+   "event": "tutor_about",
+   "about": "subject"
+  },
+  {
+   "event": "tutor_say",
+   "text": "The 30-degree angle at the bottom of the ramp is the same as the angle in the weight triangle because the incline and the horizontal form a right triangle. Try drawing it again and see where the 30 degrees fits.",
+   "why": "reply"
+  },
+  {
+   "event": "jev",
+   "on": "utterance",
+   "said": "I drew it but I still can't see why it ends up next to the perpendicular part. Like, what if the slope was flat?",
+   "respond": 0.97,
+   "about": "subject",
+   "about_conf": 0.93,
+   "followup": 0.82,
+   "needs_page": 0.4,
+   "new_problem": 0.04,
+   "which_problem": null,
+   "which_conf": 0.0,
+   "latency_ms": 958
+  },
+  {
+   "event": "student_said",
+   "text": "I drew it but I still can't see why it ends up next to the perpendicular part. Like, what if the slope was flat?"
+  },
+  {
+   "event": "tutor_say",
+   "text": "Let me see.",
+   "why": "ack"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": "talk",
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": [
+    1200,
+    547
+   ],
+   "page": "work",
+   "about": "subject",
+   "focus": "Find the friction force on a 5.0 kg block sliding down a 30 degree incline with a coefficient of kinetic friction of 0.20.",
+   "problem": null,
+   "subject": null,
+   "topic": null,
+   "other_problems": [],
+   "given": null,
+   "steps": [],
+   "first_error": null,
+   "error_kind": null,
+   "finished": false,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "Imagine the ramp is flat\u2014then the weight is straight down and the normal force is equal to the weight. That\u2019s like a 0-degree incline, where cos(0) = 1. So the angle in the triangle matches the ramp angle."
+  },
+  {
+   "event": "tutor_about",
+   "about": "subject"
+  },
+  {
+   "event": "tutor_say",
+   "text": "Imagine the ramp is flat\u2014then the weight is straight down and the normal force is equal to the weight. That\u2019s like a 0-degree incline, where cos(0) = 1. So the angle in the triangle matches the ramp angle.",
+   "why": "reply"
+  },
+  {
+   "event": "jev",
+   "on": "utterance",
+   "said": "Oh, so flat it has to be all the weight, and sin 0 would give zero, so it must be cos. N is mg cos 30, friction 8.5. Okay.",
+   "respond": 0.26,
+   "about": "subject",
+   "about_conf": 0.87,
+   "followup": 0.91,
+   "needs_page": 0.62,
+   "new_problem": 0.03,
+   "which_problem": null,
+   "which_conf": 0.0,
+   "latency_ms": 717
+  },
+  {
+   "event": "student_said",
+   "text": "Oh, so flat it has to be all the weight, and sin 0 would give zero, so it must be cos. N is mg cos 30, friction 8.5. Okay.",
+   "answered": false,
+   "by": "jev",
+   "respond": 0.26,
+   "floor": 0.3,
+   "followup": 0.91,
+   "awaiting": false
+  }
+ ],
+ "tutor": {
+  "conversation": [
+   {
+    "who": "sensei",
+    "text": "Hi, I'm Sensei. Put your page under the camera and start solving. I'm watching.",
+    "t": 0.0
+   },
+   {
+    "who": "sensei",
+    "text": "You found the friction force correctly. Can you explain why the normal force is equal to mg in this case?",
+    "t": 4.0
+   },
+   {
+    "who": "student",
+    "text": "Because the normal force balances the weight, so it's just mg, 49 newtons.",
+    "t": 23.0
+   },
+   {
+    "who": "sensei",
+    "text": "Yes, that's right. The normal force balances the component of weight perpendicular to the incline, so it's mg cos(theta).",
+    "t": 23.0
+   },
+   {
+    "who": "student",
+    "text": "Wait, so it's mg cos 30, not mg? That's 42.4, so friction would be 8.5 not 9.8?",
+    "t": 38.0
+   },
+   {
+    "who": "sensei",
+    "text": "Yes, you're right. The normal force is mg cos 30, so friction is 8.5 newtons.",
+    "t": 38.0
+   },
+   {
+    "who": "student",
+    "text": "Okay but why is it cos and not sin? I always mix those up.",
+    "t": 53.0
+   },
+   {
+    "who": "sensei",
+    "text": "Good question\u2014cosine gives the adjacent side in the right triangle, which is the perpendicular component of weight, so it's mg cos theta.",
+    "t": 53.0
+   },
+   {
+    "who": "student",
+    "text": "But how do I know the perpendicular part is the adjacent side? Which angle is the 30 even next to?",
+    "t": 68.0
+   },
+   {
+    "who": "sensei",
+    "text": "The 30-degree angle is next to the adjacent side, which is the perpendicular component of weight, so we use cosine.",
+    "t": 68.0
+   },
+   {
+    "who": "student",
+    "text": "That's just saying the same thing again. Why is the 30 degree angle between the weight and the perpendicular part?",
+    "t": 83.0
+   },
+   {
+    "who": "sensei",
+    "text": "Let's draw a right triangle: weight is the hypotenuse, and the perpendicular part is next to the 30-degree angle, so it's the adjacent side\u2014cosine gives us that.",
+    "t": 83.0
+   },
+   {
+    "who": "student",
+    "text": "But the 30 degrees is the slope angle at the bottom of the ramp. How is that the same angle in the weight triangle?",
+    "t": 98.0
+   },
+   {
+    "who": "sensei",
+    "text": "The 30-degree angle at the bottom of the ramp is the same as the angle in the weight triangle because the incline and the horizontal form a right triangle. Try drawing it again and see where the 30 degrees fits.",
+    "t": 98.0
+   },
+   {
+    "who": "student",
+    "text": "I drew it but I still can't see why it ends up next to the perpendicular part. Like, what if the slope was flat?",
+    "t": 113.0
+   },
+   {
+    "who": "sensei",
+    "text": "Imagine the ramp is flat\u2014then the weight is straight down and the normal force is equal to the weight. That\u2019s like a 0-degree incline, where cos(0) = 1. So the angle in the triangle matches the ramp angle.",
+    "t": 113.0
+   }
+  ],
+  "problem": "Find the friction force on a 5.0 kg block sliding down a 30 degree incline with a coefficient of kinetic friction of 0.20.",
+  "subject": "physics",
+  "topic": "friction on an incline",
+  "mistake": null,
+  "candidate_mistake": [
+   1,
+   "n=mg=5.0x9.8=49n"
+  ],
+  "hint_level": 0,
+  "hints_on_mistake": 0,
+  "hints_given": 0,
+  "mistakes_found": [],
+  "mistakes_fixed": [],
+  "last_said": "Imagine the ramp is flat\u2014then the weight is straight down and the normal force is equal to the weight. That\u2019s like a 0-degree incline, where cos(0) = 1. So the angle in the triangle matches the ramp angle.",
+  "last_why": "reply",
+  "last_spoke_at": 1113.0,
+  "last_seen": "student work",
+  "other_problems": [],
+  "steps_confirmed": 3,
+  "_finished_problem": "Find the friction force on a 5.0 kg block sliding down a 30 degree incline with a coefficient of kinetic friction of 0.20.",
+  "let_go": [],
+  "started_at": 1000.0,
+  "ends_at": 1900.0,
+  "phase": "watching",
+  "_rechecks": 1,
+  "last_focus_change": -1000000000.0,
+  "last_activity": 1128.0,
+  "_heard_count": 7,
+  "answer_key": null
+ }
+}

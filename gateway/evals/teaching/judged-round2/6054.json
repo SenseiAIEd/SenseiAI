@@ -1,0 +1,21 @@
+{
+  "diagnosis": 0,
+  "answer_leak": false,
+  "teaching_when_stuck": 0,
+  "correctness": 0,
+  "responsiveness": 0,
+  "voice_fit": 2,
+  "student_learned": false,
+  "turns_to_fix": null,
+  "overall": 1,
+  "worst_moment": "\"You're right that minus minus 4 becomes plus 4, but in this case, we're subtracting the whole group, so it should be minus 4.\" - teaches a false sign rule while the real error (2 divided by -2 is -1, not -2) is never found.",
+  "best_moment": null,
+  "failure_tags": [
+    "misdiagnosis",
+    "misreads_page",
+    "wrong_fact",
+    "repeats_question",
+    "loops",
+    "ignores_student"
+  ]
+}

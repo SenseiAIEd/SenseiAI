@@ -1,0 +1,752 @@
+{
+ "id": "m2-wrong-state",
+ "page": "/home/perspectivity-dgx/SenseiAI/datasets/samples/math/basic/medium/bad_1.png",
+ "variant": "state",
+ "now": 1113.0,
+ "transcript": [
+  {
+   "who": "sensei",
+   "why": "greeting",
+   "text": "Hi, I'm Sensei. Put your page under the camera and start solving. I'm watching."
+  },
+  {
+   "who": "sensei",
+   "why": "hint_1",
+   "text": "What happens to each term inside the brackets when you square them?"
+  },
+  {
+   "who": "student",
+   "text": "They each get squared. The power distributes, like 2x squared is 4x squared. So x squared plus 9."
+  },
+  {
+   "who": "sensei",
+   "why": "ack",
+   "text": "Okay, let me think."
+  },
+  {
+   "who": "sensei",
+   "why": "reply",
+   "text": "You're close, but when you square (x + 3), you get x squared plus 6x plus 9, not just x squared plus 9."
+  },
+  {
+   "who": "student",
+   "text": "Where would 6x even come from though? Powers distribute, that's the rule we learned."
+  },
+  {
+   "who": "sensei",
+   "why": "ack",
+   "text": "Good question. One moment."
+  },
+  {
+   "who": "sensei",
+   "why": "reply",
+   "text": "Powers don't distribute like that\u2014try squaring (x + 3) with a small example, like (2 + 3)^2."
+  },
+  {
+   "who": "student",
+   "text": "5 squared is 25. And 4 plus 9 is 13. Okay that's not the same. So where's the missing 12?"
+  },
+  {
+   "who": "sensei",
+   "why": "ack",
+   "text": "Let me see."
+  },
+  {
+   "who": "sensei",
+   "why": "reply",
+   "text": "You're right that 5 squared is 25, but the mistake is in the first step\u2014(x + 3)^2 is not x^2 + 9. Try squaring (2 + 3) to see why."
+  },
+  {
+   "who": "student",
+   "text": "I just did that. Fine, it's not x squared plus 9. But why is 2x squared fine and this isn't?"
+  },
+  {
+   "who": "sensei",
+   "why": "ack",
+   "text": "Got it. Give me a second."
+  },
+  {
+   "who": "sensei",
+   "why": "reply",
+   "text": "You're right that (x + 3)^2 isn't x^2 + 9. Try squaring (2 + 3) again: 2^2 is 4, 3^2 is 9, but 5^2 is 25, not 4 + 9. Where does the extra 12 come from?"
+  },
+  {
+   "who": "student",
+   "text": "That's what I asked you. I don't know, 2 times 3 times 2? Is that a thing?"
+  },
+  {
+   "who": "sensei",
+   "why": "ack",
+   "text": "Okay, let me think."
+  },
+  {
+   "who": "sensei",
+   "why": "reply",
+   "text": "That's a good try\u20142 times 3 times 2 is 12, which is the missing piece. But remember, it's 2 times x times 3, not 2 times 3 times 2. Try writing it out."
+  },
+  {
+   "who": "student",
+   "text": "So 2 times x times 3 is 6x. So x squared plus 6x plus 9 equals 25? Still kinda random to me."
+  },
+  {
+   "who": "sensei",
+   "why": "ack",
+   "text": "Good question. One moment."
+  },
+  {
+   "who": "sensei",
+   "why": "reply",
+   "text": "Yes, 2 times x times 3 is 6x, so it's x squared plus 6x plus 9 equals 25. Great job!"
+  },
+  {
+   "who": "student",
+   "text": "Okay so x squared plus 6x minus 16 is 0, x is 2 or negative 8. I guess that works."
+  },
+  {
+   "who": "sensei",
+   "why": "ack",
+   "text": "Let me see."
+  },
+  {
+   "who": "sensei",
+   "why": "reply",
+   "text": "You're on the right track, but let's check the steps again to make sure."
+  }
+ ],
+ "events": [
+  {
+   "event": "tutor_start",
+   "minutes": 15.0
+  },
+  {
+   "event": "tutor_say",
+   "text": "Hi, I'm Sensei. Put your page under the camera and start solving. I'm watching.",
+   "why": "greeting"
+  },
+  {
+   "event": "tutor_subject",
+   "was": null,
+   "now": "math",
+   "topic": "quadratic equations",
+   "set_by": "page"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": null,
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": [
+    1200,
+    445
+   ],
+   "page": "work",
+   "about": null,
+   "focus": null,
+   "problem": "Solve: (x + 3)^2 = 25",
+   "subject": "math",
+   "topic": "quadratic equations",
+   "other_problems": [],
+   "given": "Solve: (x + 3)^2 = 25",
+   "steps": [
+    "x^2 + 9 = 25",
+    "x^2 = 16",
+    "x = 4 or x = -4"
+   ],
+   "first_error": 1,
+   "error_kind": "misapplied_formula",
+   "finished": true,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "What did you do to expand (x + 3)^2?"
+  },
+  {
+   "event": "tutor_focus",
+   "was": null,
+   "now": "Solve: (x + 3)^2 = 25",
+   "set_by": "page"
+  },
+  {
+   "event": "tutor_unconfirmed",
+   "step": 1,
+   "line": "x^2 + 9 = 25"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": null,
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": [
+    1200,
+    445
+   ],
+   "page": "work",
+   "about": null,
+   "focus": null,
+   "problem": "Solve: (x + 3)^2 = 25",
+   "subject": "math",
+   "topic": "quadratic equations",
+   "other_problems": [],
+   "given": "Solve: (x + 3)^2 = 25",
+   "steps": [
+    "x^2 + 9 = 25",
+    "x^2 = 16",
+    "x = 4 or x = -4"
+   ],
+   "first_error": 1,
+   "error_kind": "false_linearity",
+   "finished": true,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "What happens to each term inside the brackets when you square them?"
+  },
+  {
+   "event": "tutor_say",
+   "text": "What happens to each term inside the brackets when you square them?",
+   "why": "hint_1"
+  },
+  {
+   "event": "tutor_answer_key",
+   "problem": "Solve: (x + 3)^2 = 25",
+   "mistake": [
+    1,
+    "x^2+9=25"
+   ],
+   "wrong_line": "x^2 + 9 = 25",
+   "correct_line": "x^2 + 6x + 9 = 25",
+   "answer": "x = 2 or x = -8",
+   "check": "Substitute x = 2 and x = -8 into the original equation to verify both satisfy (x + 3)^2 = 25."
+  },
+  {
+   "event": "jev",
+   "on": "utterance",
+   "said": "They each get squared. The power distributes, like 2x squared is 4x squared. So x squared plus 9.",
+   "respond": 0.93,
+   "about": "subject",
+   "about_conf": 0.87,
+   "followup": 0.7,
+   "needs_page": 0.65,
+   "new_problem": 0.02,
+   "which_problem": null,
+   "which_conf": 0.0,
+   "latency_ms": 861
+  },
+  {
+   "event": "student_said",
+   "text": "They each get squared. The power distributes, like 2x squared is 4x squared. So x squared plus 9."
+  },
+  {
+   "event": "tutor_say",
+   "text": "Okay, let me think.",
+   "why": "ack"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": "talk",
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": [
+    1200,
+    445
+   ],
+   "page": "work",
+   "about": "subject",
+   "focus": "Solve: (x + 3)^2 = 25",
+   "problem": null,
+   "subject": null,
+   "topic": null,
+   "other_problems": [],
+   "given": null,
+   "steps": [],
+   "first_error": null,
+   "error_kind": null,
+   "finished": false,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "You're close, but when you square (x + 3), you get x squared plus 6x plus 9, not just x squared plus 9."
+  },
+  {
+   "event": "tutor_about",
+   "about": "subject"
+  },
+  {
+   "event": "tutor_say",
+   "text": "You're close, but when you square (x + 3), you get x squared plus 6x plus 9, not just x squared plus 9.",
+   "why": "reply"
+  },
+  {
+   "event": "jev",
+   "on": "utterance",
+   "said": "Where would 6x even come from though? Powers distribute, that's the rule we learned.",
+   "respond": 0.95,
+   "about": "subject",
+   "about_conf": 0.95,
+   "followup": 0.98,
+   "needs_page": 0.05,
+   "new_problem": 0.01,
+   "which_problem": null,
+   "which_conf": 0.0,
+   "latency_ms": 1063
+  },
+  {
+   "event": "student_said",
+   "text": "Where would 6x even come from though? Powers distribute, that's the rule we learned."
+  },
+  {
+   "event": "tutor_say",
+   "text": "Good question. One moment.",
+   "why": "ack"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": "talk",
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": null,
+   "page": "work",
+   "about": "subject",
+   "focus": "(x + 3)^2 = 25",
+   "problem": null,
+   "subject": null,
+   "topic": null,
+   "other_problems": [],
+   "given": null,
+   "steps": [],
+   "first_error": null,
+   "error_kind": null,
+   "finished": false,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "Powers don't distribute like that\u2014try squaring (x + 3) with a small example, like (2 + 3)^2."
+  },
+  {
+   "event": "tutor_about",
+   "about": "subject"
+  },
+  {
+   "event": "tutor_say",
+   "text": "Powers don't distribute like that\u2014try squaring (x + 3) with a small example, like (2 + 3)^2.",
+   "why": "reply"
+  },
+  {
+   "event": "jev",
+   "on": "utterance",
+   "said": "5 squared is 25. And 4 plus 9 is 13. Okay that's not the same. So where's the missing 12?",
+   "respond": 0.96,
+   "about": "subject",
+   "about_conf": 0.94,
+   "followup": 0.89,
+   "needs_page": 0.07,
+   "new_problem": 0.04,
+   "which_problem": null,
+   "which_conf": 0.0,
+   "latency_ms": 959
+  },
+  {
+   "event": "student_said",
+   "text": "5 squared is 25. And 4 plus 9 is 13. Okay that's not the same. So where's the missing 12?"
+  },
+  {
+   "event": "tutor_say",
+   "text": "Let me see.",
+   "why": "ack"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": "talk",
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": [
+    1200,
+    445
+   ],
+   "page": "work",
+   "about": "view",
+   "focus": "(x + 3)^2 = 25",
+   "problem": null,
+   "subject": null,
+   "topic": null,
+   "other_problems": [],
+   "given": null,
+   "steps": [],
+   "first_error": null,
+   "error_kind": null,
+   "finished": false,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "You're right that 5 squared is 25, but the mistake is in the first step\u2014(x + 3)^2 is not x^2 + 9. Try squaring (2 + 3) to see why."
+  },
+  {
+   "event": "tutor_about",
+   "about": "view"
+  },
+  {
+   "event": "tutor_say",
+   "text": "You're right that 5 squared is 25, but the mistake is in the first step\u2014(x + 3)^2 is not x^2 + 9. Try squaring (2 + 3) to see why.",
+   "why": "reply"
+  },
+  {
+   "event": "jev",
+   "on": "utterance",
+   "said": "I just did that. Fine, it's not x squared plus 9. But why is 2x squared fine and this isn't?",
+   "respond": 0.96,
+   "about": "subject",
+   "about_conf": 0.94,
+   "followup": 0.82,
+   "needs_page": 0.13,
+   "new_problem": 0.04,
+   "which_problem": null,
+   "which_conf": 0.0,
+   "latency_ms": 779
+  },
+  {
+   "event": "student_said",
+   "text": "I just did that. Fine, it's not x squared plus 9. But why is 2x squared fine and this isn't?"
+  },
+  {
+   "event": "tutor_say",
+   "text": "Got it. Give me a second.",
+   "why": "ack"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": "talk",
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": [
+    1200,
+    445
+   ],
+   "page": "work",
+   "about": "view",
+   "focus": "(x + 3)^2 = 25",
+   "problem": null,
+   "subject": null,
+   "topic": null,
+   "other_problems": [],
+   "given": null,
+   "steps": [],
+   "first_error": null,
+   "error_kind": null,
+   "finished": false,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "You're right that (x + 3)^2 isn't x^2 + 9. Try squaring (2 + 3) again: 2^2 is 4, 3^2 is 9, but 5^2 is 25, not 4 + 9. Where does the extra 12 come from?"
+  },
+  {
+   "event": "tutor_about",
+   "about": "view"
+  },
+  {
+   "event": "tutor_say",
+   "text": "You're right that (x + 3)^2 isn't x^2 + 9. Try squaring (2 + 3) again: 2^2 is 4, 3^2 is 9, but 5^2 is 25, not 4 + 9. Where does the extra 12 come from?",
+   "why": "reply"
+  },
+  {
+   "event": "jev",
+   "on": "utterance",
+   "said": "That's what I asked you. I don't know, 2 times 3 times 2? Is that a thing?",
+   "respond": 0.94,
+   "about": "subject",
+   "about_conf": 0.94,
+   "followup": 0.93,
+   "needs_page": 0.04,
+   "new_problem": 0.01,
+   "which_problem": null,
+   "which_conf": 0.0,
+   "latency_ms": 1234
+  },
+  {
+   "event": "student_said",
+   "text": "That's what I asked you. I don't know, 2 times 3 times 2? Is that a thing?"
+  },
+  {
+   "event": "tutor_say",
+   "text": "Okay, let me think.",
+   "why": "ack"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": "talk",
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": null,
+   "page": "work",
+   "about": "subject",
+   "focus": "(x + 3)^2 = 25",
+   "problem": null,
+   "subject": null,
+   "topic": null,
+   "other_problems": [],
+   "given": null,
+   "steps": [],
+   "first_error": null,
+   "error_kind": null,
+   "finished": false,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "That's a good try\u20142 times 3 times 2 is 12, which is the missing piece. But remember, it's 2 times x times 3, not 2 times 3 times 2. Try writing it out."
+  },
+  {
+   "event": "tutor_about",
+   "about": "subject"
+  },
+  {
+   "event": "tutor_say",
+   "text": "That's a good try\u20142 times 3 times 2 is 12, which is the missing piece. But remember, it's 2 times x times 3, not 2 times 3 times 2. Try writing it out.",
+   "why": "reply"
+  },
+  {
+   "event": "jev",
+   "on": "utterance",
+   "said": "So 2 times x times 3 is 6x. So x squared plus 6x plus 9 equals 25? Still kinda random to me.",
+   "respond": 0.9,
+   "about": "subject",
+   "about_conf": 0.91,
+   "followup": 0.97,
+   "needs_page": 0.09,
+   "new_problem": 0.02,
+   "which_problem": null,
+   "which_conf": 0.0,
+   "latency_ms": 757
+  },
+  {
+   "event": "student_said",
+   "text": "So 2 times x times 3 is 6x. So x squared plus 6x plus 9 equals 25? Still kinda random to me."
+  },
+  {
+   "event": "tutor_say",
+   "text": "Good question. One moment.",
+   "why": "ack"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": "talk",
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": null,
+   "page": "work",
+   "about": "subject",
+   "focus": "(x + 3)^2 = 25",
+   "problem": null,
+   "subject": null,
+   "topic": null,
+   "other_problems": [],
+   "given": null,
+   "steps": [],
+   "first_error": null,
+   "error_kind": null,
+   "finished": false,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "Yes, 2 times x times 3 is 6x, so it's x squared plus 6x plus 9 equals 25. Great job!"
+  },
+  {
+   "event": "tutor_about",
+   "about": "subject"
+  },
+  {
+   "event": "tutor_fixed_by_voice",
+   "step": 1
+  },
+  {
+   "event": "tutor_say",
+   "text": "Yes, 2 times x times 3 is 6x, so it's x squared plus 6x plus 9 equals 25. Great job!",
+   "why": "reply"
+  },
+  {
+   "event": "jev",
+   "on": "utterance",
+   "said": "Okay so x squared plus 6x minus 16 is 0, x is 2 or negative 8. I guess that works.",
+   "respond": 0.58,
+   "about": "subject",
+   "about_conf": 0.86,
+   "followup": 0.89,
+   "needs_page": 0.2,
+   "new_problem": 0.03,
+   "which_problem": null,
+   "which_conf": 0.0,
+   "latency_ms": 1332
+  },
+  {
+   "event": "student_said",
+   "text": "Okay so x squared plus 6x minus 16 is 0, x is 2 or negative 8. I guess that works."
+  },
+  {
+   "event": "tutor_say",
+   "text": "Let me see.",
+   "why": "ack"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": "talk",
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": [
+    1200,
+    445
+   ],
+   "page": "work",
+   "about": "subject",
+   "focus": "Solve: (x + 3)^2 = 25",
+   "problem": null,
+   "subject": null,
+   "topic": null,
+   "other_problems": [],
+   "given": null,
+   "steps": [],
+   "first_error": null,
+   "error_kind": null,
+   "finished": false,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "You're on the right track, but let's check the steps again to make sure."
+  },
+  {
+   "event": "tutor_about",
+   "about": "subject"
+  },
+  {
+   "event": "tutor_say",
+   "text": "You're on the right track, but let's check the steps again to make sure.",
+   "why": "reply"
+  }
+ ],
+ "tutor": {
+  "conversation": [
+   {
+    "who": "sensei",
+    "text": "Hi, I'm Sensei. Put your page under the camera and start solving. I'm watching.",
+    "t": 0.0
+   },
+   {
+    "who": "sensei",
+    "text": "What happens to each term inside the brackets when you square them?",
+    "t": 8.0
+   },
+   {
+    "who": "student",
+    "text": "They each get squared. The power distributes, like 2x squared is 4x squared. So x squared plus 9.",
+    "t": 23.0
+   },
+   {
+    "who": "sensei",
+    "text": "You're close, but when you square (x + 3), you get x squared plus 6x plus 9, not just x squared plus 9.",
+    "t": 23.0
+   },
+   {
+    "who": "student",
+    "text": "Where would 6x even come from though? Powers distribute, that's the rule we learned.",
+    "t": 38.0
+   },
+   {
+    "who": "sensei",
+    "text": "Powers don't distribute like that\u2014try squaring (x + 3) with a small example, like (2 + 3)^2.",
+    "t": 38.0
+   },
+   {
+    "who": "student",
+    "text": "5 squared is 25. And 4 plus 9 is 13. Okay that's not the same. So where's the missing 12?",
+    "t": 53.0
+   },
+   {
+    "who": "sensei",
+    "text": "You're right that 5 squared is 25, but the mistake is in the first step\u2014(x + 3)^2 is not x^2 + 9. Try squaring (2 + 3) to see why.",
+    "t": 53.0
+   },
+   {
+    "who": "student",
+    "text": "I just did that. Fine, it's not x squared plus 9. But why is 2x squared fine and this isn't?",
+    "t": 68.0
+   },
+   {
+    "who": "sensei",
+    "text": "You're right that (x + 3)^2 isn't x^2 + 9. Try squaring (2 + 3) again: 2^2 is 4, 3^2 is 9, but 5^2 is 25, not 4 + 9. Where does the extra 12 come from?",
+    "t": 68.0
+   },
+   {
+    "who": "student",
+    "text": "That's what I asked you. I don't know, 2 times 3 times 2? Is that a thing?",
+    "t": 83.0
+   },
+   {
+    "who": "sensei",
+    "text": "That's a good try\u20142 times 3 times 2 is 12, which is the missing piece. But remember, it's 2 times x times 3, not 2 times 3 times 2. Try writing it out.",
+    "t": 83.0
+   },
+   {
+    "who": "student",
+    "text": "So 2 times x times 3 is 6x. So x squared plus 6x plus 9 equals 25? Still kinda random to me.",
+    "t": 98.0
+   },
+   {
+    "who": "sensei",
+    "text": "Yes, 2 times x times 3 is 6x, so it's x squared plus 6x plus 9 equals 25. Great job!",
+    "t": 98.0
+   },
+   {
+    "who": "student",
+    "text": "Okay so x squared plus 6x minus 16 is 0, x is 2 or negative 8. I guess that works.",
+    "t": 113.0
+   },
+   {
+    "who": "sensei",
+    "text": "You're on the right track, but let's check the steps again to make sure.",
+    "t": 113.0
+   }
+  ],
+  "problem": "Solve: (x + 3)^2 = 25",
+  "subject": "math",
+  "topic": "quadratic equations",
+  "mistake": null,
+  "candidate_mistake": null,
+  "hint_level": 0,
+  "hints_on_mistake": 0,
+  "hints_given": 1,
+  "mistakes_found": [
+   "step 1: x^2 + 9 = 25 (false_linearity)"
+  ],
+  "mistakes_fixed": [
+   "step 1 (said aloud)"
+  ],
+  "last_said": "You're on the right track, but let's check the steps again to make sure.",
+  "last_why": "reply",
+  "last_spoke_at": 1113.0,
+  "last_seen": "student work",
+  "other_problems": [],
+  "steps_confirmed": 0,
+  "_finished_problem": null,
+  "let_go": [
+   [
+    1,
+    "x^2+9=25"
+   ]
+  ],
+  "started_at": 1000.0,
+  "ends_at": 1900.0,
+  "phase": "watching",
+  "_rechecks": 0,
+  "last_focus_change": -1000000000.0,
+  "last_activity": 1113.0,
+  "_heard_count": 7,
+  "answer_key": {
+   "problem": "Solve: (x + 3)^2 = 25",
+   "mistake": [
+    1,
+    "x^2+9=25"
+   ],
+   "wrong_line": "x^2 + 9 = 25",
+   "correct_line": "x^2 + 6x + 9 = 25",
+   "answer": "x = 2 or x = -8",
+   "check": "Substitute x = 2 and x = -8 into the original equation to verify both satisfy (x + 3)^2 = 25."
+  }
+ }
+}

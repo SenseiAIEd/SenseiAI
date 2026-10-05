@@ -64,9 +64,9 @@ def report(name=""):
     for v in by:
         for r in by[v]:
             per[r["persona"]][v] = r["overall"]
-    print("\nper student (current -> teach):")
+    print(f"\nper student ({' -> '.join(sorted(by))}):")
     for pid in sorted(per):
-        print(f"  {pid:12} {per[pid].get('current', '-')} -> {per[pid].get('teach', '-')}")
+        print(f"  {pid:12} " + " -> ".join(str(per[pid].get(v, '-')) for v in sorted(by)))
 
 
 if __name__ == "__main__":

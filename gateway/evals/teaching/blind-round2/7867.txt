@@ -1,0 +1,20 @@
+PROBLEM: Differentiate y = sin(3x^2), find dy/dx at x = 1
+THE REAL MISTAKE ON THE PAGE: Line 1 wrote dy/dx = cos(3x^2): the chain rule's inner derivative 6x is missing. Correct dy/dx = 6x cos(3x^2), at x=1 it is 6 cos 3 = -5.94.
+STUDENT PERSONA: wants-why - Remembers the chain rule after a hint; then asks why you multiply by the inside's derivative.
+
+TRANSCRIPT:
+SENSEI: Hi, I'm Sensei. Put your page under the camera and start solving. I'm watching.
+SENSEI: You forgot to multiply by the derivative of the inside function. What happens to the inside function when you differentiate a composite function?
+STUDENT: Oh right, the chain rule. So it's 6x times cos of 3x squared?
+SENSEI: Yes, you got it! The chain rule means you multiply by the derivative of the inside, so it's 6x times cos(3x^2). Now write that down and find the value at x = 1.
+STUDENT: Okay, 6 cos 3 at x equals 1. But why do you multiply by the inside's derivative? Like why does that work?
+SENSEI: Because the inside function changes as x changes, so we multiply by how fast it changes. Try plugging x = 1 into 6x cos(3x^2).
+STUDENT: I did, it's 6 cos 3, like minus 5.94. But why multiply though? Why not add the rates or something?
+SENSEI: Multiplying by the inside's derivative accounts for how fast the inside changes, which affects the overall rate. Try plugging x = 1 into 6x cos(3x^2).
+STUDENT: I already did that, I got minus 5.94. You keep saying that. I just want to know why it's times and not plus.
+SENSEI: Multiplying by the inside's derivative scales the rate correctly, like scaling a speed. Try a simple example: what is the derivative of sin(2x) at x = 0?
+STUDENT: Um, 2 cos 0, so 2? But how does that show why it's multiply?
+SENSEI: You're on the right track with the example, but let's check the derivative of sin(2x) at x = 0. What is the derivative of sin(2x)?
+STUDENT: It's 2 cos 2x. I said that. I still don't get why it's multiply though.
+SENSEI: The derivative of sin(2x) is 2 cos(2x), so you're right. Why multiply by 2? Think: if the inside changes twice as fast, the overall rate should be twice as big.
+STUDENT: Oh, so if the inside goes twice as fast the sin bit gets pushed twice as fast. Okay that makes sense, thanks.

@@ -1,0 +1,17 @@
+{
+  "diagnosis": 2,
+  "answer_leak": false,
+  "teaching_when_stuck": 1,
+  "correctness": 1,
+  "responsiveness": 1,
+  "voice_fit": 2,
+  "student_learned": true,
+  "turns_to_fix": 1,
+  "overall": 6,
+  "worst_moment": "\"Multiplying by the inside's derivative accounts for how fast the inside changes, which affects the overall rate. Try plugging x = 1 into 6x cos(3x^2).\" - ignores that the student had already evaluated it and repeats a non-answer to their why.",
+  "best_moment": "\"The derivative of sin(2x) is 2 cos(2x), so you're right. Why multiply by 2? Think: if the inside changes twice as fast, the overall rate should be twice as big.\" - a concrete scaling intuition that finally answers why it's a product.",
+  "failure_tags": [
+    "repeats_question",
+    "ignores_student"
+  ]
+}

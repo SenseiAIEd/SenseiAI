@@ -1,0 +1,17 @@
+{
+  "diagnosis": 1,
+  "answer_leak": true,
+  "teaching_when_stuck": 1,
+  "correctness": 1,
+  "responsiveness": 2,
+  "voice_fit": 2,
+  "student_learned": true,
+  "turns_to_fix": 4,
+  "overall": 5,
+  "worst_moment": "\"You found the friction force correctly. Can you think of another way to check if this answer makes sense?\" - falsely confirms the wrong answer and delays the diagnosis.",
+  "best_moment": "\"No, the normal force isn't always equal to the weight. On an incline, only part of the weight pushes straight into the surface.\" - directly corrects the misconception with a clear physical picture.",
+  "failure_tags": [
+    "answer_leak",
+    "wrong_fact"
+  ]
+}

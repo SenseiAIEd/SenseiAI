@@ -1,0 +1,835 @@
+{
+ "id": "m4-stuck-state",
+ "page": "/home/perspectivity-dgx/SenseiAI/datasets/samples/math/basic/easy/bad_3.png",
+ "variant": "state",
+ "now": 1128.0,
+ "transcript": [
+  {
+   "who": "sensei",
+   "why": "greeting",
+   "text": "Hi, I'm Sensei. Put your page under the camera and start solving. I'm watching."
+  },
+  {
+   "who": "sensei",
+   "why": "hint_1",
+   "text": "What happens to each term inside the brackets when you subtract them?"
+  },
+  {
+   "who": "student",
+   "text": "Um, they change sign? I wrote 5 minus 2x plus 4. Is that wrong? I don't know."
+  },
+  {
+   "who": "sensei",
+   "why": "ack",
+   "text": "Okay, let me think."
+  },
+  {
+   "who": "sensei",
+   "why": "reply",
+   "text": "You're on the right track thinking about signs, but when you subtract (2x - 4), you need to subtract both terms, so it should be 5 - 2x + 4, not 5 - 2x - 4. Let's fix that first."
+  },
+  {
+   "who": "student",
+   "text": "But I did write plus 4. So that's 9 minus 2x equals 11. I don't get what's wrong."
+  },
+  {
+   "who": "sensei",
+   "why": "ack",
+   "text": "Good question. One moment."
+  },
+  {
+   "who": "sensei",
+   "why": "reply",
+   "text": "You're close, but remember: subtracting (2x - 4) means you subtract 2x and add 4, so it should be 5 - 2x + 4 = 11. Let's fix that first."
+  },
+  {
+   "who": "student",
+   "text": "That's literally what I have. Then minus 2x equals 2, so x is minus 2. Where's the mistake?"
+  },
+  {
+   "who": "sensei",
+   "why": "ack",
+   "text": "Let me see."
+  },
+  {
+   "who": "sensei",
+   "why": "reply",
+   "text": "Let's try a simpler example: what is 5 - (4 - 2)? What do you get?"
+  },
+  {
+   "who": "student",
+   "text": "3? I don't know what that has to do with my answer though."
+  },
+  {
+   "who": "sensei",
+   "why": "ack",
+   "text": "Got it. Give me a second."
+  },
+  {
+   "who": "sensei",
+   "why": "reply",
+   "text": "You're on the right track with the signs, but let's check the first step again: what is 5 - (4 - 2)?"
+  },
+  {
+   "who": "student",
+   "text": "I just said 3. Is my first line wrong or not? I'm confused."
+  },
+  {
+   "who": "sensei",
+   "why": "ack",
+   "text": "Okay, let me think."
+  },
+  {
+   "who": "sensei",
+   "why": "reply",
+   "text": "You said 3 for 5 - (4 - 2), but that's not right. Try again: what is 5 - (4 - 2)?"
+  },
+  {
+   "who": "student",
+   "text": "4 minus 2 is 2, 5 minus 2 is 3. It is 3. I don't get it."
+  },
+  {
+   "who": "sensei",
+   "why": "ack",
+   "text": "Good question. One moment."
+  },
+  {
+   "who": "sensei",
+   "why": "reply",
+   "text": "Let's try this again: what is 5 - (4 - 2)? Work it out step by step."
+  },
+  {
+   "who": "student",
+   "text": "You keep asking the same thing. It's 3. Can you just tell me which line is wrong?"
+  },
+  {
+   "who": "sensei",
+   "why": "ack",
+   "text": "Let me see."
+  },
+  {
+   "who": "sensei",
+   "why": "reply",
+   "text": "Let's try 5 - (4 - 2) again: 4 minus 2 is 2, then 5 minus 2 is 3. But that's not right\u2014what's the correct way to handle the minus sign?"
+  },
+  {
+   "who": "student",
+   "text": "I still don't get it. I give up on this one."
+  },
+  {
+   "who": "sensei",
+   "why": "ack",
+   "text": "Got it. Give me a second."
+  },
+  {
+   "who": "sensei",
+   "why": "reply",
+   "text": "It's okay to feel stuck. Let's try a simpler example: what is 5 - (4 - 2)?"
+  }
+ ],
+ "events": [
+  {
+   "event": "tutor_start",
+   "minutes": 15.0
+  },
+  {
+   "event": "tutor_say",
+   "text": "Hi, I'm Sensei. Put your page under the camera and start solving. I'm watching.",
+   "why": "greeting"
+  },
+  {
+   "event": "tutor_subject",
+   "was": null,
+   "now": "math",
+   "topic": "linear equations",
+   "set_by": "page"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": null,
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": [
+    1200,
+    593
+   ],
+   "page": "work",
+   "about": null,
+   "focus": null,
+   "problem": "Solve: 5 - (2x - 4) = 11",
+   "subject": "math",
+   "topic": "linear equations",
+   "other_problems": [],
+   "given": "Solve: 5 - (2x - 4) = 11",
+   "steps": [
+    "5 - 2x + 4 = 11",
+    "9 - 2x = 11",
+    "-2x = 11 - 9",
+    "-2x = 2",
+    "x = -2"
+   ],
+   "first_error": 1,
+   "error_kind": "sign_error",
+   "finished": true,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "You distributed the negative sign incorrectly. What did you do when you removed the parentheses?"
+  },
+  {
+   "event": "tutor_focus",
+   "was": null,
+   "now": "Solve: 5 - (2x - 4) = 11",
+   "set_by": "page"
+  },
+  {
+   "event": "tutor_unconfirmed",
+   "step": 1,
+   "line": "5 - 2x + 4 = 11"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": null,
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": [
+    1200,
+    593
+   ],
+   "page": "work",
+   "about": null,
+   "focus": null,
+   "problem": "Solve: 5 - (2x - 4) = 11",
+   "subject": "math",
+   "topic": "linear equations",
+   "other_problems": [],
+   "given": "Solve: 5 - (2x - 4) = 11",
+   "steps": [
+    "5 - 2x + 4 = 11",
+    "9 - 2x = 11",
+    "-2x = 11 - 9",
+    "-2x = 2",
+    "x = -2"
+   ],
+   "first_error": 1,
+   "error_kind": "distribution",
+   "finished": true,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "What happens to each term inside the brackets when you subtract them?"
+  },
+  {
+   "event": "tutor_say",
+   "text": "What happens to each term inside the brackets when you subtract them?",
+   "why": "hint_1"
+  },
+  {
+   "event": "tutor_answer_key",
+   "problem": "Solve: 5 - (2x - 4) = 11",
+   "mistake": [
+    1,
+    "5-2x+4=11"
+   ],
+   "wrong_line": "5 - 2x + 4 = 11",
+   "correct_line": "5 - 2x - 4 = 11",
+   "answer": "-1",
+   "check": "Substitute x = -1 into the original equation to verify both sides are equal."
+  },
+  {
+   "event": "jev",
+   "on": "utterance",
+   "said": "Um, they change sign? I wrote 5 minus 2x plus 4. Is that wrong? I don't know.",
+   "respond": 0.95,
+   "about": "subject",
+   "about_conf": 0.75,
+   "followup": 0.89,
+   "needs_page": 0.37,
+   "new_problem": 0.01,
+   "which_problem": null,
+   "which_conf": 0.0,
+   "latency_ms": 772
+  },
+  {
+   "event": "student_said",
+   "text": "Um, they change sign? I wrote 5 minus 2x plus 4. Is that wrong? I don't know."
+  },
+  {
+   "event": "tutor_say",
+   "text": "Okay, let me think.",
+   "why": "ack"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": "talk",
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": [
+    1200,
+    593
+   ],
+   "page": "work",
+   "about": "subject",
+   "focus": "Solve: 5 - (2x - 4) = 11",
+   "problem": null,
+   "subject": null,
+   "topic": null,
+   "other_problems": [],
+   "given": null,
+   "steps": [],
+   "first_error": null,
+   "error_kind": null,
+   "finished": false,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "You're on the right track thinking about signs, but when you subtract (2x - 4), you need to subtract both terms, so it should be 5 - 2x + 4, not 5 - 2x - 4. Let's fix that first."
+  },
+  {
+   "event": "tutor_about",
+   "about": "subject"
+  },
+  {
+   "event": "tutor_say",
+   "text": "You're on the right track thinking about signs, but when you subtract (2x - 4), you need to subtract both terms, so it should be 5 - 2x + 4, not 5 - 2x - 4. Let's fix that first.",
+   "why": "reply"
+  },
+  {
+   "event": "jev",
+   "on": "utterance",
+   "said": "But I did write plus 4. So that's 9 minus 2x equals 11. I don't get what's wrong.",
+   "respond": 0.89,
+   "about": "subject",
+   "about_conf": 0.9,
+   "followup": 0.96,
+   "needs_page": 0.11,
+   "new_problem": 0.01,
+   "which_problem": null,
+   "which_conf": 0.0,
+   "latency_ms": 1069
+  },
+  {
+   "event": "student_said",
+   "text": "But I did write plus 4. So that's 9 minus 2x equals 11. I don't get what's wrong."
+  },
+  {
+   "event": "tutor_say",
+   "text": "Good question. One moment.",
+   "why": "ack"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": "talk",
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": null,
+   "page": "work",
+   "about": "subject",
+   "focus": "Solve: 5 - (2x - 4) = 11",
+   "problem": null,
+   "subject": null,
+   "topic": null,
+   "other_problems": [],
+   "given": null,
+   "steps": [],
+   "first_error": null,
+   "error_kind": null,
+   "finished": false,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "You're close, but remember: subtracting (2x - 4) means you subtract 2x and add 4, so it should be 5 - 2x + 4 = 11. Let's fix that first."
+  },
+  {
+   "event": "tutor_about",
+   "about": "subject"
+  },
+  {
+   "event": "tutor_say",
+   "text": "You're close, but remember: subtracting (2x - 4) means you subtract 2x and add 4, so it should be 5 - 2x + 4 = 11. Let's fix that first.",
+   "why": "reply"
+  },
+  {
+   "event": "jev",
+   "on": "utterance",
+   "said": "That's literally what I have. Then minus 2x equals 2, so x is minus 2. Where's the mistake?",
+   "respond": 0.92,
+   "about": "subject",
+   "about_conf": 0.89,
+   "followup": 0.9,
+   "needs_page": 0.44,
+   "new_problem": 0.02,
+   "which_problem": null,
+   "which_conf": 0.0,
+   "latency_ms": 641
+  },
+  {
+   "event": "student_said",
+   "text": "That's literally what I have. Then minus 2x equals 2, so x is minus 2. Where's the mistake?"
+  },
+  {
+   "event": "tutor_say",
+   "text": "Let me see.",
+   "why": "ack"
+  },
+  {
+   "event": "tutor_repeat_retry",
+   "said": "You're close, but the mistake is in the first step. When you subtract (2x - 4), you need to subtract both terms, so it should be 5 - 2x - 4 = 11, not 5 - 2x + 4 = 11. Let's fix that.",
+   "earlier": "You're on the right track thinking about signs, but when you subtract (2x - 4), you need to subtract both terms, so it should be 5 - 2x + 4, not 5 - 2x - 4. Let's fix that first."
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": "talk",
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": [
+    1200,
+    593
+   ],
+   "page": "work",
+   "about": "subject",
+   "focus": "Solve: 5 - (2x - 4) = 11",
+   "problem": null,
+   "subject": null,
+   "topic": null,
+   "other_problems": [],
+   "given": null,
+   "steps": [],
+   "first_error": null,
+   "error_kind": null,
+   "finished": false,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "Let's try a simpler example: what is 5 - (4 - 2)? What do you get?"
+  },
+  {
+   "event": "tutor_about",
+   "about": "subject"
+  },
+  {
+   "event": "tutor_say",
+   "text": "Let's try a simpler example: what is 5 - (4 - 2)? What do you get?",
+   "why": "reply"
+  },
+  {
+   "event": "jev",
+   "on": "utterance",
+   "said": "3? I don't know what that has to do with my answer though.",
+   "respond": 0.92,
+   "about": "subject",
+   "about_conf": 0.89,
+   "followup": 0.97,
+   "needs_page": 0.17,
+   "new_problem": 0.04,
+   "which_problem": null,
+   "which_conf": 0.0,
+   "latency_ms": 637
+  },
+  {
+   "event": "student_said",
+   "text": "3? I don't know what that has to do with my answer though."
+  },
+  {
+   "event": "tutor_say",
+   "text": "Got it. Give me a second.",
+   "why": "ack"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": "talk",
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": [
+    1200,
+    593
+   ],
+   "page": "work",
+   "about": "subject",
+   "focus": "Solve: 5 - (2x - 4) = 11",
+   "problem": null,
+   "subject": null,
+   "topic": null,
+   "other_problems": [],
+   "given": null,
+   "steps": [],
+   "first_error": null,
+   "error_kind": null,
+   "finished": false,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "You're on the right track with the signs, but let's check the first step again: what is 5 - (4 - 2)?"
+  },
+  {
+   "event": "tutor_about",
+   "about": "subject"
+  },
+  {
+   "event": "tutor_say",
+   "text": "You're on the right track with the signs, but let's check the first step again: what is 5 - (4 - 2)?",
+   "why": "reply"
+  },
+  {
+   "event": "jev",
+   "on": "utterance",
+   "said": "I just said 3. Is my first line wrong or not? I'm confused.",
+   "respond": 0.91,
+   "about": "subject",
+   "about_conf": 0.77,
+   "followup": 0.95,
+   "needs_page": 0.16,
+   "new_problem": 0.05,
+   "which_problem": null,
+   "which_conf": 0.0,
+   "latency_ms": 958
+  },
+  {
+   "event": "student_said",
+   "text": "I just said 3. Is my first line wrong or not? I'm confused."
+  },
+  {
+   "event": "tutor_say",
+   "text": "Okay, let me think.",
+   "why": "ack"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": "talk",
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": [
+    1200,
+    593
+   ],
+   "page": "work",
+   "about": "subject",
+   "focus": "Solve: 5 - (2x - 4) = 11",
+   "problem": null,
+   "subject": null,
+   "topic": null,
+   "other_problems": [],
+   "given": null,
+   "steps": [],
+   "first_error": null,
+   "error_kind": null,
+   "finished": false,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "You said 3 for 5 - (4 - 2), but that's not right. Try again: what is 5 - (4 - 2)?"
+  },
+  {
+   "event": "tutor_about",
+   "about": "subject"
+  },
+  {
+   "event": "tutor_say",
+   "text": "You said 3 for 5 - (4 - 2), but that's not right. Try again: what is 5 - (4 - 2)?",
+   "why": "reply"
+  },
+  {
+   "event": "jev",
+   "on": "utterance",
+   "said": "4 minus 2 is 2, 5 minus 2 is 3. It is 3. I don't get it.",
+   "respond": 0.86,
+   "about": "subject",
+   "about_conf": 0.89,
+   "followup": 0.95,
+   "needs_page": 0.14,
+   "new_problem": 0.03,
+   "which_problem": null,
+   "which_conf": 0.0,
+   "latency_ms": 940
+  },
+  {
+   "event": "student_said",
+   "text": "4 minus 2 is 2, 5 minus 2 is 3. It is 3. I don't get it."
+  },
+  {
+   "event": "tutor_say",
+   "text": "Good question. One moment.",
+   "why": "ack"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": "talk",
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": null,
+   "page": "work",
+   "about": "subject",
+   "focus": "Solve: 5 - (2x - 4) = 11",
+   "problem": null,
+   "subject": null,
+   "topic": null,
+   "other_problems": [],
+   "given": null,
+   "steps": [],
+   "first_error": null,
+   "error_kind": null,
+   "finished": false,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "Let's try this again: what is 5 - (4 - 2)? Work it out step by step."
+  },
+  {
+   "event": "tutor_about",
+   "about": "subject"
+  },
+  {
+   "event": "tutor_say",
+   "text": "Let's try this again: what is 5 - (4 - 2)? Work it out step by step.",
+   "why": "reply"
+  },
+  {
+   "event": "jev",
+   "on": "utterance",
+   "said": "You keep asking the same thing. It's 3. Can you just tell me which line is wrong?",
+   "respond": 0.87,
+   "about": "subject",
+   "about_conf": 0.66,
+   "followup": 0.88,
+   "needs_page": 0.13,
+   "new_problem": 0.04,
+   "which_problem": null,
+   "which_conf": 0.0,
+   "latency_ms": 993
+  },
+  {
+   "event": "student_said",
+   "text": "You keep asking the same thing. It's 3. Can you just tell me which line is wrong?"
+  },
+  {
+   "event": "tutor_say",
+   "text": "Let me see.",
+   "why": "ack"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": "talk",
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": null,
+   "page": "work",
+   "about": "subject",
+   "focus": "Solve: 5 - (2x - 4) = 11",
+   "problem": null,
+   "subject": null,
+   "topic": null,
+   "other_problems": [],
+   "given": null,
+   "steps": [],
+   "first_error": null,
+   "error_kind": null,
+   "finished": false,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "Let's try 5 - (4 - 2) again: 4 minus 2 is 2, then 5 minus 2 is 3. But that's not right\u2014what's the correct way to handle the minus sign?"
+  },
+  {
+   "event": "tutor_about",
+   "about": "subject"
+  },
+  {
+   "event": "tutor_say",
+   "text": "Let's try 5 - (4 - 2) again: 4 minus 2 is 2, then 5 minus 2 is 3. But that's not right\u2014what's the correct way to handle the minus sign?",
+   "why": "reply"
+  },
+  {
+   "event": "jev",
+   "on": "utterance",
+   "said": "I still don't get it. I give up on this one.",
+   "respond": 0.84,
+   "about": "subject",
+   "about_conf": 0.5,
+   "followup": 0.93,
+   "needs_page": 0.15,
+   "new_problem": 0.08,
+   "which_problem": null,
+   "which_conf": 0.0,
+   "latency_ms": 1112
+  },
+  {
+   "event": "student_said",
+   "text": "I still don't get it. I give up on this one."
+  },
+  {
+   "event": "tutor_say",
+   "text": "Got it. Give me a second.",
+   "why": "ack"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": "talk",
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": [
+    1200,
+    593
+   ],
+   "page": "work",
+   "about": "social",
+   "focus": null,
+   "problem": null,
+   "subject": null,
+   "topic": null,
+   "other_problems": [],
+   "given": null,
+   "steps": [],
+   "first_error": null,
+   "error_kind": null,
+   "finished": false,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "It's okay to feel stuck. Let's try a simpler example: what is 5 - (4 - 2)?"
+  },
+  {
+   "event": "tutor_about",
+   "about": "social"
+  },
+  {
+   "event": "tutor_say",
+   "text": "It's okay to feel stuck. Let's try a simpler example: what is 5 - (4 - 2)?",
+   "why": "reply"
+  }
+ ],
+ "tutor": {
+  "conversation": [
+   {
+    "who": "sensei",
+    "text": "Hi, I'm Sensei. Put your page under the camera and start solving. I'm watching.",
+    "t": 0.0
+   },
+   {
+    "who": "sensei",
+    "text": "What happens to each term inside the brackets when you subtract them?",
+    "t": 8.0
+   },
+   {
+    "who": "student",
+    "text": "Um, they change sign? I wrote 5 minus 2x plus 4. Is that wrong? I don't know.",
+    "t": 23.0
+   },
+   {
+    "who": "sensei",
+    "text": "You're on the right track thinking about signs, but when you subtract (2x - 4), you need to subtract both terms, so it should be 5 - 2x + 4, not 5 - 2x - 4. Let's fix that first.",
+    "t": 23.0
+   },
+   {
+    "who": "student",
+    "text": "But I did write plus 4. So that's 9 minus 2x equals 11. I don't get what's wrong.",
+    "t": 38.0
+   },
+   {
+    "who": "sensei",
+    "text": "You're close, but remember: subtracting (2x - 4) means you subtract 2x and add 4, so it should be 5 - 2x + 4 = 11. Let's fix that first.",
+    "t": 38.0
+   },
+   {
+    "who": "student",
+    "text": "That's literally what I have. Then minus 2x equals 2, so x is minus 2. Where's the mistake?",
+    "t": 53.0
+   },
+   {
+    "who": "sensei",
+    "text": "Let's try a simpler example: what is 5 - (4 - 2)? What do you get?",
+    "t": 53.0
+   },
+   {
+    "who": "student",
+    "text": "3? I don't know what that has to do with my answer though.",
+    "t": 68.0
+   },
+   {
+    "who": "sensei",
+    "text": "You're on the right track with the signs, but let's check the first step again: what is 5 - (4 - 2)?",
+    "t": 68.0
+   },
+   {
+    "who": "student",
+    "text": "I just said 3. Is my first line wrong or not? I'm confused.",
+    "t": 83.0
+   },
+   {
+    "who": "sensei",
+    "text": "You said 3 for 5 - (4 - 2), but that's not right. Try again: what is 5 - (4 - 2)?",
+    "t": 83.0
+   },
+   {
+    "who": "student",
+    "text": "4 minus 2 is 2, 5 minus 2 is 3. It is 3. I don't get it.",
+    "t": 98.0
+   },
+   {
+    "who": "sensei",
+    "text": "Let's try this again: what is 5 - (4 - 2)? Work it out step by step.",
+    "t": 98.0
+   },
+   {
+    "who": "student",
+    "text": "You keep asking the same thing. It's 3. Can you just tell me which line is wrong?",
+    "t": 113.0
+   },
+   {
+    "who": "sensei",
+    "text": "Let's try 5 - (4 - 2) again: 4 minus 2 is 2, then 5 minus 2 is 3. But that's not right\u2014what's the correct way to handle the minus sign?",
+    "t": 113.0
+   },
+   {
+    "who": "student",
+    "text": "I still don't get it. I give up on this one.",
+    "t": 128.0
+   },
+   {
+    "who": "sensei",
+    "text": "It's okay to feel stuck. Let's try a simpler example: what is 5 - (4 - 2)?",
+    "t": 128.0
+   }
+  ],
+  "problem": "Solve: 5 - (2x - 4) = 11",
+  "subject": "math",
+  "topic": "linear equations",
+  "mistake": [
+   1,
+   "5-2x+4=11"
+  ],
+  "candidate_mistake": null,
+  "hint_level": 1,
+  "hints_on_mistake": 1,
+  "hints_given": 1,
+  "mistakes_found": [
+   "step 1: 5 - 2x + 4 = 11 (distribution)"
+  ],
+  "mistakes_fixed": [],
+  "last_said": "It's okay to feel stuck. Let's try a simpler example: what is 5 - (4 - 2)?",
+  "last_why": "reply",
+  "last_spoke_at": 1128.0,
+  "last_seen": "student work",
+  "other_problems": [],
+  "steps_confirmed": 0,
+  "_finished_problem": null,
+  "let_go": [],
+  "started_at": 1000.0,
+  "ends_at": 1900.0,
+  "phase": "watching",
+  "_rechecks": 0,
+  "last_focus_change": -1000000000.0,
+  "last_activity": 1128.0,
+  "_heard_count": 8,
+  "answer_key": {
+   "problem": "Solve: 5 - (2x - 4) = 11",
+   "mistake": [
+    1,
+    "5-2x+4=11"
+   ],
+   "wrong_line": "5 - 2x + 4 = 11",
+   "correct_line": "5 - 2x - 4 = 11",
+   "answer": "-1",
+   "check": "Substitute x = -1 into the original equation to verify both sides are equal."
+  }
+ }
+}

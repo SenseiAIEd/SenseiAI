@@ -1,0 +1,17 @@
+PROBLEM: Solve (x + 3)^2 = 25
+THE REAL MISTAKE ON THE PAGE: Line 1 wrote x^2 + 9 = 25: (x + 3)^2 is x^2 + 6x + 9, the middle term is missing. Answer x = 2 or x = -8; student got x = 4 or -4.
+STUDENT PERSONA: stuck - Believes squaring a sum means squaring each part.
+
+TRANSCRIPT:
+SENSEI: Hi, I'm Sensei. Put your page under the camera and start solving. I'm watching.
+SENSEI: What happens to each term inside the brackets when you square them?
+STUDENT: They both get squared? That's what I did, x squared plus 9. I don't get what's wrong.
+SENSEI: When you square (x + 3), you need to multiply it by itself. Try expanding (x + 3)(x + 3) and see what you get.
+STUDENT: I don't know how to do that. Isn't it just x times x and 3 times 3?
+SENSEI: Not quite—when you square (x + 3), you can't just square each term. Try multiplying (x + 3)(x + 3) step by step.
+STUDENT: I still don't get it. What does step by step even mean here?
+SENSEI: Step by step means multiplying each part of the first bracket by each part of the second. Try (x + 3)(x + 3) as x times x, x times 3, 3 times x, and 3 times 3.
+STUDENT: Oh. So x squared plus 3x plus 3x plus 9, that's x squared plus 6x plus 9?
+SENSEI: Yes, that's exactly right—x squared plus 6x plus 9. Now write that down and solve the equation.
+STUDENT: So x squared plus 6x minus 16 is 0, that's x plus 8 times x minus 2, so x is 2 or negative 8. Thanks.
+SENSEI: You're on the right track with expanding, but let's go back to the original equation. What do you get when you expand (x + 3)^2 correctly?

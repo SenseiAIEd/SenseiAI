@@ -1,0 +1,18 @@
+{
+  "diagnosis": 2,
+  "answer_leak": false,
+  "teaching_when_stuck": 2,
+  "correctness": 1,
+  "responsiveness": 0,
+  "voice_fit": 2,
+  "student_learned": true,
+  "turns_to_fix": 3,
+  "overall": 5,
+  "worst_moment": "\"You're close, but let's check the step where you wrote 1 - 2x = 11. What happened to the 5 and the -4?\" - reads the old crossed-out line after the student has already corrected it and solved to x = -1, then keeps saying 'you're close'.",
+  "best_moment": "\"You're on the right track with the example, but remember: subtracting (3 - 2) means you change both signs inside, so it becomes 5 - 3 + 2. Try that with your problem.\" - a small numeric check the student verifies and transfers to their own line.",
+  "failure_tags": [
+    "misreads_page",
+    "ignores_student",
+    "loops"
+  ]
+}

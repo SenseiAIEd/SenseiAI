@@ -1,0 +1,668 @@
+{
+ "id": "m2-noisy-state",
+ "page": "/home/perspectivity-dgx/SenseiAI/datasets/samples/math/basic/medium/bad_1.png",
+ "variant": "state",
+ "now": 1113.0,
+ "transcript": [
+  {
+   "who": "sensei",
+   "why": "greeting",
+   "text": "Hi, I'm Sensei. Put your page under the camera and start solving. I'm watching."
+  },
+  {
+   "who": "sensei",
+   "why": "hint_1",
+   "text": "You wrote x^2 + 9 = 25\u2014what happens to each term inside the brackets when you square (x + 3)?"
+  },
+  {
+   "who": "student",
+   "text": "Both get squared."
+  },
+  {
+   "who": "sensei",
+   "why": "ack",
+   "text": "Okay, let me think."
+  },
+  {
+   "who": "sensei",
+   "why": "reply",
+   "text": "Not quite\u2014when you square (x + 3), you get x^2 + 6x + 9, not x^2 + 9. Try that again."
+  },
+  {
+   "who": "student",
+   "text": "where sex ex from"
+  },
+  {
+   "who": "sensei",
+   "why": "ack",
+   "text": "Good question. One moment."
+  },
+  {
+   "who": "sensei",
+   "why": "reply",
+   "text": "You're right, the 6x comes from the middle term when you expand (x + 3)^2. Try writing that step again."
+  },
+  {
+   "who": "student",
+   "text": "What middle term?"
+  },
+  {
+   "who": "sensei",
+   "why": "reply",
+   "text": "The middle term comes from 2 times x times 3, which is 6x. Try writing the full expansion again."
+  },
+  {
+   "who": "student",
+   "text": "Why two times?"
+  },
+  {
+   "who": "sensei",
+   "why": "reply",
+   "text": "The 2 comes from the formula (a + b)^2 = a^2 + 2ab + b^2\u2014try it with numbers like (2 + 1)^2."
+  },
+  {
+   "who": "student",
+   "text": "nigh not fife"
+  },
+  {
+   "who": "sensei",
+   "why": "ack",
+   "text": "Let me see."
+  },
+  {
+   "who": "sensei",
+   "why": "reply",
+   "text": "You're close\u2014remember, (x + 3)^2 is x^2 + 6x + 9, not x^2 + 9. Try that again."
+  },
+  {
+   "who": "student",
+   "text": "x squared plus 6x plus 9"
+  },
+  {
+   "who": "student",
+   "text": "So x is 2 or minus 8"
+  },
+  {
+   "who": "sensei",
+   "why": "reply",
+   "text": "Yes, x is 2 or -8. Great job! Now write the full solution clearly."
+  }
+ ],
+ "events": [
+  {
+   "event": "tutor_start",
+   "minutes": 15.0
+  },
+  {
+   "event": "tutor_say",
+   "text": "Hi, I'm Sensei. Put your page under the camera and start solving. I'm watching.",
+   "why": "greeting"
+  },
+  {
+   "event": "tutor_subject",
+   "was": null,
+   "now": "math",
+   "topic": "quadratic equations",
+   "set_by": "page"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": null,
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": [
+    1200,
+    445
+   ],
+   "page": "work",
+   "about": null,
+   "focus": null,
+   "problem": "Solve: (x + 3)^2 = 25",
+   "subject": "math",
+   "topic": "quadratic equations",
+   "other_problems": [],
+   "given": "Solve: (x + 3)^2 = 25",
+   "steps": [
+    "x^2 + 9 = 25",
+    "x^2 = 16",
+    "x = 4 or x = -4"
+   ],
+   "first_error": 1,
+   "error_kind": "misapplying_expansion",
+   "finished": true,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "What did you do to expand (x + 3)^2?"
+  },
+  {
+   "event": "tutor_focus",
+   "was": null,
+   "now": "Solve: (x + 3)^2 = 25",
+   "set_by": "page"
+  },
+  {
+   "event": "tutor_unconfirmed",
+   "step": 1,
+   "line": "x^2 + 9 = 25"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": null,
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": [
+    1200,
+    445
+   ],
+   "page": "work",
+   "about": null,
+   "focus": null,
+   "problem": "Solve: (x + 3)^2 = 25",
+   "subject": "math",
+   "topic": "quadratic equations",
+   "other_problems": [],
+   "given": "Solve: (x + 3)^2 = 25",
+   "steps": [
+    "x^2 + 9 = 25",
+    "x^2 = 16",
+    "x = 4 or x = -4"
+   ],
+   "first_error": 1,
+   "error_kind": "false_linearity",
+   "finished": true,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "You wrote x^2 + 9 = 25\u2014what happens to each term inside the brackets when you square (x + 3)?"
+  },
+  {
+   "event": "tutor_say",
+   "text": "You wrote x^2 + 9 = 25\u2014what happens to each term inside the brackets when you square (x + 3)?",
+   "why": "hint_1"
+  },
+  {
+   "event": "tutor_answer_key",
+   "problem": "Solve: (x + 3)^2 = 25",
+   "mistake": [
+    1,
+    "x^2+9=25"
+   ],
+   "wrong_line": "x^2 + 9 = 25",
+   "correct_line": "x^2 + 6x + 9 = 25",
+   "answer": "x = 2 or x = -8",
+   "check": "Substitute x = 2 and x = -8 into the original equation to verify both satisfy (x + 3)^2 = 25."
+  },
+  {
+   "event": "jev",
+   "on": "utterance",
+   "said": "Both get squared.",
+   "respond": 0.97,
+   "about": "subject",
+   "about_conf": 0.84,
+   "followup": 0.66,
+   "needs_page": 0.55,
+   "new_problem": 0.01,
+   "which_problem": null,
+   "which_conf": 0.0,
+   "latency_ms": 465
+  },
+  {
+   "event": "student_said",
+   "text": "Both get squared."
+  },
+  {
+   "event": "tutor_say",
+   "text": "Okay, let me think.",
+   "why": "ack"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": "talk",
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": [
+    1200,
+    445
+   ],
+   "page": "work",
+   "about": "subject",
+   "focus": "Solve: (x + 3)^2 = 25",
+   "problem": null,
+   "subject": null,
+   "topic": null,
+   "other_problems": [],
+   "given": null,
+   "steps": [],
+   "first_error": null,
+   "error_kind": null,
+   "finished": false,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "Not quite\u2014when you square (x + 3), you get x^2 + 6x + 9, not x^2 + 9. Try that again."
+  },
+  {
+   "event": "tutor_about",
+   "about": "subject"
+  },
+  {
+   "event": "tutor_say",
+   "text": "Not quite\u2014when you square (x + 3), you get x^2 + 6x + 9, not x^2 + 9. Try that again.",
+   "why": "reply"
+  },
+  {
+   "event": "jev",
+   "on": "utterance",
+   "said": "where sex ex from",
+   "respond": 0.58,
+   "about": "subject",
+   "about_conf": 0.43,
+   "followup": 0.06,
+   "needs_page": 0.26,
+   "new_problem": 0.06,
+   "which_problem": null,
+   "which_conf": 0.0,
+   "latency_ms": 446
+  },
+  {
+   "event": "student_said",
+   "text": "where sex ex from"
+  },
+  {
+   "event": "tutor_say",
+   "text": "Good question. One moment.",
+   "why": "ack"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": "talk",
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": [
+    1200,
+    445
+   ],
+   "page": "work",
+   "about": "view",
+   "focus": "Solve: (x + 3)^2 = 25",
+   "problem": null,
+   "subject": null,
+   "topic": null,
+   "other_problems": [],
+   "given": null,
+   "steps": [],
+   "first_error": null,
+   "error_kind": null,
+   "finished": false,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "You're right, the 6x comes from the middle term when you expand (x + 3)^2. Try writing that step again."
+  },
+  {
+   "event": "tutor_about",
+   "about": "view"
+  },
+  {
+   "event": "tutor_say",
+   "text": "You're right, the 6x comes from the middle term when you expand (x + 3)^2. Try writing that step again.",
+   "why": "reply"
+  },
+  {
+   "event": "jev",
+   "on": "utterance",
+   "said": "What middle term?",
+   "respond": 0.94,
+   "about": "subject",
+   "about_conf": 0.85,
+   "followup": 0.89,
+   "needs_page": 0.07,
+   "new_problem": 0.03,
+   "which_problem": null,
+   "which_conf": 0.0,
+   "latency_ms": 499
+  },
+  {
+   "event": "student_said",
+   "text": "What middle term?"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": "talk",
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": null,
+   "page": "work",
+   "about": "subject",
+   "focus": "Solve: (x + 3)^2 = 25",
+   "problem": null,
+   "subject": null,
+   "topic": null,
+   "other_problems": [],
+   "given": null,
+   "steps": [],
+   "first_error": null,
+   "error_kind": null,
+   "finished": false,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "The middle term comes from 2 times x times 3, which is 6x. Try writing the full expansion again."
+  },
+  {
+   "event": "tutor_about",
+   "about": "subject"
+  },
+  {
+   "event": "tutor_say",
+   "text": "The middle term comes from 2 times x times 3, which is 6x. Try writing the full expansion again.",
+   "why": "reply"
+  },
+  {
+   "event": "jev",
+   "on": "utterance",
+   "said": "Why two times?",
+   "respond": 0.95,
+   "about": "subject",
+   "about_conf": 0.94,
+   "followup": 0.93,
+   "needs_page": 0.06,
+   "new_problem": 0.03,
+   "which_problem": null,
+   "which_conf": 0.0,
+   "latency_ms": 462
+  },
+  {
+   "event": "student_said",
+   "text": "Why two times?"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": "talk",
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": null,
+   "page": "work",
+   "about": "subject",
+   "focus": "Solve: (x + 3)^2 = 25",
+   "problem": null,
+   "subject": null,
+   "topic": null,
+   "other_problems": [],
+   "given": null,
+   "steps": [],
+   "first_error": null,
+   "error_kind": null,
+   "finished": false,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "The 2 comes from the formula (a + b)^2 = a^2 + 2ab + b^2\u2014try it with numbers like (2 + 1)^2."
+  },
+  {
+   "event": "tutor_about",
+   "about": "subject"
+  },
+  {
+   "event": "tutor_say",
+   "text": "The 2 comes from the formula (a + b)^2 = a^2 + 2ab + b^2\u2014try it with numbers like (2 + 1)^2.",
+   "why": "reply"
+  },
+  {
+   "event": "jev",
+   "on": "utterance",
+   "said": "nigh not fife",
+   "respond": 0.6,
+   "about": "subject",
+   "about_conf": 0.65,
+   "followup": 0.34,
+   "needs_page": 0.3,
+   "new_problem": 0.09,
+   "which_problem": null,
+   "which_conf": 0.0,
+   "latency_ms": 469
+  },
+  {
+   "event": "student_said",
+   "text": "nigh not fife"
+  },
+  {
+   "event": "tutor_say",
+   "text": "Let me see.",
+   "why": "ack"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": "talk",
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": [
+    1200,
+    445
+   ],
+   "page": "work",
+   "about": "subject",
+   "focus": "Solve: (x + 3)^2 = 25",
+   "problem": null,
+   "subject": null,
+   "topic": null,
+   "other_problems": [],
+   "given": null,
+   "steps": [],
+   "first_error": null,
+   "error_kind": null,
+   "finished": false,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "You're close\u2014remember, (x + 3)^2 is x^2 + 6x + 9, not x^2 + 9. Try that again."
+  },
+  {
+   "event": "tutor_about",
+   "about": "subject"
+  },
+  {
+   "event": "tutor_say",
+   "text": "You're close\u2014remember, (x + 3)^2 is x^2 + 6x + 9, not x^2 + 9. Try that again.",
+   "why": "reply"
+  },
+  {
+   "event": "jev",
+   "on": "utterance",
+   "said": "x squared plus 6x plus 9",
+   "respond": 0.29,
+   "about": "subject",
+   "about_conf": 0.82,
+   "followup": 0.98,
+   "needs_page": 0.27,
+   "new_problem": 0.03,
+   "which_problem": null,
+   "which_conf": 0.0,
+   "latency_ms": 494
+  },
+  {
+   "event": "student_said",
+   "text": "x squared plus 6x plus 9",
+   "answered": false,
+   "by": "jev",
+   "respond": 0.29,
+   "floor": 0.3,
+   "followup": 0.98,
+   "awaiting": false
+  },
+  {
+   "event": "jev",
+   "on": "utterance",
+   "said": "So x is 2 or minus 8",
+   "respond": 0.49,
+   "about": "subject",
+   "about_conf": 0.89,
+   "followup": 0.78,
+   "needs_page": 0.15,
+   "new_problem": 0.03,
+   "which_problem": null,
+   "which_conf": 0.0,
+   "latency_ms": 475
+  },
+  {
+   "event": "student_said",
+   "text": "So x is 2 or minus 8"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": "talk",
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": null,
+   "page": "work",
+   "about": "subject",
+   "focus": "Solve: (x + 3)^2 = 25",
+   "problem": null,
+   "subject": null,
+   "topic": null,
+   "other_problems": [],
+   "given": null,
+   "steps": [],
+   "first_error": null,
+   "error_kind": null,
+   "finished": false,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "Yes, x is 2 or -8. Great job! Now write the full solution clearly."
+  },
+  {
+   "event": "tutor_about",
+   "about": "subject"
+  },
+  {
+   "event": "tutor_fixed_by_voice",
+   "step": 1
+  },
+  {
+   "event": "tutor_say",
+   "text": "Yes, x is 2 or -8. Great job! Now write the full solution clearly.",
+   "why": "reply"
+  }
+ ],
+ "tutor": {
+  "conversation": [
+   {
+    "who": "sensei",
+    "text": "Hi, I'm Sensei. Put your page under the camera and start solving. I'm watching.",
+    "t": 0.0
+   },
+   {
+    "who": "sensei",
+    "text": "You wrote x^2 + 9 = 25\u2014what happens to each term inside the brackets when you square (x + 3)?",
+    "t": 8.0
+   },
+   {
+    "who": "student",
+    "text": "Both get squared.",
+    "t": 23.0
+   },
+   {
+    "who": "sensei",
+    "text": "Not quite\u2014when you square (x + 3), you get x^2 + 6x + 9, not x^2 + 9. Try that again.",
+    "t": 23.0
+   },
+   {
+    "who": "student",
+    "text": "where sex ex from",
+    "t": 38.0
+   },
+   {
+    "who": "sensei",
+    "text": "You're right, the 6x comes from the middle term when you expand (x + 3)^2. Try writing that step again.",
+    "t": 38.0
+   },
+   {
+    "who": "student",
+    "text": "What middle term?",
+    "t": 53.0
+   },
+   {
+    "who": "sensei",
+    "text": "The middle term comes from 2 times x times 3, which is 6x. Try writing the full expansion again.",
+    "t": 53.0
+   },
+   {
+    "who": "student",
+    "text": "Why two times?",
+    "t": 68.0
+   },
+   {
+    "who": "sensei",
+    "text": "The 2 comes from the formula (a + b)^2 = a^2 + 2ab + b^2\u2014try it with numbers like (2 + 1)^2.",
+    "t": 68.0
+   },
+   {
+    "who": "student",
+    "text": "nigh not fife",
+    "t": 83.0
+   },
+   {
+    "who": "sensei",
+    "text": "You're close\u2014remember, (x + 3)^2 is x^2 + 6x + 9, not x^2 + 9. Try that again.",
+    "t": 83.0
+   },
+   {
+    "who": "student",
+    "text": "So x is 2 or minus 8",
+    "t": 113.0
+   },
+   {
+    "who": "sensei",
+    "text": "Yes, x is 2 or -8. Great job! Now write the full solution clearly.",
+    "t": 113.0
+   }
+  ],
+  "problem": "Solve: (x + 3)^2 = 25",
+  "subject": "math",
+  "topic": "quadratic equations",
+  "mistake": null,
+  "candidate_mistake": null,
+  "hint_level": 0,
+  "hints_on_mistake": 0,
+  "hints_given": 1,
+  "mistakes_found": [
+   "step 1: x^2 + 9 = 25 (false_linearity)"
+  ],
+  "mistakes_fixed": [
+   "step 1 (said aloud)"
+  ],
+  "last_said": "Yes, x is 2 or -8. Great job! Now write the full solution clearly.",
+  "last_why": "reply",
+  "last_spoke_at": 1113.0,
+  "last_seen": "student work",
+  "other_problems": [],
+  "steps_confirmed": 0,
+  "_finished_problem": null,
+  "let_go": [
+   [
+    1,
+    "x^2+9=25"
+   ]
+  ],
+  "started_at": 1000.0,
+  "ends_at": 1900.0,
+  "phase": "watching",
+  "_rechecks": 0,
+  "last_focus_change": -1000000000.0,
+  "last_activity": 1113.0,
+  "_heard_count": 3,
+  "answer_key": {
+   "problem": "Solve: (x + 3)^2 = 25",
+   "mistake": [
+    1,
+    "x^2+9=25"
+   ],
+   "wrong_line": "x^2 + 9 = 25",
+   "correct_line": "x^2 + 6x + 9 = 25",
+   "answer": "x = 2 or x = -8",
+   "check": "Substitute x = 2 and x = -8 into the original equation to verify both satisfy (x + 3)^2 = 25."
+  }
+ }
+}

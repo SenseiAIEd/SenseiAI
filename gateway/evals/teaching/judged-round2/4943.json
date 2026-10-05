@@ -1,0 +1,22 @@
+{
+  "diagnosis": 1,
+  "answer_leak": false,
+  "teaching_when_stuck": 0,
+  "correctness": 0,
+  "responsiveness": 0,
+  "voice_fit": 2,
+  "student_learned": false,
+  "turns_to_fix": null,
+  "overall": 2,
+  "worst_moment": "\"The step that needs checking is when you go from 5 - 2x - 4 to 1 - 2x.\" - points at a step it had already confirmed as correct, which sends the student away from the real error in distributing the minus.",
+  "best_moment": "\"You're close, but when you subtract the brackets, you need to change the sign of each term inside.\" - states the right idea early, before it gets lost.",
+  "failure_tags": [
+    "misdiagnosis",
+    "misreads_page",
+    "wrong_fact",
+    "repeats_question",
+    "loops",
+    "no_explanation_when_stuck",
+    "ignores_student"
+  ]
+}

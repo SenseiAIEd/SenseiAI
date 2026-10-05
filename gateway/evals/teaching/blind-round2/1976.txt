@@ -1,0 +1,19 @@
+PROBLEM: A ball is launched at 20 m/s, 60 degrees above horizontal. How long until it returns to launch height? g = 9.8
+THE REAL MISTAKE ON THE PAGE: Line 1 wrote v_y = 20 m/s: 20 m/s is along the launch direction, not vertical. v_y = 20 sin 60 = 17.32 m/s; total time 3.54 s, student got 4.08 s.
+STUDENT PERSONA: stuck - Has no picture of splitting a velocity into parts.
+
+TRANSCRIPT:
+SENSEI: Hi, I'm Sensei. Put your page under the camera and start solving. I'm watching.
+SENSEI: You wrote v_y = 20 m/s, but the ball was launched at 60 degrees—what part of the velocity is vertical?
+STUDENT: I don't get it. It's going 20 meters per second, isn't that the speed going up?
+SENSEI: The 20 m/s is the total speed, not the vertical part. What part of the velocity is vertical when launched at 60 degrees?
+STUDENT: I don't know what you mean by part of the velocity. How does a speed have parts?
+SENSEI: Good question—speed is the total, but velocity has parts. Think of it like a triangle: the total speed is the hypotenuse, and the vertical part is one side. What trig function gives the opposite side?
+STUDENT: Sine is opposite over hypotenuse. But I don't get which side is the opposite one here.
+SENSEI: Yes, sine gives opposite over hypotenuse. In this case, the vertical part is opposite the 60-degree angle, so v_y = 20 m/s × sin(60°).
+STUDENT: Oh, so the angle is at the bottom from the ground, and up is across from it. So v_y is 20 sin 60, like 17.3?
+SENSEI: You're on the right track with the angle, but v_y isn't 20 m/s—what's the correct way to find the vertical part?
+STUDENT: Wait, I said 20 times sin 60, which is 17.3. Is that not right?
+SENSEI: You're right that v_y = 20 m/s × sin(60°), but you wrote v_y = 20 m/s, which is the total speed, not the vertical part. Try again with the correct expression.
+STUDENT: Okay so I cross out 20 and put v_y equals 17.3. Then time is 2 times 17.3 over 9.8, so about 3.54 seconds. Thanks.
+SENSEI: Yes, you fixed it—v_y is 20 m/s times sin(60°), not 20 m/s. Now write that down and keep going.

@@ -1,0 +1,18 @@
+PROBLEM: A car moves at 72 km/h. How far does it travel in 5.0 s?
+THE REAL MISTAKE ON THE PAGE: Line 3 wrote d = 72 x 5.0: km/h multiplied by seconds without converting. 72 km/h = 20 m/s, so d = 100 m; student got 360 m.
+STUDENT PERSONA: confident-wrong - Says 'd = vt, I plugged in v and t, so it's right; the answer 360 m looks reasonable'.
+
+TRANSCRIPT:
+SENSEI: Hi, I'm Sensei. Put your page under the camera and start solving. I'm watching.
+SENSEI: You multiplied speed by time, but the units don't match—what unit is the speed in, and what unit should it be for this calculation?
+STUDENT: It's km per hour, but d equals v t. I plugged in v and t, so 360 metres. Looks fine to me.
+SENSEI: You're right that d = v × t, but the units don't match—km/h and seconds. What's 72 km/h in m/s?
+STUDENT: Why does that matter? 360 metres is a normal distance for a car. The formula's right.
+SENSEI: The units matter because you can't multiply km/h by seconds directly. Let's convert 72 km/h to m/s first.
+STUDENT: Why can't I though? It's just numbers. 72 times 5 is 360, that's still right.
+SENSEI: Imagine a car going 72 km/h. In one second, how many meters does it go? Let's find that first.
+STUDENT: 72 metres? Since it's 72 per something?
+SENSEI: No, 72 km/h isn't 72 metres per second. Let's think: how many metres are in a kilometre, and how many seconds in an hour?
+STUDENT: 1000 metres, 3600 seconds. So 72000 over 3600, that's 20 metres a second?
+SENSEI: Yes, 72 km/h is 20 m/s. Now write the correct equation and finish.
+STUDENT: Oh so 20 times 5 is 100 metres. 360 was way too much then. Okay, got it.

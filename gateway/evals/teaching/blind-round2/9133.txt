@@ -1,0 +1,23 @@
+PROBLEM: A ball is launched at 20 m/s, 60 degrees above horizontal. How long until it returns to launch height? g = 9.8
+THE REAL MISTAKE ON THE PAGE: Line 1 wrote v_y = 20 m/s: 20 m/s is along the launch direction, not vertical. v_y = 20 sin 60 = 17.32 m/s; total time 3.54 s, student got 4.08 s.
+STUDENT PERSONA: confident-wrong - Argues 'the ball is going up at 20 m/s, it says so in the question'.
+
+TRANSCRIPT:
+SENSEI: Hi, I'm Sensei. Put your page under the camera and start solving. I'm watching.
+SENSEI: You wrote v_y = 20 m/s, but the initial speed is 20 m/s at an angle. What part of the velocity is vertical?
+STUDENT: All of it? The ball is going up at 20 meters per second, it says so in the question.
+SENSEI: The ball's speed is 20 m/s at an angle, so only part of that is vertical. What's the vertical part?
+STUDENT: But it's launched upward, so it's going up at 20. The angle just tells you it's tilted.
+SENSEI: Imagine a ball launched straight up at 20 m/s. How long until it returns? Then think how the angle changes that.
+STUDENT: Straight up would be 2 times 20 over 9.8, so 4.08. That's what I got. So the angle doesn't change anything.
+SENSEI: You're thinking about the straight-up case, which is a good start. But the angle changes the vertical speed. Try again: what's the vertical part of 20 m/s at 60 degrees?
+STUDENT: Why would it change though? It's still moving at 20 meters per second, just sideways a bit.
+SENSEI: The speed is 20 m/s, but only part of it is vertical. Try thinking about a 30-60-90 triangle to find the vertical part.
+STUDENT: You keep saying only part is vertical but I don't see why. If it moves 20 a second, it goes up 20 a second.
+SENSEI: The speed is 20 m/s, but only part of it goes up. Think of a 30-60-90 triangle: at 60 degrees, the vertical part is 20 times sin(60).
+STUDENT: That's just a formula. Why would the ball be slower going up than the 20 it was launched at?
+SENSEI: Imagine a ball thrown at 20 m/s straight up—its vertical speed is 20 m/s. Now throw it at 60 degrees—only part goes up. What’s the vertical speed if it’s 20 m/s at 60 degrees?
+STUDENT: You keep asking the same thing. I still think it's 20, it says 20 in the question.
+SENSEI: The speed is 20 m/s, but only part of it is going up. Try a smaller angle, like 30 degrees—what’s the vertical part then?
+STUDENT: I dunno, I still don't get why it isn't just 20. I'm keeping 4.08.
+SENSEI: The vertical speed isn't 20 m/s because the ball is launched at an angle. Try a simpler case: if it were launched at 30 degrees, what would the vertical speed be?

@@ -1,0 +1,20 @@
+{
+  "diagnosis": 2,
+  "answer_leak": false,
+  "teaching_when_stuck": 0,
+  "correctness": 0,
+  "responsiveness": 0,
+  "voice_fit": 2,
+  "student_learned": false,
+  "turns_to_fix": null,
+  "overall": 1,
+  "worst_moment": "\"You're right that 360 m in 5 seconds seems reasonable, but the units must match\" - 360 m in 5 s is about 260 km/h, which is not reasonable, and this agreement helped the student dig in.",
+  "best_moment": "\"You multiplied speed by time, but the units don't match\u2014what unit is the speed in, and what unit should it be for the answer to be in meters?\" - it diagnoses the real error clearly on the first turn.",
+  "failure_tags": [
+    "wrong_fact",
+    "repeats_question",
+    "no_explanation_when_stuck",
+    "loops",
+    "too_short_to_help"
+  ]
+}

@@ -1,0 +1,15 @@
+PROBLEM: Solve (x + 3)^2 = 25
+THE REAL MISTAKE ON THE PAGE: Line 1 wrote x^2 + 9 = 25: (x + 3)^2 is x^2 + 6x + 9, the middle term is missing. Answer x = 2 or x = -8; student got x = 4 or -4.
+STUDENT PERSONA: wants-why - Will expand correctly after a hint, then asks where the 6x comes from and why it isn't just x^2 + 9.
+
+TRANSCRIPT:
+SENSEI: Hi, I'm Sensei. Put your page under the camera and start solving. I'm watching.
+SENSEI: What happens to each term inside the brackets when you square (x + 3)?
+STUDENT: Oh wait, I should multiply it out. x squared plus 6x plus 9 equals 25?
+SENSEI: Yes, you're right, you need to multiply it out correctly.
+STUDENT: So x is 2 or minus 8. But where does the 6x actually come from? Why isnt it just x squared plus 9?
+SENSEI: Good question! The 6x comes from multiplying x and 3 twice when you expand (x + 3)(x + 3).
+STUDENT: Twice like x times 3 and then 3 times x? So 3x plus 3x?
+SENSEI: Yes, exactly! That's where the 6x comes from: x times 3 and 3 times x.
+STUDENT: Okay makes sense, squaring each bit misses those two. So line one is x squared plus 6x plus 9 equals 25. Thanks.
+SENSEI: You're right, you need to multiply it out correctly. The first line should be x squared plus 6x plus 9 equals 25.

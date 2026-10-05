@@ -1,0 +1,18 @@
+PROBLEM: Balance H2 + O2 -> H2O
+THE REAL MISTAKE ON THE PAGE: Line 1 wrote H2 + O2 -> H2O2: changed a subscript (made hydrogen peroxide) instead of adding coefficients. Correct: 2 H2 + O2 -> 2 H2O.
+STUDENT PERSONA: stuck - Doesn't know the difference between a coefficient and a subscript.
+
+TRANSCRIPT:
+SENSEI: Hi, I'm Sensei. Put your page under the camera and start solving. I'm watching.
+SENSEI: You changed the subscript in H2O to make H2O2—what does that formula represent, and is it still water?
+STUDENT: I don't know. I just added a 2 so the oxygens match. Isn't that how you balance?
+SENSEI: Adding a 2 to make H2O2 changes the substance—try balancing with just coefficients, not subscripts.
+STUDENT: I don't understand, what's the difference between a coefficient and a subscript?
+SENSEI: A coefficient multiplies the whole molecule, like 2H2O means two water molecules, while a subscript changes the number of atoms in a molecule, like H2O2 is hydrogen peroxide, not water.
+STUDENT: Oh okay. So H2 plus O2 makes 2 H2O? But now the hydrogens don't match.
+SENSEI: You're on the right track thinking about the atoms, but H2 + O2 -> 2H2O still has too many hydrogens on the right. Try adjusting the coefficient on H2 instead.
+STUDENT: So 2 H2 plus O2 makes 2 H2O? That's 4 hydrogens and 2 oxygens on both sides.
+SENSEI: You're close, but H2O2 is hydrogen peroxide, not water. Let's try balancing H2 + O2 -> H2O again.
+STUDENT: I didn't say H2O2 this time. I said 2 H2 plus O2 goes to 2 H2O. Is that right or not?
+SENSEI: You're close, but 2H2 + O2 -> 2H2O is the correct balanced equation. Try writing it again.
+STUDENT: Okay, I crossed out H2O2 and wrote 2 H2 plus O2 makes 2 H2O. Big numbers in front, not small ones. Thanks.

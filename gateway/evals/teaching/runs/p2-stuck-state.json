@@ -1,0 +1,666 @@
+{
+ "id": "p2-stuck-state",
+ "page": "/home/perspectivity-dgx/SenseiAI/datasets/samples/physics/basic/medium/bad_1.png",
+ "variant": "state",
+ "now": 1098.0,
+ "transcript": [
+  {
+   "who": "sensei",
+   "why": "greeting",
+   "text": "Hi, I'm Sensei. Put your page under the camera and start solving. I'm watching."
+  },
+  {
+   "who": "sensei",
+   "why": "hint_1",
+   "text": "You wrote v_y = 20 m/s, but the ball was launched at 60 degrees\u2014what part of the velocity is vertical?"
+  },
+  {
+   "who": "student",
+   "text": "I don't get it. It's going 20 meters per second, isn't that the speed going up?"
+  },
+  {
+   "who": "sensei",
+   "why": "ack",
+   "text": "Okay, let me think."
+  },
+  {
+   "who": "sensei",
+   "why": "reply",
+   "text": "The 20 m/s is the total speed, not the vertical part. What part of the velocity is vertical when launched at 60 degrees?"
+  },
+  {
+   "who": "student",
+   "text": "I don't know what you mean by part of the velocity. How does a speed have parts?"
+  },
+  {
+   "who": "sensei",
+   "why": "ack",
+   "text": "Good question. One moment."
+  },
+  {
+   "who": "sensei",
+   "why": "reply",
+   "text": "Good question\u2014speed is the total, but velocity has parts. Think of it like a triangle: the total speed is the hypotenuse, and the vertical part is one side. What trig function gives the opposite side?"
+  },
+  {
+   "who": "student",
+   "text": "Sine is opposite over hypotenuse. But I don't get which side is the opposite one here."
+  },
+  {
+   "who": "sensei",
+   "why": "ack",
+   "text": "Let me see."
+  },
+  {
+   "who": "sensei",
+   "why": "reply",
+   "text": "Yes, sine gives opposite over hypotenuse. In this case, the vertical part is opposite the 60-degree angle, so v_y = 20 m/s \u00d7 sin(60\u00b0)."
+  },
+  {
+   "who": "student",
+   "text": "Oh, so the angle is at the bottom from the ground, and up is across from it. So v_y is 20 sin 60, like 17.3?"
+  },
+  {
+   "who": "sensei",
+   "why": "ack",
+   "text": "Got it. Give me a second."
+  },
+  {
+   "who": "sensei",
+   "why": "reply",
+   "text": "You're on the right track with the angle, but v_y isn't 20 m/s\u2014what's the correct way to find the vertical part?"
+  },
+  {
+   "who": "student",
+   "text": "Wait, I said 20 times sin 60, which is 17.3. Is that not right?"
+  },
+  {
+   "who": "sensei",
+   "why": "ack",
+   "text": "Okay, let me think."
+  },
+  {
+   "who": "sensei",
+   "why": "reply",
+   "text": "You're right that v_y = 20 m/s \u00d7 sin(60\u00b0), but you wrote v_y = 20 m/s, which is the total speed, not the vertical part. Try again with the correct expression."
+  },
+  {
+   "who": "student",
+   "text": "Okay so I cross out 20 and put v_y equals 17.3. Then time is 2 times 17.3 over 9.8, so about 3.54 seconds. Thanks."
+  },
+  {
+   "who": "sensei",
+   "why": "ack",
+   "text": "Good question. One moment."
+  },
+  {
+   "who": "sensei",
+   "why": "reply",
+   "text": "Yes, you fixed it\u2014v_y is 20 m/s times sin(60\u00b0), not 20 m/s. Now write that down and keep going."
+  }
+ ],
+ "events": [
+  {
+   "event": "tutor_start",
+   "minutes": 15.0
+  },
+  {
+   "event": "tutor_say",
+   "text": "Hi, I'm Sensei. Put your page under the camera and start solving. I'm watching.",
+   "why": "greeting"
+  },
+  {
+   "event": "tutor_subject",
+   "was": null,
+   "now": "physics",
+   "topic": "projectile motion",
+   "set_by": "page"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": null,
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": [
+    1200,
+    496
+   ],
+   "page": "work",
+   "about": null,
+   "focus": null,
+   "problem": "How long until the ball returns to launch height?",
+   "subject": "physics",
+   "topic": "projectile motion",
+   "other_problems": [],
+   "given": "A ball is launched at 20 m/s, 60 degrees above the horizontal. How long until it returns to launch height? (g = 9.8 m/s^2)",
+   "steps": [
+    "v_y = 20 m/s",
+    "t_up = v_y / g = 20 / 9.8 = 2.04 s",
+    "t_total = 2 x 2.04 = 4.08 s"
+   ],
+   "first_error": 1,
+   "error_kind": "incorrect_initial_value",
+   "finished": true,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "You wrote v_y = 20 m/s, but that\u2019s the initial speed, not the vertical component. What\u2019s the vertical component of a 20 m/s velocity at 60 degrees?"
+  },
+  {
+   "event": "tutor_focus",
+   "was": null,
+   "now": "How long until the ball returns to launch height?",
+   "set_by": "page"
+  },
+  {
+   "event": "tutor_unconfirmed",
+   "step": 1,
+   "line": "v_y = 20 m/s"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": null,
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": [
+    1200,
+    496
+   ],
+   "page": "work",
+   "about": null,
+   "focus": null,
+   "problem": "How long until the ball returns to launch height?",
+   "subject": "physics",
+   "topic": "projectile motion",
+   "other_problems": [],
+   "given": "A ball is launched at 20 m/s, 60 degrees above the horizontal. How long until it returns to launch height? (g = 9.8 m/s^2)",
+   "steps": [
+    "v_y = 20 m/s",
+    "t_up = v_y / g = 20 / 9.8 = 2.04 s",
+    "t_total = 2 x 2.04 = 4.08 s"
+   ],
+   "first_error": 1,
+   "error_kind": "components",
+   "finished": true,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "You wrote v_y = 20 m/s, but the ball was launched at 60 degrees\u2014what part of the velocity is vertical?"
+  },
+  {
+   "event": "tutor_say",
+   "text": "You wrote v_y = 20 m/s, but the ball was launched at 60 degrees\u2014what part of the velocity is vertical?",
+   "why": "hint_1"
+  },
+  {
+   "event": "tutor_answer_key",
+   "problem": "How long until the ball returns to launch height?",
+   "mistake": [
+    1,
+    "v_y=20m/s"
+   ],
+   "wrong_line": "v_y = 20 m/s",
+   "correct_line": "v_y = 20 m/s",
+   "answer": "4.08 s",
+   "check": "The total time is twice the time to reach the maximum height, which is found using t_up = v_y / g, and doubling it gives the time to return to launch height."
+  },
+  {
+   "event": "jev",
+   "on": "utterance",
+   "said": "I don't get it. It's going 20 meters per second, isn't that the speed going up?",
+   "respond": 0.89,
+   "about": "subject",
+   "about_conf": 0.83,
+   "followup": 0.86,
+   "needs_page": 0.84,
+   "new_problem": 0.01,
+   "which_problem": null,
+   "which_conf": 0.0,
+   "latency_ms": 848
+  },
+  {
+   "event": "student_said",
+   "text": "I don't get it. It's going 20 meters per second, isn't that the speed going up?"
+  },
+  {
+   "event": "tutor_say",
+   "text": "Okay, let me think.",
+   "why": "ack"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": "talk",
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": [
+    1200,
+    496
+   ],
+   "page": "work",
+   "about": "subject",
+   "focus": "How long until the ball returns to launch height?",
+   "problem": null,
+   "subject": null,
+   "topic": null,
+   "other_problems": [],
+   "given": null,
+   "steps": [],
+   "first_error": null,
+   "error_kind": null,
+   "finished": false,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "The 20 m/s is the total speed, not the vertical part. What part of the velocity is vertical when launched at 60 degrees?"
+  },
+  {
+   "event": "tutor_about",
+   "about": "subject"
+  },
+  {
+   "event": "tutor_say",
+   "text": "The 20 m/s is the total speed, not the vertical part. What part of the velocity is vertical when launched at 60 degrees?",
+   "why": "reply"
+  },
+  {
+   "event": "jev",
+   "on": "utterance",
+   "said": "I don't know what you mean by part of the velocity. How does a speed have parts?",
+   "respond": 0.94,
+   "about": "subject",
+   "about_conf": 0.89,
+   "followup": 0.9,
+   "needs_page": 0.1,
+   "new_problem": 0.01,
+   "which_problem": null,
+   "which_conf": 0.0,
+   "latency_ms": 868
+  },
+  {
+   "event": "student_said",
+   "text": "I don't know what you mean by part of the velocity. How does a speed have parts?"
+  },
+  {
+   "event": "tutor_say",
+   "text": "Good question. One moment.",
+   "why": "ack"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": "talk",
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": null,
+   "page": "work",
+   "about": "subject",
+   "focus": "How long until the ball returns to launch height?",
+   "problem": null,
+   "subject": null,
+   "topic": null,
+   "other_problems": [],
+   "given": null,
+   "steps": [],
+   "first_error": null,
+   "error_kind": null,
+   "finished": false,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "Good question\u2014speed is the total, but velocity has parts. Think of it like a triangle: the total speed is the hypotenuse, and the vertical part is one side. What trig function gives the opposite side?"
+  },
+  {
+   "event": "tutor_about",
+   "about": "subject"
+  },
+  {
+   "event": "tutor_say",
+   "text": "Good question\u2014speed is the total, but velocity has parts. Think of it like a triangle: the total speed is the hypotenuse, and the vertical part is one side. What trig function gives the opposite side?",
+   "why": "reply"
+  },
+  {
+   "event": "jev",
+   "on": "utterance",
+   "said": "Sine is opposite over hypotenuse. But I don't get which side is the opposite one here.",
+   "respond": 0.95,
+   "about": "subject",
+   "about_conf": 0.88,
+   "followup": 0.95,
+   "needs_page": 0.23,
+   "new_problem": 0.01,
+   "which_problem": null,
+   "which_conf": 0.0,
+   "latency_ms": 617
+  },
+  {
+   "event": "student_said",
+   "text": "Sine is opposite over hypotenuse. But I don't get which side is the opposite one here."
+  },
+  {
+   "event": "tutor_say",
+   "text": "Let me see.",
+   "why": "ack"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": "talk",
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": [
+    1200,
+    496
+   ],
+   "page": "work",
+   "about": "subject",
+   "focus": "How long until the ball returns to launch height?",
+   "problem": null,
+   "subject": null,
+   "topic": null,
+   "other_problems": [],
+   "given": null,
+   "steps": [],
+   "first_error": null,
+   "error_kind": null,
+   "finished": false,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "Yes, sine gives opposite over hypotenuse. In this case, the vertical part is opposite the 60-degree angle, so v_y = 20 m/s \u00d7 sin(60\u00b0)."
+  },
+  {
+   "event": "tutor_about",
+   "about": "subject"
+  },
+  {
+   "event": "tutor_say",
+   "text": "Yes, sine gives opposite over hypotenuse. In this case, the vertical part is opposite the 60-degree angle, so v_y = 20 m/s \u00d7 sin(60\u00b0).",
+   "why": "reply"
+  },
+  {
+   "event": "jev",
+   "on": "utterance",
+   "said": "Oh, so the angle is at the bottom from the ground, and up is across from it. So v_y is 20 sin 60, like 17.3?",
+   "respond": 0.37,
+   "about": "subject",
+   "about_conf": 0.84,
+   "followup": 0.97,
+   "needs_page": 0.6,
+   "new_problem": 0.03,
+   "which_problem": null,
+   "which_conf": 0.0,
+   "latency_ms": 1202
+  },
+  {
+   "event": "student_said",
+   "text": "Oh, so the angle is at the bottom from the ground, and up is across from it. So v_y is 20 sin 60, like 17.3?"
+  },
+  {
+   "event": "tutor_say",
+   "text": "Got it. Give me a second.",
+   "why": "ack"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": "talk",
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": [
+    1200,
+    496
+   ],
+   "page": "work",
+   "about": "subject",
+   "focus": "How long until the ball returns to launch height?",
+   "problem": null,
+   "subject": null,
+   "topic": null,
+   "other_problems": [],
+   "given": null,
+   "steps": [],
+   "first_error": null,
+   "error_kind": null,
+   "finished": false,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "You're on the right track with the angle, but v_y isn't 20 m/s\u2014what's the correct way to find the vertical part?"
+  },
+  {
+   "event": "tutor_about",
+   "about": "subject"
+  },
+  {
+   "event": "tutor_say",
+   "text": "You're on the right track with the angle, but v_y isn't 20 m/s\u2014what's the correct way to find the vertical part?",
+   "why": "reply"
+  },
+  {
+   "event": "jev",
+   "on": "utterance",
+   "said": "Wait, I said 20 times sin 60, which is 17.3. Is that not right?",
+   "respond": 0.96,
+   "about": "subject",
+   "about_conf": 0.88,
+   "followup": 0.9,
+   "needs_page": 0.86,
+   "new_problem": 0.01,
+   "which_problem": null,
+   "which_conf": 0.0,
+   "latency_ms": 1019
+  },
+  {
+   "event": "student_said",
+   "text": "Wait, I said 20 times sin 60, which is 17.3. Is that not right?"
+  },
+  {
+   "event": "tutor_say",
+   "text": "Okay, let me think.",
+   "why": "ack"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": "talk",
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": [
+    1200,
+    496
+   ],
+   "page": "work",
+   "about": "view",
+   "focus": "How long until the ball returns to launch height?",
+   "problem": null,
+   "subject": null,
+   "topic": null,
+   "other_problems": [],
+   "given": null,
+   "steps": [],
+   "first_error": null,
+   "error_kind": null,
+   "finished": false,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "You're right that v_y = 20 m/s \u00d7 sin(60\u00b0), but you wrote v_y = 20 m/s, which is the total speed, not the vertical part. Try again with the correct expression."
+  },
+  {
+   "event": "tutor_about",
+   "about": "view"
+  },
+  {
+   "event": "tutor_say",
+   "text": "You're right that v_y = 20 m/s \u00d7 sin(60\u00b0), but you wrote v_y = 20 m/s, which is the total speed, not the vertical part. Try again with the correct expression.",
+   "why": "reply"
+  },
+  {
+   "event": "jev_error",
+   "error": "timed out"
+  },
+  {
+   "event": "student_said",
+   "text": "Okay so I cross out 20 and put v_y equals 17.3. Then time is 2 times 17.3 over 9.8, so about 3.54 seconds. Thanks."
+  },
+  {
+   "event": "tutor_say",
+   "text": "Good question. One moment.",
+   "why": "ack"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": "talk",
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": [
+    1200,
+    496
+   ],
+   "page": "work",
+   "about": "view",
+   "focus": "How long until the ball returns to launch height?",
+   "problem": null,
+   "subject": null,
+   "topic": null,
+   "other_problems": [],
+   "given": null,
+   "steps": [],
+   "first_error": null,
+   "error_kind": null,
+   "finished": false,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "Yes, you fixed it\u2014v_y is 20 m/s times sin(60\u00b0), not 20 m/s. Now write that down and keep going."
+  },
+  {
+   "event": "tutor_about",
+   "about": "view"
+  },
+  {
+   "event": "tutor_fixed_by_voice",
+   "step": 1
+  },
+  {
+   "event": "tutor_say",
+   "text": "Yes, you fixed it\u2014v_y is 20 m/s times sin(60\u00b0), not 20 m/s. Now write that down and keep going.",
+   "why": "reply"
+  }
+ ],
+ "tutor": {
+  "conversation": [
+   {
+    "who": "sensei",
+    "text": "Hi, I'm Sensei. Put your page under the camera and start solving. I'm watching.",
+    "t": 0.0
+   },
+   {
+    "who": "sensei",
+    "text": "You wrote v_y = 20 m/s, but the ball was launched at 60 degrees\u2014what part of the velocity is vertical?",
+    "t": 8.0
+   },
+   {
+    "who": "student",
+    "text": "I don't get it. It's going 20 meters per second, isn't that the speed going up?",
+    "t": 23.0
+   },
+   {
+    "who": "sensei",
+    "text": "The 20 m/s is the total speed, not the vertical part. What part of the velocity is vertical when launched at 60 degrees?",
+    "t": 23.0
+   },
+   {
+    "who": "student",
+    "text": "I don't know what you mean by part of the velocity. How does a speed have parts?",
+    "t": 38.0
+   },
+   {
+    "who": "sensei",
+    "text": "Good question\u2014speed is the total, but velocity has parts. Think of it like a triangle: the total speed is the hypotenuse, and the vertical part is one side. What trig function gives the opposite side?",
+    "t": 38.0
+   },
+   {
+    "who": "student",
+    "text": "Sine is opposite over hypotenuse. But I don't get which side is the opposite one here.",
+    "t": 53.0
+   },
+   {
+    "who": "sensei",
+    "text": "Yes, sine gives opposite over hypotenuse. In this case, the vertical part is opposite the 60-degree angle, so v_y = 20 m/s \u00d7 sin(60\u00b0).",
+    "t": 53.0
+   },
+   {
+    "who": "student",
+    "text": "Oh, so the angle is at the bottom from the ground, and up is across from it. So v_y is 20 sin 60, like 17.3?",
+    "t": 68.0
+   },
+   {
+    "who": "sensei",
+    "text": "You're on the right track with the angle, but v_y isn't 20 m/s\u2014what's the correct way to find the vertical part?",
+    "t": 68.0
+   },
+   {
+    "who": "student",
+    "text": "Wait, I said 20 times sin 60, which is 17.3. Is that not right?",
+    "t": 83.0
+   },
+   {
+    "who": "sensei",
+    "text": "You're right that v_y = 20 m/s \u00d7 sin(60\u00b0), but you wrote v_y = 20 m/s, which is the total speed, not the vertical part. Try again with the correct expression.",
+    "t": 83.0
+   },
+   {
+    "who": "student",
+    "text": "Okay so I cross out 20 and put v_y equals 17.3. Then time is 2 times 17.3 over 9.8, so about 3.54 seconds. Thanks.",
+    "t": 98.0
+   },
+   {
+    "who": "sensei",
+    "text": "Yes, you fixed it\u2014v_y is 20 m/s times sin(60\u00b0), not 20 m/s. Now write that down and keep going.",
+    "t": 98.0
+   }
+  ],
+  "problem": "How long until the ball returns to launch height?",
+  "subject": "physics",
+  "topic": "projectile motion",
+  "mistake": null,
+  "candidate_mistake": null,
+  "hint_level": 0,
+  "hints_on_mistake": 0,
+  "hints_given": 1,
+  "mistakes_found": [
+   "step 1: v_y = 20 m/s (components)"
+  ],
+  "mistakes_fixed": [
+   "step 1 (said aloud)"
+  ],
+  "last_said": "Yes, you fixed it\u2014v_y is 20 m/s times sin(60\u00b0), not 20 m/s. Now write that down and keep going.",
+  "last_why": "reply",
+  "last_spoke_at": 1098.0,
+  "last_seen": "student work",
+  "other_problems": [],
+  "steps_confirmed": 0,
+  "_finished_problem": null,
+  "let_go": [
+   [
+    1,
+    "v_y=20m/s"
+   ]
+  ],
+  "started_at": 1000.0,
+  "ends_at": 1900.0,
+  "phase": "watching",
+  "_rechecks": 0,
+  "last_focus_change": -1000000000.0,
+  "last_activity": 1098.0,
+  "_heard_count": 6,
+  "answer_key": {
+   "problem": "How long until the ball returns to launch height?",
+   "mistake": [
+    1,
+    "v_y=20m/s"
+   ],
+   "wrong_line": "v_y = 20 m/s",
+   "correct_line": "v_y = 20 m/s",
+   "answer": "4.08 s",
+   "check": "The total time is twice the time to reach the maximum height, which is found using t_up = v_y / g, and doubling it gives the time to return to launch height."
+  }
+ }
+}

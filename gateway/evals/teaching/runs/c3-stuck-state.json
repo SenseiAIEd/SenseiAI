@@ -1,0 +1,424 @@
+{
+ "id": "c3-stuck-state",
+ "page": "/home/perspectivity-dgx/SenseiAI/datasets/samples/chemistry/basic/hard/bad_1.png",
+ "variant": "state",
+ "now": 1053.0,
+ "transcript": [
+  {
+   "who": "sensei",
+   "why": "greeting",
+   "text": "Hi, I'm Sensei. Put your page under the camera and start solving. I'm watching."
+  },
+  {
+   "who": "sensei",
+   "why": "hint_1",
+   "text": "You used 25 for the temperature in the gas law\u2014what temperature scale does the ideal gas law need?"
+  },
+  {
+   "who": "student",
+   "text": "I don't know. The question said 25 degrees so I used that."
+  },
+  {
+   "who": "sensei",
+   "why": "ack",
+   "text": "Okay, let me think."
+  },
+  {
+   "who": "sensei",
+   "why": "reply",
+   "text": "You're right that the question says 25\u00b0C, but the ideal gas law needs Kelvin, not Celsius. What's 25\u00b0C in Kelvin?"
+  },
+  {
+   "who": "student",
+   "text": "I don't really get Kelvin. How do I change Celsius into it?"
+  },
+  {
+   "who": "sensei",
+   "why": "ack",
+   "text": "Good question. One moment."
+  },
+  {
+   "who": "sensei",
+   "why": "reply",
+   "text": "To convert Celsius to Kelvin, add 273. So 25\u00b0C is 25 + 273 = 298 K. Try that in the formula now."
+  },
+  {
+   "who": "student",
+   "text": "Okay so 0.25 times 0.0821 times 298 over 1. That's about 6.12 liters, not 0.513. Thanks."
+  },
+  {
+   "who": "sensei",
+   "why": "ack",
+   "text": "Let me see."
+  },
+  {
+   "who": "sensei",
+   "why": "reply",
+   "text": "Yes, you're right\u201425\u00b0C is 298 K, so using 298 gives about 6.12 liters. Write that correction and keep going."
+  }
+ ],
+ "events": [
+  {
+   "event": "tutor_start",
+   "minutes": 15.0
+  },
+  {
+   "event": "tutor_say",
+   "text": "Hi, I'm Sensei. Put your page under the camera and start solving. I'm watching.",
+   "why": "greeting"
+  },
+  {
+   "event": "tutor_subject",
+   "was": null,
+   "now": "chemistry",
+   "topic": "stoichiometry and gas laws",
+   "set_by": "page"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": null,
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": [
+    1200,
+    746
+   ],
+   "page": "work",
+   "about": null,
+   "focus": null,
+   "problem": "Find the volume of CO2 produced from the decomposition of 25.0 g of CaCO3 at 25\u00b0C and 1.00 atm.",
+   "subject": "chemistry",
+   "topic": "stoichiometry and gas laws",
+   "other_problems": [],
+   "given": "CaCO3 -> CaO + CO2\n25.0 g of CaCO3 decomposes completely.\nFind the volume of CO2 at 25 C and 1.00 atm.\nR = 0.0821 L atm / mol K",
+   "steps": [
+    "M(CaCO3) = 40.1 + 12.0 + 3(16.0) = 100.1 g/mol",
+    "n(CaCO3) = 25.0 / 100.1 = 0.250 mol",
+    "n(CO2) = 0.250 mol (1:1)",
+    "V = nRT / P = (0.250)(0.0821)(25) / 1.00",
+    "V = 0.513 L"
+   ],
+   "first_error": 4,
+   "error_kind": "unit_conversion",
+   "finished": true,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "You used the right formula, but check the temperature in your calculation\u2014did you convert it to Kelvin?"
+  },
+  {
+   "event": "tutor_focus",
+   "was": null,
+   "now": "Find the volume of CO2 produced from the decomposition of 25.0 g of CaCO3 at 25\u00b0C and 1.00 atm.",
+   "set_by": "page"
+  },
+  {
+   "event": "tutor_unconfirmed",
+   "step": 4,
+   "line": "V = nRT / P = (0.250)(0.0821)(25) / 1.00"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": null,
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": [
+    1200,
+    746
+   ],
+   "page": "work",
+   "about": null,
+   "focus": null,
+   "problem": "Find the volume of CO2 produced from the decomposition of 25.0 g of CaCO3 at 25\u00b0C and 1.00 atm.",
+   "subject": "chemistry",
+   "topic": "gas laws and stoichiometry",
+   "other_problems": [],
+   "given": "CaCO3 -> CaO + CO2\n25.0 g of CaCO3 decomposes completely.\nFind the volume of CO2 at 25 C and 1.00 atm.\nR = 0.0821 L atm / mol K",
+   "steps": [
+    "M(CaCO3) = 40.1 + 12.0 + 3(16.0) = 100.1 g/mol",
+    "n(CaCO3) = 25.0 / 100.1 = 0.250 mol",
+    "n(CO2) = 0.250 mol (1 : 1)",
+    "V = nRT / P = (0.250)(0.0821)(25) / 1.00",
+    "V = 0.513 L"
+   ],
+   "first_error": 4,
+   "error_kind": "kelvin",
+   "finished": true,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "You used 25 for the temperature in the gas law\u2014what temperature scale does the ideal gas law need?"
+  },
+  {
+   "event": "tutor_say",
+   "text": "You used 25 for the temperature in the gas law\u2014what temperature scale does the ideal gas law need?",
+   "why": "hint_1"
+  },
+  {
+   "event": "tutor_answer_key",
+   "problem": "Find the volume of CO2 produced from the decomposition of 25.0 g of CaCO3 at 25\u00b0C and 1.00 atm.",
+   "mistake": [
+    4,
+    "v=nrt/p=(0.250)(0.0821)(25)/1.00"
+   ],
+   "wrong_line": "V = nRT / P = (0.250)(0.0821)(25) / 1.00",
+   "correct_line": "V = nRT / P = (0.250)(0.0821)(298) / 1.00",
+   "answer": "6.12 L",
+   "check": "The volume can be verified by ensuring the temperature is in Kelvin (25\u00b0C = 298 K) and using the ideal gas law with correct values for n, R, T, and P."
+  },
+  {
+   "event": "jev",
+   "on": "utterance",
+   "said": "I don't know. The question said 25 degrees so I used that.",
+   "respond": 0.97,
+   "about": "subject",
+   "about_conf": 0.62,
+   "followup": 0.94,
+   "needs_page": 0.3,
+   "new_problem": 0.01,
+   "which_problem": null,
+   "which_conf": 0.0,
+   "latency_ms": 635
+  },
+  {
+   "event": "student_said",
+   "text": "I don't know. The question said 25 degrees so I used that."
+  },
+  {
+   "event": "tutor_say",
+   "text": "Okay, let me think.",
+   "why": "ack"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": "talk",
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": [
+    1200,
+    746
+   ],
+   "page": "work",
+   "about": "subject",
+   "focus": "Find the volume of CO2 produced from the decomposition of 25.0 g of CaCO3 at 25\u00b0C and 1.00 atm.",
+   "problem": null,
+   "subject": null,
+   "topic": null,
+   "other_problems": [],
+   "given": null,
+   "steps": [],
+   "first_error": null,
+   "error_kind": null,
+   "finished": false,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "You're right that the question says 25\u00b0C, but the ideal gas law needs Kelvin, not Celsius. What's 25\u00b0C in Kelvin?"
+  },
+  {
+   "event": "tutor_about",
+   "about": "subject"
+  },
+  {
+   "event": "tutor_say",
+   "text": "You're right that the question says 25\u00b0C, but the ideal gas law needs Kelvin, not Celsius. What's 25\u00b0C in Kelvin?",
+   "why": "reply"
+  },
+  {
+   "event": "jev",
+   "on": "utterance",
+   "said": "I don't really get Kelvin. How do I change Celsius into it?",
+   "respond": 0.97,
+   "about": "subject",
+   "about_conf": 0.92,
+   "followup": 0.98,
+   "needs_page": 0.04,
+   "new_problem": 0.04,
+   "which_problem": null,
+   "which_conf": 0.0,
+   "latency_ms": 1058
+  },
+  {
+   "event": "student_said",
+   "text": "I don't really get Kelvin. How do I change Celsius into it?"
+  },
+  {
+   "event": "tutor_say",
+   "text": "Good question. One moment.",
+   "why": "ack"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": "talk",
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": null,
+   "page": "work",
+   "about": "subject",
+   "focus": "Find the volume of CO2 produced from the decomposition of 25.0 g of CaCO3 at 25\u00b0C and 1.00 atm.",
+   "problem": null,
+   "subject": null,
+   "topic": null,
+   "other_problems": [],
+   "given": null,
+   "steps": [],
+   "first_error": null,
+   "error_kind": null,
+   "finished": false,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "To convert Celsius to Kelvin, add 273. So 25\u00b0C is 25 + 273 = 298 K. Try that in the formula now."
+  },
+  {
+   "event": "tutor_about",
+   "about": "subject"
+  },
+  {
+   "event": "tutor_say",
+   "text": "To convert Celsius to Kelvin, add 273. So 25\u00b0C is 25 + 273 = 298 K. Try that in the formula now.",
+   "why": "reply"
+  },
+  {
+   "event": "jev_error",
+   "error": "timed out"
+  },
+  {
+   "event": "student_said",
+   "text": "Okay so 0.25 times 0.0821 times 298 over 1. That's about 6.12 liters, not 0.513. Thanks."
+  },
+  {
+   "event": "tutor_say",
+   "text": "Let me see.",
+   "why": "ack"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": "talk",
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": [
+    1200,
+    746
+   ],
+   "page": "work",
+   "about": "view",
+   "focus": "Find the volume of CO2 produced from the decomposition of 25.0 g of CaCO3 at 25\u00b0C and 1.00 atm.",
+   "problem": null,
+   "subject": null,
+   "topic": null,
+   "other_problems": [],
+   "given": null,
+   "steps": [],
+   "first_error": null,
+   "error_kind": null,
+   "finished": false,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "Yes, you're right\u201425\u00b0C is 298 K, so using 298 gives about 6.12 liters. Write that correction and keep going."
+  },
+  {
+   "event": "tutor_about",
+   "about": "view"
+  },
+  {
+   "event": "tutor_fixed_by_voice",
+   "step": 4
+  },
+  {
+   "event": "tutor_say",
+   "text": "Yes, you're right\u201425\u00b0C is 298 K, so using 298 gives about 6.12 liters. Write that correction and keep going.",
+   "why": "reply"
+  }
+ ],
+ "tutor": {
+  "conversation": [
+   {
+    "who": "sensei",
+    "text": "Hi, I'm Sensei. Put your page under the camera and start solving. I'm watching.",
+    "t": 0.0
+   },
+   {
+    "who": "sensei",
+    "text": "You used 25 for the temperature in the gas law\u2014what temperature scale does the ideal gas law need?",
+    "t": 8.0
+   },
+   {
+    "who": "student",
+    "text": "I don't know. The question said 25 degrees so I used that.",
+    "t": 23.0
+   },
+   {
+    "who": "sensei",
+    "text": "You're right that the question says 25\u00b0C, but the ideal gas law needs Kelvin, not Celsius. What's 25\u00b0C in Kelvin?",
+    "t": 23.0
+   },
+   {
+    "who": "student",
+    "text": "I don't really get Kelvin. How do I change Celsius into it?",
+    "t": 38.0
+   },
+   {
+    "who": "sensei",
+    "text": "To convert Celsius to Kelvin, add 273. So 25\u00b0C is 25 + 273 = 298 K. Try that in the formula now.",
+    "t": 38.0
+   },
+   {
+    "who": "student",
+    "text": "Okay so 0.25 times 0.0821 times 298 over 1. That's about 6.12 liters, not 0.513. Thanks.",
+    "t": 53.0
+   },
+   {
+    "who": "sensei",
+    "text": "Yes, you're right\u201425\u00b0C is 298 K, so using 298 gives about 6.12 liters. Write that correction and keep going.",
+    "t": 53.0
+   }
+  ],
+  "problem": "Find the volume of CO2 produced from the decomposition of 25.0 g of CaCO3 at 25\u00b0C and 1.00 atm.",
+  "subject": "chemistry",
+  "topic": "gas laws and stoichiometry",
+  "mistake": null,
+  "candidate_mistake": null,
+  "hint_level": 0,
+  "hints_on_mistake": 0,
+  "hints_given": 1,
+  "mistakes_found": [
+   "step 4: V = nRT / P = (0.250)(0.0821)(25) / 1.00 (kelvin)"
+  ],
+  "mistakes_fixed": [
+   "step 4 (said aloud)"
+  ],
+  "last_said": "Yes, you're right\u201425\u00b0C is 298 K, so using 298 gives about 6.12 liters. Write that correction and keep going.",
+  "last_why": "reply",
+  "last_spoke_at": 1053.0,
+  "last_seen": "student work",
+  "other_problems": [],
+  "steps_confirmed": 0,
+  "_finished_problem": null,
+  "let_go": [
+   [
+    4,
+    "v=nrt/p=(0.250)(0.0821)(25)/1.00"
+   ]
+  ],
+  "started_at": 1000.0,
+  "ends_at": 1900.0,
+  "phase": "watching",
+  "_rechecks": 0,
+  "last_focus_change": -1000000000.0,
+  "last_activity": 1053.0,
+  "_heard_count": 3,
+  "answer_key": {
+   "problem": "Find the volume of CO2 produced from the decomposition of 25.0 g of CaCO3 at 25\u00b0C and 1.00 atm.",
+   "mistake": [
+    4,
+    "v=nrt/p=(0.250)(0.0821)(25)/1.00"
+   ],
+   "wrong_line": "V = nRT / P = (0.250)(0.0821)(25) / 1.00",
+   "correct_line": "V = nRT / P = (0.250)(0.0821)(298) / 1.00",
+   "answer": "6.12 L",
+   "check": "The volume can be verified by ensuring the temperature is in Kelvin (25\u00b0C = 298 K) and using the ideal gas law with correct values for n, R, T, and P."
+  }
+ }
+}

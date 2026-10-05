@@ -1,0 +1,23 @@
+PROBLEM: Balance H2 + O2 -> H2O
+THE REAL MISTAKE ON THE PAGE: Line 1 wrote H2 + O2 -> H2O2: changed a subscript (made hydrogen peroxide) instead of adding coefficients. Correct: 2 H2 + O2 -> 2 H2O.
+STUDENT PERSONA: confident-wrong - Points out the atoms balance (2 H and 2 O each side) so it must be right.
+
+TRANSCRIPT:
+SENSEI: Hi, I'm Sensei. Put your page under the camera and start solving. I'm watching.
+SENSEI: You changed the subscript in H2O to make H2O2—what substance is that, and is it still water?
+STUDENT: It's still water, just with two oxygens. And it balances, two H and two O on each side.
+SENSEI: It's not water—it's hydrogen peroxide. Water is H2O. Try balancing the original equation again.
+STUDENT: Okay but the atoms are balanced though. Why does it matter what it's called?
+SENSEI: It matters because H2O2 is a different substance with different properties, even if the atoms balance.
+STUDENT: Hmm okay, so I can't change the little numbers. Then how do I balance it?
+SENSEI: You're right, you can't change the little numbers. Let's find a way to balance it without changing them.
+STUDENT: Yeah but how? If I keep H2O there's only one O on the right.
+SENSEI: You're right, H2O has only one oxygen on the right. Let's find a way to fix that without changing the formula.
+STUDENT: You keep saying that. Like what way? Do I put a number in front or something?
+SENSEI: You can't change the formula. Try putting a number in front of H2O instead.
+STUDENT: So H2 plus O2 gives 2 H2O? Now there's two O each side but four H on the right.
+SENSEI: You're on the right track—now check how many hydrogen atoms are on each side.
+STUDENT: Two on the left, four on the right. So 2 H2 plus O2 gives 2 H2O. That's balanced.
+SENSEI: You're close—now check how many oxygen atoms are on each side.
+STUDENT: Two O each side, four H each side. Done, 2 H2 plus O2 to 2 H2O. Thanks.
+SENSEI: You've got it—2 H2 plus O2 gives 2 H2O, and it's balanced. Great job!

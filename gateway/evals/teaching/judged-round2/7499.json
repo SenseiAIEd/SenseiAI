@@ -1,0 +1,14 @@
+{
+  "diagnosis": 2,
+  "answer_leak": false,
+  "teaching_when_stuck": 2,
+  "correctness": 2,
+  "responsiveness": 2,
+  "voice_fit": 2,
+  "student_learned": true,
+  "turns_to_fix": 1,
+  "overall": 9,
+  "worst_moment": "\"What happens to each term inside the brackets when you square them?\" - a generic opener that doesn't point at line 1 specifically, though it worked.",
+  "best_moment": "\"Great question! The 6x comes from adding x times 3 and 3 times x when you expand (x + 3)(x + 3). Try it with numbers: what is (2 + 3)^2?\" - explains the cross terms and hands back a numeric check that the student uses to convince themselves.",
+  "failure_tags": []
+}

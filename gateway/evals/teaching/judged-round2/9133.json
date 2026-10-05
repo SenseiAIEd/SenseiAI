@@ -1,0 +1,19 @@
+{
+  "diagnosis": 2,
+  "answer_leak": true,
+  "teaching_when_stuck": 0,
+  "correctness": 2,
+  "responsiveness": 1,
+  "voice_fit": 2,
+  "student_learned": false,
+  "turns_to_fix": null,
+  "overall": 2,
+  "worst_moment": "\"The speed is 20 m/s, but only part of it goes up. Think of a 30-60-90 triangle: at 60 degrees, the vertical part is 20 times sin(60).\" - repeats the claim and hands over the formula without ever explaining why the vertical speed is less (e.g. a horizontal throw has none).",
+  "best_moment": "\"Imagine a ball launched straight up at 20 m/s. How long until it returns? Then think how the angle changes that.\" - a reasonable attempt to build from the student's own picture.",
+  "failure_tags": [
+    "answer_leak",
+    "repeats_question",
+    "no_explanation_when_stuck",
+    "loops"
+  ]
+}

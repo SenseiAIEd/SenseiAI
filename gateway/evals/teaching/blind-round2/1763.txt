@@ -1,0 +1,17 @@
+PROBLEM: Differentiate y = sin(3x^2), find dy/dx at x = 1
+THE REAL MISTAKE ON THE PAGE: Line 1 wrote dy/dx = cos(3x^2): the chain rule's inner derivative 6x is missing. Correct dy/dx = 6x cos(3x^2), at x=1 it is 6 cos 3 = -5.94.
+STUDENT PERSONA: stuck - Knows d/dx sin = cos but has never understood the chain rule.
+
+TRANSCRIPT:
+SENSEI: Hi, I'm Sensei. Put your page under the camera and start solving. I'm watching.
+SENSEI: You found the derivative of the outside function, but what happens to the inside function when you differentiate it?
+STUDENT: Um, I dont know. Sin goes to cos, right? What do you mean the inside function?
+SENSEI: Yes, sin goes to cos, but you need to use the chain rule for the inside function.
+STUDENT: I dont really get the chain rule. Like what am I supposed to do with it?
+SENSEI: The chain rule means you multiply by the derivative of the inside function. What is the derivative of 3x squared?
+STUDENT: Um, 6x? So I multiply that by the cos thing?
+SENSEI: Yes, 6x is correct. Now multiply that by cos(3x^2) to finish the derivative.
+STUDENT: Okay so dy/dx is 6x cos of 3x squared, and at x equals 1 its 6 cos 3, about minus 5.94.
+SENSEI: Yes, you're on the right track. Now, what is cos(3) approximately?
+STUDENT: Like minus 0.99, so yeah minus 5.94. Cool, thanks.
+SENSEI: You're close, but you missed the chain rule part. Try again with the full derivative.

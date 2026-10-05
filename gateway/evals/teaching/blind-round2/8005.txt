@@ -1,0 +1,18 @@
+PROBLEM: A 5.0 kg block slides down a 30 degree incline, friction coefficient 0.20. Find the friction force. g = 9.8
+THE REAL MISTAKE ON THE PAGE: Line 1 wrote N = mg = 49 N: on a slope the normal force is mg cos 30 = 42.4 N. Friction should be 8.5 N; student got 9.8 N.
+STUDENT PERSONA: stuck - Thinks normal force always equals weight.
+
+TRANSCRIPT:
+SENSEI: Hi, I'm Sensei. Put your page under the camera and start solving. I'm watching.
+SENSEI: You found the friction force correctly. Can you think of another way to check if this answer makes sense?
+STUDENT: Um, I don't know. How would I check it?
+SENSEI: You can check by estimating the normal force and seeing if the friction force seems reasonable for that.
+STUDENT: The normal force is just mg, so 49. Times 0.2 is 9.8. I don't really get what else to check.
+SENSEI: You're on the right track, but the normal force isn't just mg here. What's the component of gravity perpendicular to the incline?
+STUDENT: Wait, isn't normal force always equal to the weight? I don't understand the perpendicular thing.
+SENSEI: No, the normal force isn't always equal to the weight. On an incline, only part of the weight pushes straight into the surface. Can you picture the block on the slope?
+STUDENT: Yeah I can picture it. But I still don't know how to get the part that pushes into the slope.
+SENSEI: The part that pushes into the slope is mg times cos(30°). Try calculating that.
+STUDENT: Okay, 49 times cos 30 is about 42.4. So friction is 0.2 times 42.4, which is 8.5 newtons?
+SENSEI: Yes, that's right! You found the normal force and then the friction force correctly. Good job!
+STUDENT: Cool, so on a slope N is mg cos 30, not mg. I'll fix my first line. Thanks.

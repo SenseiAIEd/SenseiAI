@@ -1,0 +1,497 @@
+{
+ "id": "p1-why-state",
+ "page": "/home/perspectivity-dgx/SenseiAI/datasets/samples/physics/basic/easy/bad_1.png",
+ "variant": "state",
+ "now": 1068.0,
+ "transcript": [
+  {
+   "who": "sensei",
+   "why": "greeting",
+   "text": "Hi, I'm Sensei. Put your page under the camera and start solving. I'm watching."
+  },
+  {
+   "who": "sensei",
+   "why": "hint_1",
+   "text": "You multiplied speed by time, but the units don't match\u2014what unit is the speed in, and what unit should it be for this calculation?"
+  },
+  {
+   "who": "student",
+   "text": "Oh the speed is in kilometers per hour but time is seconds. So I need meters per second?"
+  },
+  {
+   "who": "sensei",
+   "why": "ack",
+   "text": "Okay, let me think."
+  },
+  {
+   "who": "sensei",
+   "why": "reply",
+   "text": "Yes, you need to convert km/h to m/s. What's 72 km/h in m/s?"
+  },
+  {
+   "who": "student",
+   "text": "Um I think you divide by 3.6, so 20 meters per second. Then 20 times 5 is 100 meters."
+  },
+  {
+   "who": "sensei",
+   "why": "ack",
+   "text": "Good question. One moment."
+  },
+  {
+   "who": "sensei",
+   "why": "reply",
+   "text": "Yes, 72 km/h is 20 m/s, and 20 times 5 is 100 meters. Write that down and keep going."
+  },
+  {
+   "who": "student",
+   "text": "Okay but why is it 3.6 though? My teacher just said divide by 3.6."
+  },
+  {
+   "who": "sensei",
+   "why": "ack",
+   "text": "Let me see."
+  },
+  {
+   "who": "sensei",
+   "why": "reply",
+   "text": "Because 1 kilometer is 1000 meters and 1 hour is 3600 seconds, so 72 km/h is 72 times 1000 meters per 3600 seconds."
+  },
+  {
+   "who": "student",
+   "text": "Oh so 3600 over 1000 is 3.6. So 72 times 1000 over 3600 is 20, then 20 times 5 is 100 meters. Got it, thanks."
+  },
+  {
+   "who": "sensei",
+   "why": "ack",
+   "text": "Got it. Give me a second."
+  },
+  {
+   "who": "sensei",
+   "why": "reply",
+   "text": "Yes, you're right\u20143600 divided by 1000 is 3.6, so 72 times 1000 over 3600 gives 20 m/s. Great job!"
+  }
+ ],
+ "events": [
+  {
+   "event": "tutor_start",
+   "minutes": 15.0
+  },
+  {
+   "event": "tutor_say",
+   "text": "Hi, I'm Sensei. Put your page under the camera and start solving. I'm watching.",
+   "why": "greeting"
+  },
+  {
+   "event": "tutor_subject",
+   "was": null,
+   "now": "physics",
+   "topic": "unit conversion",
+   "set_by": "page"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": null,
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": [
+    1200,
+    570
+   ],
+   "page": "work",
+   "about": null,
+   "focus": null,
+   "problem": "A car moves at 72 km/h. How far does it travel in 5.0 s?",
+   "subject": "physics",
+   "topic": "unit conversion",
+   "other_problems": [],
+   "given": "A car moves at 72 km/h. How far does it travel in 5.0 s?",
+   "steps": [
+    "v = 72 km/h",
+    "d = v x t",
+    "d = 72 x 5.0",
+    "d = 360 m"
+   ],
+   "first_error": 3,
+   "error_kind": "unit_conversion",
+   "finished": true,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "You multiplied 72 by 5.0, but what units are you using for speed and time? What should you check about the units?"
+  },
+  {
+   "event": "tutor_focus",
+   "was": null,
+   "now": "A car moves at 72 km/h. How far does it travel in 5.0 s?",
+   "set_by": "page"
+  },
+  {
+   "event": "tutor_unconfirmed",
+   "step": 3,
+   "line": "d = 72 x 5.0"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": null,
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": [
+    1200,
+    570
+   ],
+   "page": "work",
+   "about": null,
+   "focus": null,
+   "problem": "A car moves at 72 km/h. How far does it travel in 5.0 s?",
+   "subject": "physics",
+   "topic": "unit conversion",
+   "other_problems": [],
+   "given": "A car moves at 72 km/h. How far does it travel in 5.0 s?",
+   "steps": [
+    "v = 72 km/h",
+    "d = v x t",
+    "d = 72 x 5.0",
+    "d = 360 m"
+   ],
+   "first_error": 3,
+   "error_kind": "units",
+   "finished": true,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "You multiplied speed by time, but the units don't match\u2014what unit is the speed in, and what unit should it be for this calculation?"
+  },
+  {
+   "event": "tutor_say",
+   "text": "You multiplied speed by time, but the units don't match\u2014what unit is the speed in, and what unit should it be for this calculation?",
+   "why": "hint_1"
+  },
+  {
+   "event": "tutor_answer_key",
+   "problem": "A car moves at 72 km/h. How far does it travel in 5.0 s?",
+   "mistake": [
+    3,
+    "d=72x5.0"
+   ],
+   "wrong_line": "d = 72 x 5.0",
+   "correct_line": "d = 20 x 5.0",
+   "answer": "100 m",
+   "check": "Convert 72 km/h to m/s by dividing by 3.6 to get 20 m/s, then multiply by 5.0 s to get 100 m."
+  },
+  {
+   "event": "jev_error",
+   "error": "timed out"
+  },
+  {
+   "event": "student_said",
+   "text": "Oh the speed is in kilometers per hour but time is seconds. So I need meters per second?"
+  },
+  {
+   "event": "tutor_say",
+   "text": "Okay, let me think.",
+   "why": "ack"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": "talk",
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": [
+    1200,
+    570
+   ],
+   "page": "work",
+   "about": "subject",
+   "focus": "A car moves at 72 km/h. How far does it travel in 5.0 s?",
+   "problem": null,
+   "subject": null,
+   "topic": null,
+   "other_problems": [],
+   "given": null,
+   "steps": [],
+   "first_error": null,
+   "error_kind": null,
+   "finished": false,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "Yes, you need to convert km/h to m/s. What's 72 km/h in m/s?"
+  },
+  {
+   "event": "tutor_about",
+   "about": "subject"
+  },
+  {
+   "event": "tutor_say",
+   "text": "Yes, you need to convert km/h to m/s. What's 72 km/h in m/s?",
+   "why": "reply"
+  },
+  {
+   "event": "jev",
+   "on": "utterance",
+   "said": "Um I think you divide by 3.6, so 20 meters per second. Then 20 times 5 is 100 meters.",
+   "respond": 0.74,
+   "about": "subject",
+   "about_conf": 0.82,
+   "followup": 0.95,
+   "needs_page": 0.47,
+   "new_problem": 0.03,
+   "which_problem": null,
+   "which_conf": 0.0,
+   "latency_ms": 735
+  },
+  {
+   "event": "student_said",
+   "text": "Um I think you divide by 3.6, so 20 meters per second. Then 20 times 5 is 100 meters."
+  },
+  {
+   "event": "tutor_say",
+   "text": "Good question. One moment.",
+   "why": "ack"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": "talk",
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": [
+    1200,
+    570
+   ],
+   "page": "work",
+   "about": "subject",
+   "focus": "A car moves at 72 km/h. How far does it travel in 5.0 s?",
+   "problem": null,
+   "subject": null,
+   "topic": null,
+   "other_problems": [],
+   "given": null,
+   "steps": [],
+   "first_error": null,
+   "error_kind": null,
+   "finished": false,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "Yes, 72 km/h is 20 m/s, and 20 times 5 is 100 meters. Write that down and keep going."
+  },
+  {
+   "event": "tutor_about",
+   "about": "subject"
+  },
+  {
+   "event": "tutor_fixed_by_voice",
+   "step": 3
+  },
+  {
+   "event": "tutor_say",
+   "text": "Yes, 72 km/h is 20 m/s, and 20 times 5 is 100 meters. Write that down and keep going.",
+   "why": "reply"
+  },
+  {
+   "event": "jev",
+   "on": "utterance",
+   "said": "Okay but why is it 3.6 though? My teacher just said divide by 3.6.",
+   "respond": 0.86,
+   "about": "subject",
+   "about_conf": 0.95,
+   "followup": 0.24,
+   "needs_page": 0.18,
+   "new_problem": 0.03,
+   "which_problem": null,
+   "which_conf": 0.0,
+   "latency_ms": 666
+  },
+  {
+   "event": "student_said",
+   "text": "Okay but why is it 3.6 though? My teacher just said divide by 3.6."
+  },
+  {
+   "event": "tutor_say",
+   "text": "Let me see.",
+   "why": "ack"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": "talk",
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": [
+    1200,
+    570
+   ],
+   "page": "work",
+   "about": "subject",
+   "focus": "A car moves at 72 km/h. How far does it travel in 5.0 s?",
+   "problem": null,
+   "subject": null,
+   "topic": null,
+   "other_problems": [],
+   "given": null,
+   "steps": [],
+   "first_error": null,
+   "error_kind": null,
+   "finished": false,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "Because 1 kilometer is 1000 meters and 1 hour is 3600 seconds, so 72 km/h is 72 times 1000 meters per 3600 seconds."
+  },
+  {
+   "event": "tutor_about",
+   "about": "subject"
+  },
+  {
+   "event": "tutor_say",
+   "text": "Because 1 kilometer is 1000 meters and 1 hour is 3600 seconds, so 72 km/h is 72 times 1000 meters per 3600 seconds.",
+   "why": "reply"
+  },
+  {
+   "event": "jev_error",
+   "error": "timed out"
+  },
+  {
+   "event": "student_said",
+   "text": "Oh so 3600 over 1000 is 3.6. So 72 times 1000 over 3600 is 20, then 20 times 5 is 100 meters. Got it, thanks."
+  },
+  {
+   "event": "tutor_say",
+   "text": "Got it. Give me a second.",
+   "why": "ack"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": "talk",
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": [
+    1200,
+    570
+   ],
+   "page": "work",
+   "about": "subject",
+   "focus": "A car moves at 72 km/h. How far does it travel in 5.0 s?",
+   "problem": null,
+   "subject": null,
+   "topic": null,
+   "other_problems": [],
+   "given": null,
+   "steps": [],
+   "first_error": null,
+   "error_kind": null,
+   "finished": false,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "Yes, you're right\u20143600 divided by 1000 is 3.6, so 72 times 1000 over 3600 gives 20 m/s. Great job!"
+  },
+  {
+   "event": "tutor_about",
+   "about": "subject"
+  },
+  {
+   "event": "tutor_say",
+   "text": "Yes, you're right\u20143600 divided by 1000 is 3.6, so 72 times 1000 over 3600 gives 20 m/s. Great job!",
+   "why": "reply"
+  }
+ ],
+ "tutor": {
+  "conversation": [
+   {
+    "who": "sensei",
+    "text": "Hi, I'm Sensei. Put your page under the camera and start solving. I'm watching.",
+    "t": 0.0
+   },
+   {
+    "who": "sensei",
+    "text": "You multiplied speed by time, but the units don't match\u2014what unit is the speed in, and what unit should it be for this calculation?",
+    "t": 8.0
+   },
+   {
+    "who": "student",
+    "text": "Oh the speed is in kilometers per hour but time is seconds. So I need meters per second?",
+    "t": 23.0
+   },
+   {
+    "who": "sensei",
+    "text": "Yes, you need to convert km/h to m/s. What's 72 km/h in m/s?",
+    "t": 23.0
+   },
+   {
+    "who": "student",
+    "text": "Um I think you divide by 3.6, so 20 meters per second. Then 20 times 5 is 100 meters.",
+    "t": 38.0
+   },
+   {
+    "who": "sensei",
+    "text": "Yes, 72 km/h is 20 m/s, and 20 times 5 is 100 meters. Write that down and keep going.",
+    "t": 38.0
+   },
+   {
+    "who": "student",
+    "text": "Okay but why is it 3.6 though? My teacher just said divide by 3.6.",
+    "t": 53.0
+   },
+   {
+    "who": "sensei",
+    "text": "Because 1 kilometer is 1000 meters and 1 hour is 3600 seconds, so 72 km/h is 72 times 1000 meters per 3600 seconds.",
+    "t": 53.0
+   },
+   {
+    "who": "student",
+    "text": "Oh so 3600 over 1000 is 3.6. So 72 times 1000 over 3600 is 20, then 20 times 5 is 100 meters. Got it, thanks.",
+    "t": 68.0
+   },
+   {
+    "who": "sensei",
+    "text": "Yes, you're right\u20143600 divided by 1000 is 3.6, so 72 times 1000 over 3600 gives 20 m/s. Great job!",
+    "t": 68.0
+   }
+  ],
+  "problem": "A car moves at 72 km/h. How far does it travel in 5.0 s?",
+  "subject": "physics",
+  "topic": "unit conversion",
+  "mistake": null,
+  "candidate_mistake": null,
+  "hint_level": 0,
+  "hints_on_mistake": 0,
+  "hints_given": 1,
+  "mistakes_found": [
+   "step 3: d = 72 x 5.0 (units)"
+  ],
+  "mistakes_fixed": [
+   "step 3 (said aloud)"
+  ],
+  "last_said": "Yes, you're right\u20143600 divided by 1000 is 3.6, so 72 times 1000 over 3600 gives 20 m/s. Great job!",
+  "last_why": "reply",
+  "last_spoke_at": 1068.0,
+  "last_seen": "student work",
+  "other_problems": [],
+  "steps_confirmed": 0,
+  "_finished_problem": null,
+  "let_go": [
+   [
+    3,
+    "d=72x5.0"
+   ]
+  ],
+  "started_at": 1000.0,
+  "ends_at": 1900.0,
+  "phase": "watching",
+  "_rechecks": 0,
+  "last_focus_change": -1000000000.0,
+  "last_activity": 1068.0,
+  "_heard_count": 4,
+  "answer_key": {
+   "problem": "A car moves at 72 km/h. How far does it travel in 5.0 s?",
+   "mistake": [
+    3,
+    "d=72x5.0"
+   ],
+   "wrong_line": "d = 72 x 5.0",
+   "correct_line": "d = 20 x 5.0",
+   "answer": "100 m",
+   "check": "Convert 72 km/h to m/s by dividing by 3.6 to get 20 m/s, then multiply by 5.0 s to get 100 m."
+  }
+ }
+}
