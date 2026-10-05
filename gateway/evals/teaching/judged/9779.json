@@ -1,0 +1,18 @@
+{
+  "diagnosis": 2,
+  "answer_leak": false,
+  "teaching_when_stuck": 1,
+  "correctness": 1,
+  "responsiveness": 0,
+  "voice_fit": 2,
+  "student_learned": false,
+  "turns_to_fix": null,
+  "overall": 3,
+  "worst_moment": "\"The limiting reagent is the one that runs out first based on the reaction ratio. For example, if you have 4 H2 molecules, you need 2 O2 molecules. So how many O2 molecules do you need for 6.0 g of H2?\" - repeated three times after the student answered 1.5 and asked directly whether H2 is limiting.",
+  "best_moment": "\"The ratio tells us how much of each reactant is needed. For example, 2 H2 and 1 O2 make 2 H2O. So how many O2 molecules do you need for 3 H2 molecules?\" - uses the ratio to lead the student to the needed-amount comparison.",
+  "failure_tags": [
+    "repeats_question",
+    "ignores_student",
+    "loops"
+  ]
+}

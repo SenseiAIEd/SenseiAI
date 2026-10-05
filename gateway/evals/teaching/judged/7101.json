@@ -1,0 +1,14 @@
+{
+  "diagnosis": 2,
+  "answer_leak": false,
+  "teaching_when_stuck": 2,
+  "correctness": 2,
+  "responsiveness": 1,
+  "voice_fit": 2,
+  "student_learned": true,
+  "turns_to_fix": 1,
+  "overall": 8,
+  "worst_moment": "\"To convert km/h to m/s, you divide by 3.6 because 1 km is 1000 meters and 1 hour is 3600 seconds. Try converting 20 km/h to m/s using that idea.\" - skips over the student's correct 10000/3600 working without acknowledging it and asks for yet another conversion.",
+  "best_moment": "\"The number 3.6 comes from how many meters are in a kilometer and how many seconds are in an hour. Try converting 10 km/h to m/s to see the pattern.\" - a small worked example that lets the student find where 3.6 comes from.",
+  "failure_tags": []
+}

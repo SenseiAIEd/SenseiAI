@@ -1,0 +1,806 @@
+{
+ "id": "m4-stuck-teach",
+ "page": "/home/perspectivity-dgx/SenseiAI/datasets/samples/math/basic/easy/bad_3.png",
+ "variant": "teach",
+ "now": 1128.0,
+ "transcript": [
+  {
+   "who": "sensei",
+   "why": "greeting",
+   "text": "Hi, I'm Sensei. Put your page under the camera and start solving. I'm watching."
+  },
+  {
+   "who": "sensei",
+   "why": "hint_1",
+   "text": "What happens to each term inside the brackets when you subtract them?"
+  },
+  {
+   "who": "student",
+   "text": "Um, they both change sign? So I got 5 minus 2x plus 4. Is that wrong?"
+  },
+  {
+   "who": "sensei",
+   "why": "ack",
+   "text": "Okay, let me think."
+  },
+  {
+   "who": "sensei",
+   "why": "reply",
+   "text": "Yes, when you subtract a group, every term inside changes sign. Try it with 7 - (3 - 1) and see what you get."
+  },
+  {
+   "who": "student",
+   "text": "7 minus 3 plus 1, so 5. Okay but I dont know what is wrong on my page then."
+  },
+  {
+   "who": "sensei",
+   "why": "ack",
+   "text": "Good question. One moment."
+  },
+  {
+   "who": "sensei",
+   "why": "reply",
+   "text": "When you subtract a group, every term inside changes sign. Try 8 - (4 - 2) and see what you get. What happens to the minus sign?"
+  },
+  {
+   "who": "student",
+   "text": "8 minus 4 plus 2, thats 6. The minus becomes plus. I did that already though. I dont get whats wrong."
+  },
+  {
+   "who": "sensei",
+   "why": "ack",
+   "text": "Let me see."
+  },
+  {
+   "who": "sensei",
+   "why": "reply",
+   "text": "When you subtract a group, every term inside the brackets changes sign. Try 6 - (3 - 2) and see what happens to the minus sign. What do you get?"
+  },
+  {
+   "who": "student",
+   "text": "5. But I keep getting these right. Is my first line actually wrong or is it something else?"
+  },
+  {
+   "who": "sensei",
+   "why": "ack",
+   "text": "Got it. Give me a second."
+  },
+  {
+   "who": "sensei",
+   "why": "reply",
+   "text": "When you subtract a group, every term inside changes sign. Try 7 - (3 - 1) and see what happens to the minus sign. What do you get?"
+  },
+  {
+   "who": "student",
+   "text": "You already asked that, its 5. Can you just tell me which line is wrong?"
+  },
+  {
+   "who": "sensei",
+   "why": "ack",
+   "text": "Okay, let me think."
+  },
+  {
+   "who": "sensei",
+   "why": "reply",
+   "text": "You're right, I asked that. The first line is wrong because you didn't change the sign of the -4 when you removed the parentheses."
+  },
+  {
+   "who": "student",
+   "text": "But I did, I wrote plus 4. Look, 5 minus 2x plus 4. I dont get it."
+  },
+  {
+   "who": "sensei",
+   "why": "ack",
+   "text": "Good question. One moment."
+  },
+  {
+   "who": "sensei",
+   "why": "reply",
+   "text": "When you subtract a group, every term inside changes sign. For example, 6 - (3 - 2) becomes 6 - 3 + 2. What happens to the -4 in your first line?"
+  },
+  {
+   "who": "student",
+   "text": "It becomes plus 4. Which I have. So is it fine? Then my answer x equals minus 2 is right?"
+  },
+  {
+   "who": "sensei",
+   "why": "ack",
+   "text": "Let me see."
+  },
+  {
+   "who": "sensei",
+   "why": "reply",
+   "text": "When you subtract a group, every term inside changes sign. For example, 5 - (2x - 4) becomes 5 - 2x + 4. What happens to the -4 in your first line?"
+  },
+  {
+   "who": "student",
+   "text": "Thats exactly what I wrote. I still dont get what is wrong."
+  },
+  {
+   "who": "sensei",
+   "why": "ack",
+   "text": "Got it. Give me a second."
+  },
+  {
+   "who": "sensei",
+   "why": "reply",
+   "text": "When you subtract a group, every term inside changes sign. For example, 5 - (2x - 4) becomes 5 - 2x + 4. What happens to the -4 in your first line?"
+  }
+ ],
+ "events": [
+  {
+   "event": "tutor_start",
+   "minutes": 15.0
+  },
+  {
+   "event": "tutor_say",
+   "text": "Hi, I'm Sensei. Put your page under the camera and start solving. I'm watching.",
+   "why": "greeting"
+  },
+  {
+   "event": "tutor_subject",
+   "was": null,
+   "now": "math",
+   "topic": "linear equations",
+   "set_by": "page"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": null,
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": [
+    1200,
+    593
+   ],
+   "page": "work",
+   "about": null,
+   "focus": null,
+   "problem": "Solve: 5 - (2x - 4) = 11",
+   "subject": "math",
+   "topic": "linear equations",
+   "other_problems": [],
+   "given": "Solve: 5 - (2x - 4) = 11",
+   "steps": [
+    "5 - 2x + 4 = 11",
+    "9 - 2x = 11",
+    "-2x = 11 - 9",
+    "-2x = 2",
+    "x = -2"
+   ],
+   "first_error": 1,
+   "error_kind": "sign_error",
+   "finished": true,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "You distributed the negative sign incorrectly\u2014what should you have done with the minus sign in front of the parentheses?"
+  },
+  {
+   "event": "tutor_focus",
+   "was": null,
+   "now": "Solve: 5 - (2x - 4) = 11",
+   "set_by": "page"
+  },
+  {
+   "event": "tutor_unconfirmed",
+   "step": 1,
+   "line": "5 - 2x + 4 = 11"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": null,
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": [
+    1200,
+    593
+   ],
+   "page": "work",
+   "about": null,
+   "focus": null,
+   "problem": "Solve: 5 - (2x - 4) = 11",
+   "subject": "math",
+   "topic": "linear equations",
+   "other_problems": [],
+   "given": "Solve: 5 - (2x - 4) = 11",
+   "steps": [
+    "5 - 2x + 4 = 11",
+    "9 - 2x = 11",
+    "-2x = 11 - 9",
+    "-2x = 2",
+    "x = -2"
+   ],
+   "first_error": 1,
+   "error_kind": "distribution",
+   "finished": true,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "What happens to each term inside the brackets when you subtract them?"
+  },
+  {
+   "event": "tutor_say",
+   "text": "What happens to each term inside the brackets when you subtract them?",
+   "why": "hint_1"
+  },
+  {
+   "event": "jev",
+   "on": "utterance",
+   "said": "Um, they both change sign? So I got 5 minus 2x plus 4. Is that wrong?",
+   "respond": 0.91,
+   "about": "subject",
+   "about_conf": 0.97,
+   "followup": 0.79,
+   "needs_page": 0.53,
+   "new_problem": 0.01,
+   "which_problem": null,
+   "which_conf": 0.0,
+   "latency_ms": 571
+  },
+  {
+   "event": "student_said",
+   "text": "Um, they both change sign? So I got 5 minus 2x plus 4. Is that wrong?"
+  },
+  {
+   "event": "tutor_say",
+   "text": "Okay, let me think.",
+   "why": "ack"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": "talk",
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": [
+    1200,
+    593
+   ],
+   "page": "work",
+   "about": "subject",
+   "focus": "Solve: 5 - (2x - 4) = 11",
+   "problem": null,
+   "subject": null,
+   "topic": null,
+   "other_problems": [],
+   "given": null,
+   "steps": [],
+   "first_error": null,
+   "error_kind": null,
+   "finished": false,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "Yes, when you subtract a group, every term inside changes sign. Try it with 7 - (3 - 1) and see what you get."
+  },
+  {
+   "event": "tutor_about",
+   "about": "subject"
+  },
+  {
+   "event": "tutor_say",
+   "text": "Yes, when you subtract a group, every term inside changes sign. Try it with 7 - (3 - 1) and see what you get.",
+   "why": "reply"
+  },
+  {
+   "event": "jev",
+   "on": "utterance",
+   "said": "7 minus 3 plus 1, so 5. Okay but I dont know what is wrong on my page then.",
+   "respond": 0.5,
+   "about": "subject",
+   "about_conf": 0.75,
+   "followup": 0.84,
+   "needs_page": 0.86,
+   "new_problem": 0.06,
+   "which_problem": null,
+   "which_conf": 0.0,
+   "latency_ms": 816
+  },
+  {
+   "event": "student_said",
+   "text": "7 minus 3 plus 1, so 5. Okay but I dont know what is wrong on my page then."
+  },
+  {
+   "event": "tutor_say",
+   "text": "Good question. One moment.",
+   "why": "ack"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": "talk",
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": [
+    1200,
+    593
+   ],
+   "page": "work",
+   "about": "subject",
+   "focus": "Solve: 5 - (2x - 4) = 11",
+   "problem": null,
+   "subject": null,
+   "topic": null,
+   "other_problems": [],
+   "given": null,
+   "steps": [],
+   "first_error": null,
+   "error_kind": null,
+   "finished": false,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "When you subtract a group, every term inside changes sign. Try 8 - (4 - 2) and see what you get. What happens to the minus sign?"
+  },
+  {
+   "event": "tutor_about",
+   "about": "subject"
+  },
+  {
+   "event": "tutor_say",
+   "text": "When you subtract a group, every term inside changes sign. Try 8 - (4 - 2) and see what you get. What happens to the minus sign?",
+   "why": "reply"
+  },
+  {
+   "event": "jev",
+   "on": "utterance",
+   "said": "8 minus 4 plus 2, thats 6. The minus becomes plus. I did that already though. I dont get whats wrong.",
+   "respond": 0.63,
+   "about": "subject",
+   "about_conf": 0.93,
+   "followup": 0.91,
+   "needs_page": 0.88,
+   "new_problem": 0.06,
+   "which_problem": null,
+   "which_conf": 0.0,
+   "latency_ms": 542
+  },
+  {
+   "event": "student_said",
+   "text": "8 minus 4 plus 2, thats 6. The minus becomes plus. I did that already though. I dont get whats wrong."
+  },
+  {
+   "event": "tutor_say",
+   "text": "Let me see.",
+   "why": "ack"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": "talk",
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": [
+    1200,
+    593
+   ],
+   "page": "work",
+   "about": "subject",
+   "focus": "Solve: 5 - (2x - 4) = 11",
+   "problem": null,
+   "subject": null,
+   "topic": null,
+   "other_problems": [],
+   "given": null,
+   "steps": [],
+   "first_error": null,
+   "error_kind": null,
+   "finished": false,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "When you subtract a group, every term inside the brackets changes sign. Try 6 - (3 - 2) and see what happens to the minus sign. What do you get?"
+  },
+  {
+   "event": "tutor_about",
+   "about": "subject"
+  },
+  {
+   "event": "tutor_say",
+   "text": "When you subtract a group, every term inside the brackets changes sign. Try 6 - (3 - 2) and see what happens to the minus sign. What do you get?",
+   "why": "reply"
+  },
+  {
+   "event": "jev",
+   "on": "utterance",
+   "said": "5. But I keep getting these right. Is my first line actually wrong or is it something else?",
+   "respond": 0.6,
+   "about": "subject",
+   "about_conf": 0.93,
+   "followup": 0.91,
+   "needs_page": 0.82,
+   "new_problem": 0.18,
+   "which_problem": null,
+   "which_conf": 0.0,
+   "latency_ms": 931
+  },
+  {
+   "event": "student_said",
+   "text": "5. But I keep getting these right. Is my first line actually wrong or is it something else?"
+  },
+  {
+   "event": "tutor_say",
+   "text": "Got it. Give me a second.",
+   "why": "ack"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": "talk",
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": [
+    1200,
+    593
+   ],
+   "page": "work",
+   "about": "subject",
+   "focus": "Solve: 5 - (2x - 4) = 11",
+   "problem": null,
+   "subject": null,
+   "topic": null,
+   "other_problems": [],
+   "given": null,
+   "steps": [],
+   "first_error": null,
+   "error_kind": null,
+   "finished": false,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "When you subtract a group, every term inside changes sign. Try 7 - (3 - 1) and see what happens to the minus sign. What do you get?"
+  },
+  {
+   "event": "tutor_about",
+   "about": "subject"
+  },
+  {
+   "event": "tutor_say",
+   "text": "When you subtract a group, every term inside changes sign. Try 7 - (3 - 1) and see what happens to the minus sign. What do you get?",
+   "why": "reply"
+  },
+  {
+   "event": "jev_error",
+   "error": "timed out"
+  },
+  {
+   "event": "student_said",
+   "text": "You already asked that, its 5. Can you just tell me which line is wrong?"
+  },
+  {
+   "event": "tutor_say",
+   "text": "Okay, let me think.",
+   "why": "ack"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": "talk",
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": [
+    1200,
+    593
+   ],
+   "page": "work",
+   "about": "view",
+   "focus": "Solve: 5 - (2x - 4) = 11",
+   "problem": null,
+   "subject": null,
+   "topic": null,
+   "other_problems": [],
+   "given": null,
+   "steps": [],
+   "first_error": null,
+   "error_kind": null,
+   "finished": false,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "You're right, I asked that. The first line is wrong because you didn't change the sign of the -4 when you removed the parentheses."
+  },
+  {
+   "event": "tutor_about",
+   "about": "view"
+  },
+  {
+   "event": "tutor_say",
+   "text": "You're right, I asked that. The first line is wrong because you didn't change the sign of the -4 when you removed the parentheses.",
+   "why": "reply"
+  },
+  {
+   "event": "jev",
+   "on": "utterance",
+   "said": "But I did, I wrote plus 4. Look, 5 minus 2x plus 4. I dont get it.",
+   "respond": 0.33,
+   "about": "subject",
+   "about_conf": 0.94,
+   "followup": 0.84,
+   "needs_page": 0.74,
+   "new_problem": 0.02,
+   "which_problem": null,
+   "which_conf": 0.0,
+   "latency_ms": 1207
+  },
+  {
+   "event": "student_said",
+   "text": "But I did, I wrote plus 4. Look, 5 minus 2x plus 4. I dont get it."
+  },
+  {
+   "event": "tutor_say",
+   "text": "Good question. One moment.",
+   "why": "ack"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": "talk",
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": [
+    1200,
+    593
+   ],
+   "page": "work",
+   "about": "subject",
+   "focus": "Solve: 5 - (2x - 4) = 11",
+   "problem": null,
+   "subject": null,
+   "topic": null,
+   "other_problems": [],
+   "given": null,
+   "steps": [],
+   "first_error": null,
+   "error_kind": null,
+   "finished": false,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "When you subtract a group, every term inside changes sign. For example, 6 - (3 - 2) becomes 6 - 3 + 2. What happens to the -4 in your first line?"
+  },
+  {
+   "event": "tutor_about",
+   "about": "subject"
+  },
+  {
+   "event": "tutor_say",
+   "text": "When you subtract a group, every term inside changes sign. For example, 6 - (3 - 2) becomes 6 - 3 + 2. What happens to the -4 in your first line?",
+   "why": "reply"
+  },
+  {
+   "event": "jev",
+   "on": "utterance",
+   "said": "It becomes plus 4. Which I have. So is it fine? Then my answer x equals minus 2 is right?",
+   "respond": 0.79,
+   "about": "subject",
+   "about_conf": 0.93,
+   "followup": 0.74,
+   "needs_page": 0.45,
+   "new_problem": 0.01,
+   "which_problem": null,
+   "which_conf": 0.0,
+   "latency_ms": 1285
+  },
+  {
+   "event": "student_said",
+   "text": "It becomes plus 4. Which I have. So is it fine? Then my answer x equals minus 2 is right?"
+  },
+  {
+   "event": "tutor_say",
+   "text": "Let me see.",
+   "why": "ack"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": "talk",
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": [
+    1200,
+    593
+   ],
+   "page": "work",
+   "about": "subject",
+   "focus": "Solve: 5 - (2x - 4) = 11",
+   "problem": null,
+   "subject": null,
+   "topic": null,
+   "other_problems": [],
+   "given": null,
+   "steps": [],
+   "first_error": null,
+   "error_kind": null,
+   "finished": false,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "When you subtract a group, every term inside changes sign. For example, 5 - (2x - 4) becomes 5 - 2x + 4. What happens to the -4 in your first line?"
+  },
+  {
+   "event": "tutor_about",
+   "about": "subject"
+  },
+  {
+   "event": "tutor_say",
+   "text": "When you subtract a group, every term inside changes sign. For example, 5 - (2x - 4) becomes 5 - 2x + 4. What happens to the -4 in your first line?",
+   "why": "reply"
+  },
+  {
+   "event": "jev",
+   "on": "utterance",
+   "said": "Thats exactly what I wrote. I still dont get what is wrong.",
+   "respond": 0.45,
+   "about": "subject",
+   "about_conf": 0.96,
+   "followup": 0.77,
+   "needs_page": 0.16,
+   "new_problem": 0.01,
+   "which_problem": null,
+   "which_conf": 0.0,
+   "latency_ms": 1267
+  },
+  {
+   "event": "student_said",
+   "text": "Thats exactly what I wrote. I still dont get what is wrong."
+  },
+  {
+   "event": "tutor_say",
+   "text": "Got it. Give me a second.",
+   "why": "ack"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": "talk",
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": [
+    1200,
+    593
+   ],
+   "page": "work",
+   "about": "subject",
+   "focus": "Solve: 5 - (2x - 4) = 11",
+   "problem": null,
+   "subject": null,
+   "topic": null,
+   "other_problems": [],
+   "given": null,
+   "steps": [],
+   "first_error": null,
+   "error_kind": null,
+   "finished": false,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "When you subtract a group, every term inside changes sign. For example, 5 - (2x - 4) becomes 5 - 2x + 4. What happens to the -4 in your first line?"
+  },
+  {
+   "event": "tutor_about",
+   "about": "subject"
+  },
+  {
+   "event": "tutor_say",
+   "text": "When you subtract a group, every term inside changes sign. For example, 5 - (2x - 4) becomes 5 - 2x + 4. What happens to the -4 in your first line?",
+   "why": "reply"
+  }
+ ],
+ "tutor": {
+  "conversation": [
+   {
+    "who": "sensei",
+    "text": "Hi, I'm Sensei. Put your page under the camera and start solving. I'm watching.",
+    "t": 0.0
+   },
+   {
+    "who": "sensei",
+    "text": "What happens to each term inside the brackets when you subtract them?",
+    "t": 8.0
+   },
+   {
+    "who": "student",
+    "text": "Um, they both change sign? So I got 5 minus 2x plus 4. Is that wrong?",
+    "t": 23.0
+   },
+   {
+    "who": "sensei",
+    "text": "Yes, when you subtract a group, every term inside changes sign. Try it with 7 - (3 - 1) and see what you get.",
+    "t": 23.0
+   },
+   {
+    "who": "student",
+    "text": "7 minus 3 plus 1, so 5. Okay but I dont know what is wrong on my page then.",
+    "t": 38.0
+   },
+   {
+    "who": "sensei",
+    "text": "When you subtract a group, every term inside changes sign. Try 8 - (4 - 2) and see what you get. What happens to the minus sign?",
+    "t": 38.0
+   },
+   {
+    "who": "student",
+    "text": "8 minus 4 plus 2, thats 6. The minus becomes plus. I did that already though. I dont get whats wrong.",
+    "t": 53.0
+   },
+   {
+    "who": "sensei",
+    "text": "When you subtract a group, every term inside the brackets changes sign. Try 6 - (3 - 2) and see what happens to the minus sign. What do you get?",
+    "t": 53.0
+   },
+   {
+    "who": "student",
+    "text": "5. But I keep getting these right. Is my first line actually wrong or is it something else?",
+    "t": 68.0
+   },
+   {
+    "who": "sensei",
+    "text": "When you subtract a group, every term inside changes sign. Try 7 - (3 - 1) and see what happens to the minus sign. What do you get?",
+    "t": 68.0
+   },
+   {
+    "who": "student",
+    "text": "You already asked that, its 5. Can you just tell me which line is wrong?",
+    "t": 83.0
+   },
+   {
+    "who": "sensei",
+    "text": "You're right, I asked that. The first line is wrong because you didn't change the sign of the -4 when you removed the parentheses.",
+    "t": 83.0
+   },
+   {
+    "who": "student",
+    "text": "But I did, I wrote plus 4. Look, 5 minus 2x plus 4. I dont get it.",
+    "t": 98.0
+   },
+   {
+    "who": "sensei",
+    "text": "When you subtract a group, every term inside changes sign. For example, 6 - (3 - 2) becomes 6 - 3 + 2. What happens to the -4 in your first line?",
+    "t": 98.0
+   },
+   {
+    "who": "student",
+    "text": "It becomes plus 4. Which I have. So is it fine? Then my answer x equals minus 2 is right?",
+    "t": 113.0
+   },
+   {
+    "who": "sensei",
+    "text": "When you subtract a group, every term inside changes sign. For example, 5 - (2x - 4) becomes 5 - 2x + 4. What happens to the -4 in your first line?",
+    "t": 113.0
+   },
+   {
+    "who": "student",
+    "text": "Thats exactly what I wrote. I still dont get what is wrong.",
+    "t": 128.0
+   },
+   {
+    "who": "sensei",
+    "text": "When you subtract a group, every term inside changes sign. For example, 5 - (2x - 4) becomes 5 - 2x + 4. What happens to the -4 in your first line?",
+    "t": 128.0
+   }
+  ],
+  "problem": "Solve: 5 - (2x - 4) = 11",
+  "subject": "math",
+  "topic": "linear equations",
+  "mistake": [
+   1,
+   "5-2x+4=11"
+  ],
+  "candidate_mistake": null,
+  "hint_level": 1,
+  "hints_on_mistake": 1,
+  "hints_given": 1,
+  "mistakes_found": [
+   "step 1: 5 - 2x + 4 = 11 (distribution)"
+  ],
+  "mistakes_fixed": [],
+  "last_said": "When you subtract a group, every term inside changes sign. For example, 5 - (2x - 4) becomes 5 - 2x + 4. What happens to the -4 in your first line?",
+  "last_why": "reply",
+  "last_spoke_at": 1128.0,
+  "last_seen": "student work",
+  "other_problems": [],
+  "steps_confirmed": 0,
+  "_finished_problem": null,
+  "let_go": [],
+  "started_at": 1000.0,
+  "ends_at": 1900.0,
+  "phase": "watching",
+  "_rechecks": 0,
+  "last_focus_change": -1000000000.0,
+  "last_activity": 1128.0,
+  "_heard_count": 8
+ }
+}

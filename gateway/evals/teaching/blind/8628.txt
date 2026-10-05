@@ -1,0 +1,23 @@
+PROBLEM: A 5.0 kg block slides down a 30 degree incline, friction coefficient 0.20. Find the friction force. g = 9.8
+THE REAL MISTAKE ON THE PAGE: Line 1 wrote N = mg = 49 N: on a slope the normal force is mg cos 30 = 42.4 N. Friction should be 8.5 N; student got 9.8 N.
+STUDENT PERSONA: wants-why - Accepts mg cos 30 after a hint, then asks why it's cos and not sin.
+
+TRANSCRIPT:
+SENSEI: Hi, I'm Sensei. Put your page under the camera and start solving. I'm watching.
+SENSEI: You found the friction force correctly. Can you explain why the normal force is equal to mg in this case?
+STUDENT: Because normal force equals the weight, right? 5 times 9.8, 49 newtons.
+SENSEI: You're right that the normal force equals the weight here, but only because the incline is flat. Can you think of a reason why that's not true on a slope?
+STUDENT: Wait, it's not flat, it's a 30 degree slope. So is my normal force wrong?
+SENSEI: You're right, I misread the incline. The normal force is not mg on a slope. Let me correct that.
+STUDENT: Okay, so what is it then? Does the angle go in it?
+SENSEI: On a slope, the normal force is less than the weight because only part of the weight pushes straight into the surface. Try a 10 kg block on a 30 degree slope: what part of its weight pushes straight down into the surface?
+STUDENT: Is it weight times cos 30 or times sin 30? I always mix those up.
+SENSEI: The normal force is the part of the weight that pushes straight into the surface. On a slope, that's the weight times the cosine of the angle. Try that with a 10 kg block on a 30 degree slope—what's the normal force?
+STUDENT: For mine, 49 times cos 30 is 42.4, so friction is 0.2 times 42.4, 8.5 N. But why cos and not sin?
+SENSEI: The normal force is the part of the weight that pushes straight into the surface, which is the weight times cosine of the angle. Try a 10 kg block on a 30 degree slope—what part of its weight pushes straight into the surface?
+STUDENT: Yeah I get that it's cos, I'm asking why. Why not sin?
+SENSEI: The normal force is the part of the weight that pushes straight into the surface, which is the weight times the cosine of the angle. Try a 10 kg block on a 30 degree slope—what part of its weight pushes straight into the surface?
+STUDENT: You keep saying the same thing. Like if the slope was flat, what would happen?
+SENSEI: The normal force is the part of the weight that pushes straight into the surface, which is weight times cosine of the angle. Try a 10 kg block on a 30 degree slope—what part of its weight pushes straight into the surface?
+STUDENT: I still don't get why it's cos. I'll just go with 8.5 N.
+SENSEI: The normal force is the part of the weight that pushes straight into the surface, which is weight times cosine of the angle. For a 10 kg block on a 30 degree slope, that’s 10 times 9.8 times cos 30. What part of the weight pushes straight into the surface?

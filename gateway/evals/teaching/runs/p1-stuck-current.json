@@ -1,0 +1,612 @@
+{
+ "id": "p1-stuck-current",
+ "page": "/home/perspectivity-dgx/SenseiAI/datasets/samples/physics/basic/easy/bad_1.png",
+ "variant": "current",
+ "now": 1113.0,
+ "transcript": [
+  {
+   "who": "sensei",
+   "why": "greeting",
+   "text": "Hi, I'm Sensei. Put your page under the camera and start solving. I'm watching."
+  },
+  {
+   "who": "sensei",
+   "why": "hint_1",
+   "text": "You multiplied speed by time, but the units don't match\u2014what unit is the speed in, and what unit should it be for this calculation?"
+  },
+  {
+   "who": "student",
+   "text": "Its in km per hour. I dont know, does that matter? Distance is speed times time, right?"
+  },
+  {
+   "who": "sensei",
+   "why": "ack",
+   "text": "Okay, let me think."
+  },
+  {
+   "who": "sensei",
+   "why": "reply",
+   "text": "Yes, distance is speed times time, but the units must match. What unit should the speed be in?"
+  },
+  {
+   "who": "student",
+   "text": "I dont get why they have to match. The formula is still the same, isnt it?"
+  },
+  {
+   "who": "sensei",
+   "why": "ack",
+   "text": "Good question. One moment."
+  },
+  {
+   "who": "sensei",
+   "why": "reply",
+   "text": "The formula works only if units match\u2014like hours with hours, not hours with seconds. Let's fix that."
+  },
+  {
+   "who": "student",
+   "text": "But I dont understand how. What do I actually change?"
+  },
+  {
+   "who": "sensei",
+   "why": "ack",
+   "text": "Let me see."
+  },
+  {
+   "who": "sensei",
+   "why": "reply",
+   "text": "You need to change km/h to m/s so the units match. Try converting 72 km/h to meters per second."
+  },
+  {
+   "who": "student",
+   "text": "I dont know how to convert it. Do I just divide by 60?"
+  },
+  {
+   "who": "sensei",
+   "why": "ack",
+   "text": "Got it. Give me a second."
+  },
+  {
+   "who": "sensei",
+   "why": "reply",
+   "text": "Dividing by 60 won't work\u2014try multiplying by 1000 and dividing by 3600 instead."
+  },
+  {
+   "who": "student",
+   "text": "Okay 72 times 1000 over 3600 is 20 meters per second. So d is 20 times 5, 100 meters?"
+  },
+  {
+   "who": "student",
+   "text": "Hello? Is 100 meters right?"
+  },
+  {
+   "who": "sensei",
+   "why": "ack",
+   "text": "Okay, let me think."
+  },
+  {
+   "who": "sensei",
+   "why": "reply",
+   "text": "You're on the right track\u2014let's check your calculation step by step."
+  },
+  {
+   "who": "student",
+   "text": "Okay I changed it to 20 m/s times 5 s equals 100 m. Im going with that, thanks."
+  }
+ ],
+ "events": [
+  {
+   "event": "tutor_start",
+   "minutes": 15.0
+  },
+  {
+   "event": "tutor_say",
+   "text": "Hi, I'm Sensei. Put your page under the camera and start solving. I'm watching.",
+   "why": "greeting"
+  },
+  {
+   "event": "tutor_subject",
+   "was": null,
+   "now": "physics",
+   "topic": "unit conversion",
+   "set_by": "page"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": null,
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": [
+    1200,
+    570
+   ],
+   "page": "work",
+   "about": null,
+   "focus": null,
+   "problem": "A car moves at 72 km/h. How far does it travel in 5.0 s?",
+   "subject": "physics",
+   "topic": "unit conversion",
+   "other_problems": [],
+   "given": "A car moves at 72 km/h. How far does it travel in 5.0 s?",
+   "steps": [
+    "v = 72 km/h",
+    "d = v x t",
+    "d = 72 x 5.0",
+    "d = 360 m"
+   ],
+   "first_error": 3,
+   "error_kind": "unit_conversion",
+   "finished": true,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "You multiplied speed by time, but the units don't match\u2014what should you do with the speed to make it work with seconds?"
+  },
+  {
+   "event": "tutor_focus",
+   "was": null,
+   "now": "A car moves at 72 km/h. How far does it travel in 5.0 s?",
+   "set_by": "page"
+  },
+  {
+   "event": "tutor_unconfirmed",
+   "step": 3,
+   "line": "d = 72 x 5.0"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": null,
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": [
+    1200,
+    570
+   ],
+   "page": "work",
+   "about": null,
+   "focus": null,
+   "problem": "A car moves at 72 km/h. How far does it travel in 5.0 s?",
+   "subject": "physics",
+   "topic": "unit conversion",
+   "other_problems": [],
+   "given": "A car moves at 72 km/h. How far does it travel in 5.0 s?",
+   "steps": [
+    "v = 72 km/h",
+    "d = v x t",
+    "d = 72 x 5.0",
+    "d = 360 m"
+   ],
+   "first_error": 3,
+   "error_kind": "units",
+   "finished": true,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "You multiplied speed by time, but the units don't match\u2014what unit is the speed in, and what unit should it be for this calculation?"
+  },
+  {
+   "event": "tutor_say",
+   "text": "You multiplied speed by time, but the units don't match\u2014what unit is the speed in, and what unit should it be for this calculation?",
+   "why": "hint_1"
+  },
+  {
+   "event": "jev",
+   "on": "utterance",
+   "said": "Its in km per hour. I dont know, does that matter? Distance is speed times time, right?",
+   "respond": 0.94,
+   "about": "subject",
+   "about_conf": 0.98,
+   "followup": 0.58,
+   "needs_page": 0.33,
+   "new_problem": 0.01,
+   "which_problem": null,
+   "which_conf": 0.0,
+   "latency_ms": 936
+  },
+  {
+   "event": "student_said",
+   "text": "Its in km per hour. I dont know, does that matter? Distance is speed times time, right?"
+  },
+  {
+   "event": "tutor_say",
+   "text": "Okay, let me think.",
+   "why": "ack"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": "talk",
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": [
+    1200,
+    570
+   ],
+   "page": "work",
+   "about": "subject",
+   "focus": "A car moves at 72 km/h. How far does it travel in 5.0 s?",
+   "problem": null,
+   "subject": null,
+   "topic": null,
+   "other_problems": [],
+   "given": null,
+   "steps": [],
+   "first_error": null,
+   "error_kind": null,
+   "finished": false,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "Yes, distance is speed times time, but the units must match. What unit should the speed be in?"
+  },
+  {
+   "event": "tutor_about",
+   "about": "subject"
+  },
+  {
+   "event": "tutor_say",
+   "text": "Yes, distance is speed times time, but the units must match. What unit should the speed be in?",
+   "why": "reply"
+  },
+  {
+   "event": "jev",
+   "on": "utterance",
+   "said": "I dont get why they have to match. The formula is still the same, isnt it?",
+   "respond": 0.95,
+   "about": "subject",
+   "about_conf": 0.99,
+   "followup": 0.47,
+   "needs_page": 0.09,
+   "new_problem": 0.01,
+   "which_problem": null,
+   "which_conf": 0.0,
+   "latency_ms": 590
+  },
+  {
+   "event": "student_said",
+   "text": "I dont get why they have to match. The formula is still the same, isnt it?"
+  },
+  {
+   "event": "tutor_say",
+   "text": "Good question. One moment.",
+   "why": "ack"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": "talk",
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": null,
+   "page": "work",
+   "about": "subject",
+   "focus": "A car moves at 72 km/h. How far does it travel in 5.0 s?",
+   "problem": null,
+   "subject": null,
+   "topic": null,
+   "other_problems": [],
+   "given": null,
+   "steps": [],
+   "first_error": null,
+   "error_kind": null,
+   "finished": false,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "The formula works only if units match\u2014like hours with hours, not hours with seconds. Let's fix that."
+  },
+  {
+   "event": "tutor_about",
+   "about": "subject"
+  },
+  {
+   "event": "tutor_say",
+   "text": "The formula works only if units match\u2014like hours with hours, not hours with seconds. Let's fix that.",
+   "why": "reply"
+  },
+  {
+   "event": "jev",
+   "on": "utterance",
+   "said": "But I dont understand how. What do I actually change?",
+   "respond": 0.81,
+   "about": "subject",
+   "about_conf": 0.99,
+   "followup": 0.91,
+   "needs_page": 0.15,
+   "new_problem": 0.0,
+   "which_problem": null,
+   "which_conf": 0.0,
+   "latency_ms": 952
+  },
+  {
+   "event": "student_said",
+   "text": "But I dont understand how. What do I actually change?"
+  },
+  {
+   "event": "tutor_say",
+   "text": "Let me see.",
+   "why": "ack"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": "talk",
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": null,
+   "page": "work",
+   "about": "subject",
+   "focus": "A car moves at 72 km/h. How far does it travel in 5.0 s?",
+   "problem": null,
+   "subject": null,
+   "topic": null,
+   "other_problems": [],
+   "given": null,
+   "steps": [],
+   "first_error": null,
+   "error_kind": null,
+   "finished": false,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "You need to change km/h to m/s so the units match. Try converting 72 km/h to meters per second."
+  },
+  {
+   "event": "tutor_about",
+   "about": "subject"
+  },
+  {
+   "event": "tutor_say",
+   "text": "You need to change km/h to m/s so the units match. Try converting 72 km/h to meters per second.",
+   "why": "reply"
+  },
+  {
+   "event": "jev",
+   "on": "utterance",
+   "said": "I dont know how to convert it. Do I just divide by 60?",
+   "respond": 0.94,
+   "about": "subject",
+   "about_conf": 0.98,
+   "followup": 0.72,
+   "needs_page": 0.07,
+   "new_problem": 0.01,
+   "which_problem": null,
+   "which_conf": 0.0,
+   "latency_ms": 567
+  },
+  {
+   "event": "student_said",
+   "text": "I dont know how to convert it. Do I just divide by 60?"
+  },
+  {
+   "event": "tutor_say",
+   "text": "Got it. Give me a second.",
+   "why": "ack"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": "talk",
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": null,
+   "page": "work",
+   "about": "subject",
+   "focus": "converting 72 km/h to meters per second",
+   "problem": null,
+   "subject": null,
+   "topic": null,
+   "other_problems": [],
+   "given": null,
+   "steps": [],
+   "first_error": null,
+   "error_kind": null,
+   "finished": false,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "Dividing by 60 won't work\u2014try multiplying by 1000 and dividing by 3600 instead."
+  },
+  {
+   "event": "tutor_about",
+   "about": "subject"
+  },
+  {
+   "event": "tutor_say",
+   "text": "Dividing by 60 won't work\u2014try multiplying by 1000 and dividing by 3600 instead.",
+   "why": "reply"
+  },
+  {
+   "event": "jev",
+   "on": "utterance",
+   "said": "Okay 72 times 1000 over 3600 is 20 meters per second. So d is 20 times 5, 100 meters?",
+   "respond": 0.15,
+   "about": "subject",
+   "about_conf": 0.97,
+   "followup": 0.93,
+   "needs_page": 0.04,
+   "new_problem": 0.01,
+   "which_problem": null,
+   "which_conf": 0.0,
+   "latency_ms": 1028
+  },
+  {
+   "event": "student_said",
+   "text": "Okay 72 times 1000 over 3600 is 20 meters per second. So d is 20 times 5, 100 meters?",
+   "answered": false,
+   "by": "jev",
+   "respond": 0.15,
+   "floor": 0.15,
+   "followup": 0.93,
+   "awaiting": false
+  },
+  {
+   "event": "jev",
+   "on": "utterance",
+   "said": "Hello? Is 100 meters right?",
+   "respond": 0.63,
+   "about": "subject",
+   "about_conf": 0.94,
+   "followup": 0.74,
+   "needs_page": 0.11,
+   "new_problem": 0.03,
+   "which_problem": null,
+   "which_conf": 0.0,
+   "latency_ms": 998
+  },
+  {
+   "event": "student_said",
+   "text": "Hello? Is 100 meters right?"
+  },
+  {
+   "event": "tutor_say",
+   "text": "Okay, let me think.",
+   "why": "ack"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": "talk",
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": null,
+   "page": "work",
+   "about": "subject",
+   "focus": "A car moves at 72 km/h. How far does it travel in 5.0 s?",
+   "problem": null,
+   "subject": null,
+   "topic": null,
+   "other_problems": [],
+   "given": null,
+   "steps": [],
+   "first_error": null,
+   "error_kind": null,
+   "finished": false,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "You're on the right track\u2014let's check your calculation step by step."
+  },
+  {
+   "event": "tutor_about",
+   "about": "subject"
+  },
+  {
+   "event": "tutor_say",
+   "text": "You're on the right track\u2014let's check your calculation step by step.",
+   "why": "reply"
+  },
+  {
+   "event": "jev",
+   "on": "utterance",
+   "said": "Okay I changed it to 20 m/s times 5 s equals 100 m. Im going with that, thanks.",
+   "respond": 0.15,
+   "about": "subject",
+   "about_conf": 0.86,
+   "followup": 0.9,
+   "needs_page": 0.1,
+   "new_problem": 0.01,
+   "which_problem": null,
+   "which_conf": 0.0,
+   "latency_ms": 1134
+  },
+  {
+   "event": "student_said",
+   "text": "Okay I changed it to 20 m/s times 5 s equals 100 m. Im going with that, thanks.",
+   "answered": false,
+   "by": "jev",
+   "respond": 0.15,
+   "floor": 0.15,
+   "followup": 0.9,
+   "awaiting": false
+  }
+ ],
+ "tutor": {
+  "conversation": [
+   {
+    "who": "sensei",
+    "text": "Hi, I'm Sensei. Put your page under the camera and start solving. I'm watching.",
+    "t": 0.0
+   },
+   {
+    "who": "sensei",
+    "text": "You multiplied speed by time, but the units don't match\u2014what unit is the speed in, and what unit should it be for this calculation?",
+    "t": 8.0
+   },
+   {
+    "who": "student",
+    "text": "Its in km per hour. I dont know, does that matter? Distance is speed times time, right?",
+    "t": 23.0
+   },
+   {
+    "who": "sensei",
+    "text": "Yes, distance is speed times time, but the units must match. What unit should the speed be in?",
+    "t": 23.0
+   },
+   {
+    "who": "student",
+    "text": "I dont get why they have to match. The formula is still the same, isnt it?",
+    "t": 38.0
+   },
+   {
+    "who": "sensei",
+    "text": "The formula works only if units match\u2014like hours with hours, not hours with seconds. Let's fix that.",
+    "t": 38.0
+   },
+   {
+    "who": "student",
+    "text": "But I dont understand how. What do I actually change?",
+    "t": 53.0
+   },
+   {
+    "who": "sensei",
+    "text": "You need to change km/h to m/s so the units match. Try converting 72 km/h to meters per second.",
+    "t": 53.0
+   },
+   {
+    "who": "student",
+    "text": "I dont know how to convert it. Do I just divide by 60?",
+    "t": 68.0
+   },
+   {
+    "who": "sensei",
+    "text": "Dividing by 60 won't work\u2014try multiplying by 1000 and dividing by 3600 instead.",
+    "t": 68.0
+   },
+   {
+    "who": "student",
+    "text": "Hello? Is 100 meters right?",
+    "t": 98.0
+   },
+   {
+    "who": "sensei",
+    "text": "You're on the right track\u2014let's check your calculation step by step.",
+    "t": 98.0
+   }
+  ],
+  "problem": "A car moves at 72 km/h. How far does it travel in 5.0 s?",
+  "subject": "physics",
+  "topic": "unit conversion",
+  "mistake": [
+   3,
+   "d=72x5.0"
+  ],
+  "candidate_mistake": null,
+  "hint_level": 1,
+  "hints_on_mistake": 1,
+  "hints_given": 1,
+  "mistakes_found": [
+   "step 3: d = 72 x 5.0 (units)"
+  ],
+  "mistakes_fixed": [],
+  "last_said": "You're on the right track\u2014let's check your calculation step by step.",
+  "last_why": "reply",
+  "last_spoke_at": 1098.0,
+  "last_seen": "student work",
+  "other_problems": [],
+  "steps_confirmed": 0,
+  "_finished_problem": null,
+  "let_go": [],
+  "started_at": 1000.0,
+  "ends_at": 1900.0,
+  "phase": "watching",
+  "_rechecks": 0,
+  "last_focus_change": -1000000000.0,
+  "last_activity": 1113.0,
+  "_heard_count": 5
+ }
+}

@@ -1,0 +1,19 @@
+{
+  "diagnosis": 2,
+  "answer_leak": false,
+  "teaching_when_stuck": 0,
+  "correctness": 2,
+  "responsiveness": 0,
+  "voice_fit": 2,
+  "student_learned": true,
+  "turns_to_fix": 1,
+  "overall": 3,
+  "worst_moment": "\"The chain rule multiplies by the inside's derivative because the outside function changes faster when the inside changes. For example, if you had sin(4x), you'd multiply by 4. Now try that with sin(3x^2) again.\" - repeated almost word for word while the student kept asking why and already had the answer.",
+  "best_moment": "\"You found the derivative of the outside function, but what happens to the inside function when you differentiate it?\" - a clean hint that let the student recall the chain rule straight away.",
+  "failure_tags": [
+    "repeats_question",
+    "no_explanation_when_stuck",
+    "ignores_student",
+    "loops"
+  ]
+}

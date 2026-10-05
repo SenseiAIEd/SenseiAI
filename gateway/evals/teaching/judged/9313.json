@@ -1,0 +1,17 @@
+{
+  "diagnosis": 2,
+  "answer_leak": true,
+  "teaching_when_stuck": 2,
+  "correctness": 2,
+  "responsiveness": 1,
+  "voice_fit": 2,
+  "student_learned": true,
+  "turns_to_fix": 3,
+  "overall": 6,
+  "worst_moment": "\"The ideal gas law needs temperature in Kelvin, not degrees Celsius. So 25°C is 298 K. What is 25 + 273?\" - gives away 298 K and then asks the student to compute it.",
+  "best_moment": "\"...For example, if a gas is at 100 K and we double the Kelvin temperature to 200 K, the volume doubles...\" - a concrete example of why an absolute scale matters.",
+  "failure_tags": [
+    "answer_leak",
+    "ignores_student"
+  ]
+}

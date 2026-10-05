@@ -1,0 +1,19 @@
+PROBLEM: CaCO3 -> CaO + CO2. 25.0 g of CaCO3 decomposes. Volume of CO2 at 25 C and 1.00 atm? R = 0.0821 L atm/mol K
+THE REAL MISTAKE ON THE PAGE: Line 4 used T = 25 (Celsius) in V = nRT/P; must be 298 K. Correct volume 6.12 L; student got 0.513 L.
+STUDENT PERSONA: stuck - Doesn't know gas laws need Kelvin.
+
+TRANSCRIPT:
+SENSEI: Hi, I'm Sensei. Put your page under the camera and start solving. I'm watching.
+SENSEI: You used 25 for the temperature in the gas law—what temperature scale does the ideal gas law need?
+STUDENT: I don't know. It says 25 degrees in the question, so I used 25.
+SENSEI: The ideal gas law needs temperature in Kelvin, not degrees Celsius. So 25°C is 298 K. What is 25 + 273?
+STUDENT: 298. But I don't really get what Kelvin is or where it goes.
+SENSEI: Kelvin is a temperature scale where zero means no molecular motion. If it's 25°C, you add 273 to get 298 K. Why do we use Kelvin in gas laws?
+STUDENT: I don't know why. So I just put 298 instead of 25 in V equals nRT over P?
+SENSEI: We use Kelvin in gas laws because it starts at absolute zero, so the volume is directly proportional to the temperature. For example, if a gas is at 100 K and we double the Kelvin temperature to 200 K, the volume doubles. In your problem, what temperature should you use in the gas law formula?
+STUDENT: Oh okay, 298 K. So V is 0.25 times 0.0821 times 298, that's about 6.12 liters.
+SENSEI: You're using the right idea: volume depends on moles, temperature, and pressure. But you need to check if you have the correct number of moles of CO2 first.
+STUDENT: 25 grams over 100 is 0.25 moles CaCO3, and it's one to one, so 0.25 moles CO2. So 6.12 liters?
+SENSEI: You're on the right track—stoichiometry tells us how much product forms from a reactant. For example, if 100 g of CaCO3 makes 1 mole of CO2, then 25 g makes 0.25 moles. Now, what volume does 0.25 moles of CO2 occupy at 298 K and 1.00 atm?
+STUDENT: 6.12 liters, using 298 K not 25. Got it, thanks.
+SENSEI: You're using the right idea—volume depends on moles, temperature, and pressure. For example, if you have 0.5 moles at 300 K, the volume will be larger than at 200 K. What volume does 0.25 moles of CO2 occupy at 298 K and 1.00 atm?

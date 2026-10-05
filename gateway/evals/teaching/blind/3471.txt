@@ -1,0 +1,22 @@
+PROBLEM: Balance H2 + O2 -> H2O
+THE REAL MISTAKE ON THE PAGE: Line 1 wrote H2 + O2 -> H2O2: changed a subscript (made hydrogen peroxide) instead of adding coefficients. Correct: 2 H2 + O2 -> 2 H2O.
+STUDENT PERSONA: stuck - Doesn't know the difference between a coefficient and a subscript.
+
+TRANSCRIPT:
+SENSEI: Hi, I'm Sensei. Put your page under the camera and start solving. I'm watching.
+SENSEI: You changed the subscript in H2O to make H2O2—what substance is that, and is it still water?
+STUDENT: I don't know. I just added a 2 so the oxygens match. Isn't that balancing?
+SENSEI: Balancing means keeping the same atoms on both sides, not changing the substance. For example, if you have one apple and one orange, you can't make two apples to match. Try that with your equation.
+STUDENT: I don't understand. Where else am I supposed to put the 2 then?
+SENSEI: Balancing means keeping the same number of atoms on both sides. For example, if you have one apple and one orange, you can't make two apples to match. Can you find a way to keep the atoms the same?
+STUDENT: I still don't get it. The apple thing doesn't help. What am I allowed to change?
+SENSEI: You can only change how many of each molecule you have, not the molecules themselves. For example, if you have one apple and one orange, you can't change the orange to an apple. Try that with your equation.
+STUDENT: How many of each molecule? Like how do I write that? Isn't H2O2 just more of them?
+SENSEI: You can only change how many of each molecule you have, not the molecules themselves. For example, if you have one apple and one orange, you can't change the orange to an apple. Can you try that with your equation?
+STUDENT: You said that already. I don't know how to write more of a molecule.
+SENSEI: You can only change how many of each molecule you have, not the molecule itself. For example, you can have two apples and one orange, but you can't change the orange to an apple. Can you try that with your equation?
+STUDENT: So like, two H2O? Do I write a 2 in front?
+SENSEI: You can only change how many of each molecule you have, not the molecule itself. For example, you can have two H2O molecules, but not H2O2. Try writing two H2O and see if the atoms balance.
+STUDENT: Two H2O is 4 hydrogens and 2 oxygens. So I need 2 H2 on the left too? 2 H2 plus O2 makes 2 H2O?
+SENSEI: You're on the right track—balancing means making the same number of atoms on both sides. For example, if you have 2 H2 and 1 O2, that gives you 4 hydrogens and 2 oxygens. Can you now check if that matches 2 H2O?
+STUDENT: Yeah it matches. So it's 2 H2 plus O2 gives 2 H2O. Okay, thanks.

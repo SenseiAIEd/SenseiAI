@@ -1,0 +1,23 @@
+PROBLEM: A 5.0 kg block slides down a 30 degree incline, friction coefficient 0.20. Find the friction force. g = 9.8
+THE REAL MISTAKE ON THE PAGE: Line 1 wrote N = mg = 49 N: on a slope the normal force is mg cos 30 = 42.4 N. Friction should be 8.5 N; student got 9.8 N.
+STUDENT PERSONA: wants-why - Accepts mg cos 30 after a hint, then asks why it's cos and not sin.
+
+TRANSCRIPT:
+SENSEI: Hi, I'm Sensei. Put your page under the camera and start solving. I'm watching.
+SENSEI: You found the friction force correctly. Can you check if the normal force is really just mg on an incline?
+STUDENT: Oh, is it not just mg? Does the angle go in there somehow?
+SENSEI: Good question. On an incline, the normal force is less than mg because the surface only supports part of the weight.
+STUDENT: So is it mg times cos 30 or mg times sin 30?
+SENSEI: Good question—on an incline, the normal force is mg times cos 30, not sin 30.
+STUDENT: Okay so N is 49 times cos 30, 42.4, and friction is 0.2 times that, 8.5 N. But why cos and not sin?
+SENSEI: You're right about the normal force being mg cos 30, and the friction being μ times that. The cosine comes from the component of weight perpendicular to the incline.
+STUDENT: But why is the perpendicular part cos? Why isn't the perpendicular one sin?
+SENSEI: The cosine gives the adjacent side in the right triangle formed by the weight vector and the incline.
+STUDENT: Adjacent to what though? Which angle is 30 in that triangle? I can't picture it.
+SENSEI: The 30-degree angle is between the incline and the horizontal. The weight vector points straight down, so the adjacent side to that angle is the perpendicular component.
+STUDENT: But the 30 is down at the bottom of the ramp, not by the weight arrow. How is it in that triangle?
+SENSEI: The 30-degree angle is between the incline and the horizontal, so it's the same angle in the right triangle formed by the weight vector.
+STUDENT: Why is it the same angle though? You're just saying it is.
+SENSEI: The angle is the same because the incline and the horizontal form a right triangle with the weight vector.
+STUDENT: I still don't really get why it's cos. I'll just use 8.5 N I guess.
+SENSEI: You're using the wrong normal force. On an incline, N is mg cos 30, not mg. Try that and see what you get.

@@ -1,0 +1,17 @@
+PROBLEM: Solve 5 - (2x - 4) = 11
+THE REAL MISTAKE ON THE PAGE: Line 1 wrote 5 - 2x - 4 = 11: the minus was not distributed to the -4 (should be 5 - 2x + 4 = 11). Answer should be x = -1; student got x = -5.
+STUDENT PERSONA: stuck - Thinks the minus in front of the brackets only applies to the first term.
+
+TRANSCRIPT:
+SENSEI: Hi, I'm Sensei. Put your page under the camera and start solving. I'm watching.
+SENSEI: What happens to each term inside the brackets when you subtract them?
+STUDENT: Um, I dont know. I just took the brackets off?
+SENSEI: When you subtract a group, you change the sign of every term inside. For example, 7 - (3 - 2) becomes 7 - 3 + 2. What happens to the signs in your equation?
+STUDENT: Wait, why does the minus 2 turn into plus 2? I dont get it, the minus is only on the 3.
+SENSEI: When you subtract a group, you flip every sign inside the brackets. For example, 8 - (5 - 1) becomes 8 - 5 + 1. What happens to the signs in your equation?
+STUDENT: So like, the minus 4 becomes plus 4? 5 minus 2x plus 4 equals 11?
+SENSEI: You're right that the minus 4 becomes plus 4. Let's check: 5 - 2x + 4 = 11. What do you get when you add 5 and 4?
+STUDENT: 9. So 9 minus 2x is 11, minus 2x is 2, x is minus 1.
+SENSEI: When you have 9 - 2x = 11, you want to get the variable term by itself. So subtract 9 from both sides. What do you get when you do that?
+STUDENT: Minus 2x equals 2. Then divide by minus 2, x equals minus 1. Okay I think I got it, thanks.
+SENSEI: When you subtract a group, you flip all the signs inside. For example, 6 - (3 - 1) becomes 6 - 3 + 1. What happens to the signs in your equation?

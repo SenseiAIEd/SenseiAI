@@ -7,3 +7,4 @@ httpx
 pytest
 faster-whisper
 pyserial
+onnx-asr[cpu,hub]

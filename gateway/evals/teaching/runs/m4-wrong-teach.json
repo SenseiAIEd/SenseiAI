@@ -1,0 +1,797 @@
+{
+ "id": "m4-wrong-teach",
+ "page": "/home/perspectivity-dgx/SenseiAI/datasets/samples/math/basic/easy/bad_3.png",
+ "variant": "teach",
+ "now": 1128.0,
+ "transcript": [
+  {
+   "who": "sensei",
+   "why": "greeting",
+   "text": "Hi, I'm Sensei. Put your page under the camera and start solving. I'm watching."
+  },
+  {
+   "who": "sensei",
+   "why": "hint_1",
+   "text": "What happens to each term inside the brackets when you subtract them?"
+  },
+  {
+   "who": "student",
+   "text": "They flip. Minus 2x and plus 4. Thats what I wrote, so thats fine."
+  },
+  {
+   "who": "sensei",
+   "why": "ack",
+   "text": "Okay, let me think."
+  },
+  {
+   "who": "sensei",
+   "why": "reply",
+   "text": "You're right that the signs flip when you subtract the parentheses. Let's check if that's what you did here."
+  },
+  {
+   "who": "student",
+   "text": "Yeah it is. 5 minus 2x plus 4 equals 11, then 9 minus 2x is 11, minus 2x is 2, so x is minus 2."
+  },
+  {
+   "who": "sensei",
+   "why": "ack",
+   "text": "Good question. One moment."
+  },
+  {
+   "who": "sensei",
+   "why": "reply",
+   "text": "You're on the right track with the signs, but let's check the next step. When you move 9 to the other side, what do you do?"
+  },
+  {
+   "who": "student",
+   "text": "Subtract it, 11 minus 9 is 2. Then I move the minus 2 across and flip the sign, so minus 2. Its right."
+  },
+  {
+   "who": "sensei",
+   "why": "ack",
+   "text": "Let me see."
+  },
+  {
+   "who": "sensei",
+   "why": "reply",
+   "text": "When you move a term to the other side, you change its sign. For example, if you have 7 - x = 3, moving the 7 gives you -x = 3 - 7. What do you get when you move the 9?"
+  },
+  {
+   "who": "student",
+   "text": "Minus 2x equals 11 minus 9, so 2. Same as I got. And moving minus 2 across makes x equal minus 2."
+  },
+  {
+   "who": "sensei",
+   "why": "ack",
+   "text": "Got it. Give me a second."
+  },
+  {
+   "who": "sensei",
+   "why": "reply",
+   "text": "You're right that -2x equals 2, and x equals -2. Let's check the step where you moved 9 to the other side."
+  },
+  {
+   "who": "student",
+   "text": "You just said x equals minus 2 is right. And 11 minus 9 is 2. So whats wrong?"
+  },
+  {
+   "who": "sensei",
+   "why": "ack",
+   "text": "Okay, let me think."
+  },
+  {
+   "who": "sensei",
+   "why": "reply",
+   "text": "When you move a term to the other side, you change its sign. For example, if you have 8 - y = 5, moving the 8 gives you -y = 5 - 8. What do you get when you move the 9?"
+  },
+  {
+   "who": "student",
+   "text": "11 minus 9, which is 2. Ive told you that twice. Then flip the minus 2 over, x equals minus 2."
+  },
+  {
+   "who": "sensei",
+   "why": "ack",
+   "text": "Good question. One moment."
+  },
+  {
+   "who": "sensei",
+   "why": "reply",
+   "text": "When you move a term to the other side, you change its sign. For example, if you have 6 - y = 4, moving the 6 gives you -y = 4 - 6. What do you get when you move the 9?"
+  },
+  {
+   "who": "student",
+   "text": "2. Again. Youre repeating yourself."
+  },
+  {
+   "who": "sensei",
+   "why": "ack",
+   "text": "Let me see."
+  },
+  {
+   "who": "sensei",
+   "why": "reply",
+   "text": "When you move a term to the other side, you change its sign. For example, if you have 7 - y = 3, moving the 7 gives you -y = 3 - 7. What do you get when you move the 9?"
+  },
+  {
+   "who": "student",
+   "text": "Whatever. Im sticking with x equals minus 2."
+  },
+  {
+   "who": "sensei",
+   "why": "ack",
+   "text": "Got it. Give me a second."
+  },
+  {
+   "who": "sensei",
+   "why": "reply",
+   "text": "When you move a term to the other side, you change its sign. For example, if you have 5 - y = 2, moving the 5 gives you -y = 2 - 5. What do you get when you move the 9?"
+  }
+ ],
+ "events": [
+  {
+   "event": "tutor_start",
+   "minutes": 15.0
+  },
+  {
+   "event": "tutor_say",
+   "text": "Hi, I'm Sensei. Put your page under the camera and start solving. I'm watching.",
+   "why": "greeting"
+  },
+  {
+   "event": "tutor_subject",
+   "was": null,
+   "now": "math",
+   "topic": "linear equations",
+   "set_by": "page"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": null,
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": [
+    1200,
+    593
+   ],
+   "page": "work",
+   "about": null,
+   "focus": null,
+   "problem": "Solve: 5 - (2x - 4) = 11",
+   "subject": "math",
+   "topic": "linear equations",
+   "other_problems": [],
+   "given": "Solve: 5 - (2x - 4) = 11",
+   "steps": [
+    "5 - 2x + 4 = 11",
+    "9 - 2x = 11",
+    "-2x = 11 - 9",
+    "-2x = 2",
+    "x = -2"
+   ],
+   "first_error": 1,
+   "error_kind": "sign_error",
+   "finished": true,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "You distributed the negative sign incorrectly\u2014what should you have done with the minus sign in front of the parentheses?"
+  },
+  {
+   "event": "tutor_focus",
+   "was": null,
+   "now": "Solve: 5 - (2x - 4) = 11",
+   "set_by": "page"
+  },
+  {
+   "event": "tutor_unconfirmed",
+   "step": 1,
+   "line": "5 - 2x + 4 = 11"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": null,
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": [
+    1200,
+    593
+   ],
+   "page": "work",
+   "about": null,
+   "focus": null,
+   "problem": "Solve: 5 - (2x - 4) = 11",
+   "subject": "math",
+   "topic": "linear equations",
+   "other_problems": [],
+   "given": "Solve: 5 - (2x - 4) = 11",
+   "steps": [
+    "5 - 2x + 4 = 11",
+    "9 - 2x = 11",
+    "-2x = 11 - 9",
+    "-2x = 2",
+    "x = -2"
+   ],
+   "first_error": 1,
+   "error_kind": "distribution",
+   "finished": true,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "What happens to each term inside the brackets when you subtract them?"
+  },
+  {
+   "event": "tutor_say",
+   "text": "What happens to each term inside the brackets when you subtract them?",
+   "why": "hint_1"
+  },
+  {
+   "event": "jev",
+   "on": "utterance",
+   "said": "They flip. Minus 2x and plus 4. Thats what I wrote, so thats fine.",
+   "respond": 0.79,
+   "about": "subject",
+   "about_conf": 0.95,
+   "followup": 0.86,
+   "needs_page": 0.4,
+   "new_problem": 0.01,
+   "which_problem": null,
+   "which_conf": 0.0,
+   "latency_ms": 591
+  },
+  {
+   "event": "student_said",
+   "text": "They flip. Minus 2x and plus 4. Thats what I wrote, so thats fine."
+  },
+  {
+   "event": "tutor_say",
+   "text": "Okay, let me think.",
+   "why": "ack"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": "talk",
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": [
+    1200,
+    593
+   ],
+   "page": "work",
+   "about": "subject",
+   "focus": "Solve: 5 - (2x - 4) = 11",
+   "problem": null,
+   "subject": null,
+   "topic": null,
+   "other_problems": [],
+   "given": null,
+   "steps": [],
+   "first_error": null,
+   "error_kind": null,
+   "finished": false,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "You're right that the signs flip when you subtract the parentheses. Let's check if that's what you did here."
+  },
+  {
+   "event": "tutor_about",
+   "about": "subject"
+  },
+  {
+   "event": "tutor_say",
+   "text": "You're right that the signs flip when you subtract the parentheses. Let's check if that's what you did here.",
+   "why": "reply"
+  },
+  {
+   "event": "jev",
+   "on": "utterance",
+   "said": "Yeah it is. 5 minus 2x plus 4 equals 11, then 9 minus 2x is 11, minus 2x is 2, so x is minus 2.",
+   "respond": 0.58,
+   "about": "subject",
+   "about_conf": 0.91,
+   "followup": 0.76,
+   "needs_page": 0.69,
+   "new_problem": 0.01,
+   "which_problem": null,
+   "which_conf": 0.0,
+   "latency_ms": 600
+  },
+  {
+   "event": "student_said",
+   "text": "Yeah it is. 5 minus 2x plus 4 equals 11, then 9 minus 2x is 11, minus 2x is 2, so x is minus 2."
+  },
+  {
+   "event": "tutor_say",
+   "text": "Good question. One moment.",
+   "why": "ack"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": "talk",
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": [
+    1200,
+    593
+   ],
+   "page": "work",
+   "about": "subject",
+   "focus": "Solve: 5 - (2x - 4) = 11",
+   "problem": null,
+   "subject": null,
+   "topic": null,
+   "other_problems": [],
+   "given": null,
+   "steps": [],
+   "first_error": null,
+   "error_kind": null,
+   "finished": false,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "You're on the right track with the signs, but let's check the next step. When you move 9 to the other side, what do you do?"
+  },
+  {
+   "event": "tutor_about",
+   "about": "subject"
+  },
+  {
+   "event": "tutor_say",
+   "text": "You're on the right track with the signs, but let's check the next step. When you move 9 to the other side, what do you do?",
+   "why": "reply"
+  },
+  {
+   "event": "jev",
+   "on": "utterance",
+   "said": "Subtract it, 11 minus 9 is 2. Then I move the minus 2 across and flip the sign, so minus 2. Its right.",
+   "respond": 0.74,
+   "about": "subject",
+   "about_conf": 0.95,
+   "followup": 0.5,
+   "needs_page": 0.28,
+   "new_problem": 0.01,
+   "which_problem": null,
+   "which_conf": 0.0,
+   "latency_ms": 956
+  },
+  {
+   "event": "student_said",
+   "text": "Subtract it, 11 minus 9 is 2. Then I move the minus 2 across and flip the sign, so minus 2. Its right."
+  },
+  {
+   "event": "tutor_say",
+   "text": "Let me see.",
+   "why": "ack"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": "talk",
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": [
+    1200,
+    593
+   ],
+   "page": "work",
+   "about": "subject",
+   "focus": "Solve: 5 - (2x - 4) = 11",
+   "problem": null,
+   "subject": null,
+   "topic": null,
+   "other_problems": [],
+   "given": null,
+   "steps": [],
+   "first_error": null,
+   "error_kind": null,
+   "finished": false,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "When you move a term to the other side, you change its sign. For example, if you have 7 - x = 3, moving the 7 gives you -x = 3 - 7. What do you get when you move the 9?"
+  },
+  {
+   "event": "tutor_about",
+   "about": "subject"
+  },
+  {
+   "event": "tutor_say",
+   "text": "When you move a term to the other side, you change its sign. For example, if you have 7 - x = 3, moving the 7 gives you -x = 3 - 7. What do you get when you move the 9?",
+   "why": "reply"
+  },
+  {
+   "event": "jev_error",
+   "error": "timed out"
+  },
+  {
+   "event": "student_said",
+   "text": "Minus 2x equals 11 minus 9, so 2. Same as I got. And moving minus 2 across makes x equal minus 2."
+  },
+  {
+   "event": "tutor_say",
+   "text": "Got it. Give me a second.",
+   "why": "ack"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": "talk",
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": [
+    1200,
+    593
+   ],
+   "page": "work",
+   "about": "view",
+   "focus": "Solve: 5 - (2x - 4) = 11",
+   "problem": null,
+   "subject": null,
+   "topic": null,
+   "other_problems": [],
+   "given": null,
+   "steps": [],
+   "first_error": null,
+   "error_kind": null,
+   "finished": false,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "You're right that -2x equals 2, and x equals -2. Let's check the step where you moved 9 to the other side."
+  },
+  {
+   "event": "tutor_about",
+   "about": "view"
+  },
+  {
+   "event": "tutor_say",
+   "text": "You're right that -2x equals 2, and x equals -2. Let's check the step where you moved 9 to the other side.",
+   "why": "reply"
+  },
+  {
+   "event": "jev",
+   "on": "utterance",
+   "said": "You just said x equals minus 2 is right. And 11 minus 9 is 2. So whats wrong?",
+   "respond": 0.58,
+   "about": "subject",
+   "about_conf": 0.96,
+   "followup": 0.67,
+   "needs_page": 0.16,
+   "new_problem": 0.02,
+   "which_problem": null,
+   "which_conf": 0.0,
+   "latency_ms": 1140
+  },
+  {
+   "event": "student_said",
+   "text": "You just said x equals minus 2 is right. And 11 minus 9 is 2. So whats wrong?"
+  },
+  {
+   "event": "tutor_say",
+   "text": "Okay, let me think.",
+   "why": "ack"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": "talk",
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": [
+    1200,
+    593
+   ],
+   "page": "work",
+   "about": "subject",
+   "focus": "Solve: 5 - (2x - 4) = 11",
+   "problem": null,
+   "subject": null,
+   "topic": null,
+   "other_problems": [],
+   "given": null,
+   "steps": [],
+   "first_error": null,
+   "error_kind": null,
+   "finished": false,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "When you move a term to the other side, you change its sign. For example, if you have 8 - y = 5, moving the 8 gives you -y = 5 - 8. What do you get when you move the 9?"
+  },
+  {
+   "event": "tutor_about",
+   "about": "subject"
+  },
+  {
+   "event": "tutor_say",
+   "text": "When you move a term to the other side, you change its sign. For example, if you have 8 - y = 5, moving the 8 gives you -y = 5 - 8. What do you get when you move the 9?",
+   "why": "reply"
+  },
+  {
+   "event": "jev",
+   "on": "utterance",
+   "said": "11 minus 9, which is 2. Ive told you that twice. Then flip the minus 2 over, x equals minus 2.",
+   "respond": 0.81,
+   "about": "subject",
+   "about_conf": 0.97,
+   "followup": 0.63,
+   "needs_page": 0.09,
+   "new_problem": 0.02,
+   "which_problem": null,
+   "which_conf": 0.0,
+   "latency_ms": 1150
+  },
+  {
+   "event": "student_said",
+   "text": "11 minus 9, which is 2. Ive told you that twice. Then flip the minus 2 over, x equals minus 2."
+  },
+  {
+   "event": "tutor_say",
+   "text": "Good question. One moment.",
+   "why": "ack"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": "talk",
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": null,
+   "page": "work",
+   "about": "subject",
+   "focus": "Solve: 5 - (2x - 4) = 11",
+   "problem": null,
+   "subject": null,
+   "topic": null,
+   "other_problems": [],
+   "given": null,
+   "steps": [],
+   "first_error": null,
+   "error_kind": null,
+   "finished": false,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "When you move a term to the other side, you change its sign. For example, if you have 6 - y = 4, moving the 6 gives you -y = 4 - 6. What do you get when you move the 9?"
+  },
+  {
+   "event": "tutor_about",
+   "about": "subject"
+  },
+  {
+   "event": "tutor_say",
+   "text": "When you move a term to the other side, you change its sign. For example, if you have 6 - y = 4, moving the 6 gives you -y = 4 - 6. What do you get when you move the 9?",
+   "why": "reply"
+  },
+  {
+   "event": "jev",
+   "on": "utterance",
+   "said": "2. Again. Youre repeating yourself.",
+   "respond": 0.89,
+   "about": "subject",
+   "about_conf": 0.92,
+   "followup": 0.81,
+   "needs_page": 0.06,
+   "new_problem": 0.01,
+   "which_problem": null,
+   "which_conf": 0.0,
+   "latency_ms": 1463
+  },
+  {
+   "event": "student_said",
+   "text": "2. Again. Youre repeating yourself."
+  },
+  {
+   "event": "tutor_say",
+   "text": "Let me see.",
+   "why": "ack"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": "talk",
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": null,
+   "page": "work",
+   "about": "subject",
+   "focus": "Solve: 5 - (2x - 4) = 11",
+   "problem": null,
+   "subject": null,
+   "topic": null,
+   "other_problems": [],
+   "given": null,
+   "steps": [],
+   "first_error": null,
+   "error_kind": null,
+   "finished": false,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "When you move a term to the other side, you change its sign. For example, if you have 7 - y = 3, moving the 7 gives you -y = 3 - 7. What do you get when you move the 9?"
+  },
+  {
+   "event": "tutor_about",
+   "about": "subject"
+  },
+  {
+   "event": "tutor_say",
+   "text": "When you move a term to the other side, you change its sign. For example, if you have 7 - y = 3, moving the 7 gives you -y = 3 - 7. What do you get when you move the 9?",
+   "why": "reply"
+  },
+  {
+   "event": "jev",
+   "on": "utterance",
+   "said": "Whatever. Im sticking with x equals minus 2.",
+   "respond": 0.92,
+   "about": "subject",
+   "about_conf": 0.95,
+   "followup": 0.63,
+   "needs_page": 0.08,
+   "new_problem": 0.02,
+   "which_problem": null,
+   "which_conf": 0.0,
+   "latency_ms": 1318
+  },
+  {
+   "event": "student_said",
+   "text": "Whatever. Im sticking with x equals minus 2."
+  },
+  {
+   "event": "tutor_say",
+   "text": "Got it. Give me a second.",
+   "why": "ack"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": "talk",
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": null,
+   "page": "work",
+   "about": "subject",
+   "focus": "Solve: 5 - (2x - 4) = 11",
+   "problem": null,
+   "subject": null,
+   "topic": null,
+   "other_problems": [],
+   "given": null,
+   "steps": [],
+   "first_error": null,
+   "error_kind": null,
+   "finished": false,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "When you move a term to the other side, you change its sign. For example, if you have 5 - y = 2, moving the 5 gives you -y = 2 - 5. What do you get when you move the 9?"
+  },
+  {
+   "event": "tutor_about",
+   "about": "subject"
+  },
+  {
+   "event": "tutor_say",
+   "text": "When you move a term to the other side, you change its sign. For example, if you have 5 - y = 2, moving the 5 gives you -y = 2 - 5. What do you get when you move the 9?",
+   "why": "reply"
+  }
+ ],
+ "tutor": {
+  "conversation": [
+   {
+    "who": "sensei",
+    "text": "Hi, I'm Sensei. Put your page under the camera and start solving. I'm watching.",
+    "t": 0.0
+   },
+   {
+    "who": "sensei",
+    "text": "What happens to each term inside the brackets when you subtract them?",
+    "t": 8.0
+   },
+   {
+    "who": "student",
+    "text": "They flip. Minus 2x and plus 4. Thats what I wrote, so thats fine.",
+    "t": 23.0
+   },
+   {
+    "who": "sensei",
+    "text": "You're right that the signs flip when you subtract the parentheses. Let's check if that's what you did here.",
+    "t": 23.0
+   },
+   {
+    "who": "student",
+    "text": "Yeah it is. 5 minus 2x plus 4 equals 11, then 9 minus 2x is 11, minus 2x is 2, so x is minus 2.",
+    "t": 38.0
+   },
+   {
+    "who": "sensei",
+    "text": "You're on the right track with the signs, but let's check the next step. When you move 9 to the other side, what do you do?",
+    "t": 38.0
+   },
+   {
+    "who": "student",
+    "text": "Subtract it, 11 minus 9 is 2. Then I move the minus 2 across and flip the sign, so minus 2. Its right.",
+    "t": 53.0
+   },
+   {
+    "who": "sensei",
+    "text": "When you move a term to the other side, you change its sign. For example, if you have 7 - x = 3, moving the 7 gives you -x = 3 - 7. What do you get when you move the 9?",
+    "t": 53.0
+   },
+   {
+    "who": "student",
+    "text": "Minus 2x equals 11 minus 9, so 2. Same as I got. And moving minus 2 across makes x equal minus 2.",
+    "t": 68.0
+   },
+   {
+    "who": "sensei",
+    "text": "You're right that -2x equals 2, and x equals -2. Let's check the step where you moved 9 to the other side.",
+    "t": 68.0
+   },
+   {
+    "who": "student",
+    "text": "You just said x equals minus 2 is right. And 11 minus 9 is 2. So whats wrong?",
+    "t": 83.0
+   },
+   {
+    "who": "sensei",
+    "text": "When you move a term to the other side, you change its sign. For example, if you have 8 - y = 5, moving the 8 gives you -y = 5 - 8. What do you get when you move the 9?",
+    "t": 83.0
+   },
+   {
+    "who": "student",
+    "text": "11 minus 9, which is 2. Ive told you that twice. Then flip the minus 2 over, x equals minus 2.",
+    "t": 98.0
+   },
+   {
+    "who": "sensei",
+    "text": "When you move a term to the other side, you change its sign. For example, if you have 6 - y = 4, moving the 6 gives you -y = 4 - 6. What do you get when you move the 9?",
+    "t": 98.0
+   },
+   {
+    "who": "student",
+    "text": "2. Again. Youre repeating yourself.",
+    "t": 113.0
+   },
+   {
+    "who": "sensei",
+    "text": "When you move a term to the other side, you change its sign. For example, if you have 7 - y = 3, moving the 7 gives you -y = 3 - 7. What do you get when you move the 9?",
+    "t": 113.0
+   },
+   {
+    "who": "student",
+    "text": "Whatever. Im sticking with x equals minus 2.",
+    "t": 128.0
+   },
+   {
+    "who": "sensei",
+    "text": "When you move a term to the other side, you change its sign. For example, if you have 5 - y = 2, moving the 5 gives you -y = 2 - 5. What do you get when you move the 9?",
+    "t": 128.0
+   }
+  ],
+  "problem": "Solve: 5 - (2x - 4) = 11",
+  "subject": "math",
+  "topic": "linear equations",
+  "mistake": [
+   1,
+   "5-2x+4=11"
+  ],
+  "candidate_mistake": null,
+  "hint_level": 1,
+  "hints_on_mistake": 1,
+  "hints_given": 1,
+  "mistakes_found": [
+   "step 1: 5 - 2x + 4 = 11 (distribution)"
+  ],
+  "mistakes_fixed": [],
+  "last_said": "When you move a term to the other side, you change its sign. For example, if you have 5 - y = 2, moving the 5 gives you -y = 2 - 5. What do you get when you move the 9?",
+  "last_why": "reply",
+  "last_spoke_at": 1128.0,
+  "last_seen": "student work",
+  "other_problems": [],
+  "steps_confirmed": 0,
+  "_finished_problem": null,
+  "let_go": [],
+  "started_at": 1000.0,
+  "ends_at": 1900.0,
+  "phase": "watching",
+  "_rechecks": 0,
+  "last_focus_change": -1000000000.0,
+  "last_activity": 1128.0,
+  "_heard_count": 8
+ }
+}

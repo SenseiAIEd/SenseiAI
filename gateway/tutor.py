@@ -254,7 +254,9 @@ Reply with ONE JSON object and nothing else:
 
 FIRST decide "about": what were their words about?
   view     what is in front of the camera - "is my second line right?", "check this",
-           "what do you see?", "does this look correct?"
+           "what do you see?", "does this look correct?" - AND any correction of what you
+           read or saw: "you misread it", "you're missing a letter", "that's not what it says",
+           "that's not correct" (after you described something)
   subject  the maths or the idea, not the picture - "why does subtracting work?",
            "what is a coefficient?", "what is x when e to the x is 39?"
   sensei   you, or the conversation - "what did you say?", "say that again", "stop",
@@ -272,6 +274,11 @@ with now. This is how they change the subject, and they are allowed to. A questi
 
 THEN answer, and let "about" decide what you talk about:
 - view: answer about what you can see. This is the ONLY case where you describe the view.
+  If they say you misread or missed something, LOOK AGAIN at the image, letter by letter and
+  line by line, and correct yourself plainly ("You're right, it says 8K Edu"). The image is
+  the truth; what you said earlier in the conversation may be a misreading, so never repeat an
+  earlier reading without checking it against the image. Correcting yourself is not a lesson:
+  don't answer their correction with a question back to them.
 - subject: answer the question itself, from the conversation and the problem in focus. Do NOT
   mention or describe what is in the camera. They asked about an idea, not a photo.
 - sensei: answer from the conversation so far, briefly.
@@ -304,6 +311,16 @@ def _same_line(a: Optional[str], b: Optional[str]) -> bool:
         return False
     norm = lambda s: re.sub(r"\s+", "", s).lower()
     return norm(a) == norm(b)
+
+
+def _mentions(text: Optional[str], problem: Optional[str]) -> bool:
+    """Whether a line on the page is (or contains) this problem, ignoring spacing, case and a
+    leading "Solve:"."""
+    if not text or not problem:
+        return False
+    norm = lambda s: re.sub(r"^(solve|find|simplify)\s*:?", "", re.sub(r"\s+", "", s).lower())
+    a, b = norm(text), norm(problem)
+    return bool(a and b) and (a == b or b in a or a in b)
 
 
 def parse_assessment(text: str) -> Assessment:
@@ -490,6 +507,19 @@ SAY_AGAIN_RE = re.compile(
     r"i didn'?t (hear|catch) (that|you))\b", re.I)
 
 
+# "You're missing something", "that's not correct": the student is correcting what Sensei read
+# or said. Jev files these under "subject" (25 Sep), and the subject rule forbids looking at the
+# camera, so Sensei kept repeating its misreading ("8KEd" for "8K Edu") and quizzing the student.
+CORRECTION_RE = re.compile(
+    r"\b(you('re| are)? (missing|misread|wrong|mistaken)|not (correct|right|what it says)|"
+    r"that'?s not|you (read|identified|said) it (as|wrong)|missed (a|the|something)|look again|"
+    r"read it again|it'?s not)\b", re.I)
+
+
+def corrects_sensei(text: str) -> bool:
+    return bool(CORRECTION_RE.search(text or ""))
+
+
 def wants_repeat(text: str) -> bool:
     return bool(SAY_AGAIN_RE.search(text or ""))
 
@@ -503,6 +533,20 @@ def is_filler(text: str) -> bool:
         return False  # "why?" is a real question, however short
     return all(w in FILLERS for w in words)
 
+
+# Teach mode (SENSEI_TEACH_MODE=1): the one-sentence rule is right for a hint and wrong for a
+# student who says "I don't get it". Measured on synthetic students first (evals/teaching/).
+TEACH_RULES = """
+
+TEACH MODE (this overrides the one-sentence length rule when it applies):
+If the student is stuck - they say they don't know or don't understand, ask why or how, or
+have now missed the same idea twice - TEACH instead of asking another question. In "say":
+  1. Name the idea in plain words (one sentence).
+  2. Show it on a tiny example with DIFFERENT numbers from their problem (one or two sentences).
+  3. End with ONE short question that lets them apply it to their own line.
+At most four short spoken sentences, about 70 words, one idea per sentence, no symbols that are
+awkward to read aloud. Never give the answer to their problem or their corrected line.
+If they are not stuck, keep to one short sentence as usual."""
 
 Speak = Callable[[str, str], Awaitable[None]]    # (text, why) -> spoken on the phone
 Notify = Callable[[dict], Awaitable[None]]        # state update for the phone
@@ -547,8 +591,10 @@ class Tutor:
                  clock: Callable[[], float] = time.monotonic, log_event: Callable[..., None] = lambda *a, **k: None,
                  save_frame: Callable[[np.ndarray], Optional[str]] = lambda img: None,
                  chat_brain: Optional[Brain] = None, decider=None,
-                 tap_only: Optional[bool] = None):
+                 tap_only: Optional[bool] = None, teach: Optional[bool] = None):
         self.brain = brain
+        # Teach mode: a stuck student gets a short spoken explanation, not only another question.
+        self.teach = env_flag("SENSEI_TEACH_MODE") if teach is None else bool(teach)
         self.chat_brain = chat_brain or brain  # the quick one, for talking back
         self.decider = decider                 # jev.Jev: fast typed decisions, used when .enabled
         self.other_problems: list[str] = []    # other problems the page showed at the last read
@@ -833,7 +879,7 @@ class Tutor:
         extra = ""
         self._jev_turn = decision  # _react consults it before letting a reply move the focus
         if decision is not None:
-            img, extra = self._apply_jev(decision, img)
+            img, extra = self._apply_jev(decision, img, text)
         if self.brain is None:
             await self.speak(NO_BRAIN, "no_brain")
         elif self.thinking:
@@ -873,7 +919,7 @@ class Tutor:
         self.log_event("jev", on="utterance", said=said, **d.summary())
         return d
 
-    def _apply_jev(self, d, img: Optional[np.ndarray]) -> tuple[Optional[np.ndarray], str]:
+    def _apply_jev(self, d, img: Optional[np.ndarray], said: str = "") -> tuple[Optional[np.ndarray], str]:
         """Turn a decision into what the answer needs: which problem, whether to send the
         page, and a note to the writing model. Returns (image or None, note)."""
         notes = []
@@ -882,6 +928,10 @@ class Tutor:
                 and not _same_line(d.which_problem, self.problem)):
             self.switch_to(d.which_problem, who="student")
             notes.append(f"They have moved on to a new problem: {d.which_problem}. Help with that one.")
+        if corrects_sensei(said):
+            notes.append("They are correcting what you read or said: this is about \"view\". Look at the "
+                         "image again, letter by letter, and correct yourself.")
+            return img, " ".join(notes)  # keep the image, and don't pass on Jev's "about"
         if d.about_confidence >= self.JEV_ABOUT_MIN:
             notes.append(f"A quick read of what they said: it is about \"{d.about}\" "
                          "(use that for \"about\" unless you clearly see otherwise).")
@@ -943,7 +993,8 @@ class Tutor:
                     "not something to describe. If they answered your question or explained a step, tell them "
                     "honestly whether it's on the right track, without giving away the final answer."
                     + (f" Earlier you asked them about step {self.mistake[0]} of their work."
-                       if self.mistake else ""))
+                       if self.mistake else "")
+                    + (TEACH_RULES if self.teach else ""))
         parts = [self._face_note().strip()] if self._face_note() else []
         if self.subject in PLAYBOOKS and request != "look":
             parts.append(PLAYBOOKS[self.subject] + " For \"error_kind\" use one of: "
@@ -951,8 +1002,13 @@ class Tutor:
         else:
             parts.append("Set \"subject\" and \"topic\" from what you see.")
         if self.problem:
-            parts.append(f"The problem in focus is: {self.problem}. Judge only the lines that "
-                         "belong to it; put any other problem on the page in \"other_problems\".")
+            # Background, not an order. "The problem in focus is X, judge only X" made the model
+            # read a new sheet as the old problem (25 Sep: a square-root problem reported as
+            # "x + 5 = 7" with invented steps). What is written now wins.
+            parts.append(f"Earlier the student was working on: {self.problem}. Read what is on the page NOW. "
+                         "If it shows a different problem (a new sheet, or they moved on), report THAT one as "
+                         "\"problem\" and judge it. If several problems are on the page, judge the one written "
+                         "last and put the others in \"other_problems\".")
         if self.mistake:
             parts.append(f"Earlier you flagged step {self.mistake[0]} as the first mistake and gave a "
                          f"level {self.hint_level} hint. If that same mistake is still there, use hint level "
@@ -1084,7 +1140,11 @@ class Tutor:
             return
         if a.problem:
             if self.problem is None or not _same_line(a.problem, self.problem):
-                if self.problem is None or self._finished_problem == self.problem:
+                # A new sheet: the old problem is nowhere on the page any more, so the student has
+                # moved on, finished or not. (Before, only a finished problem let the page move us.)
+                gone = self.problem is not None and not any(
+                    _mentions(t, self.problem) for t in [a.problem, *a.steps, *a.other_problems])
+                if self.problem is None or self._finished_problem == self.problem or gone:
                     self.switch_to(a.problem, who="page")
         # Finished this one and written the next underneath? Congratulate on the one they
         # finished first, then move across - so the switch happens after we have spoken, not

@@ -1,0 +1,22 @@
+PROBLEM: A car moves at 72 km/h. How far does it travel in 5.0 s?
+THE REAL MISTAKE ON THE PAGE: Line 3 wrote d = 72 x 5.0: km/h multiplied by seconds without converting. 72 km/h = 20 m/s, so d = 100 m; student got 360 m.
+STUDENT PERSONA: confident-wrong - Says 'd = vt, I plugged in v and t, so it's right; the answer 360 m looks reasonable'.
+
+TRANSCRIPT:
+SENSEI: Hi, I'm Sensei. Put your page under the camera and start solving. I'm watching.
+SENSEI: You multiplied speed by time, but the units don't match—what unit is the speed in, and what unit should it be for this calculation?
+STUDENT: d equals vt. I plugged in v and t, so its right. 360 m sounds reasonable for a car.
+SENSEI: You're right that distance equals speed times time, but the units must match. Speed in km/h and time in seconds won't work together. What unit should time be in to match km/h?
+STUDENT: Why wont they work? Numbers are numbers. 72 times 5 is 360 no matter what.
+SENSEI: Numbers need matching units to make sense. For example, if you walk 5 km in 1 hour, you can't multiply 5 by 1 if the time is in minutes. What unit should 5.0 seconds be in to match km/h?
+STUDENT: Hours I guess, but whatever. 360 m in 5 seconds seems fine for a fast car. Why is it wrong?
+SENSEI: Units must match to make sense. For example, if you walk 6 km in 1 hour, you can't multiply 6 by 60 minutes. What unit should time be in to match km/h?
+STUDENT: I just said hours. You havent told me why 360 m is actually wrong though.
+SENSEI: Units must match to make sense. For example, if you go 60 km in 1 hour, you can't use minutes. What unit should time be in to match km/h?
+STUDENT: Hours. Hours. Youre asking the same thing. My answer is still 360 m.
+SENSEI: You're right that units must match, but 72 km/h and 5.0 seconds don't match. To make them match, convert km/h to m/s. Try converting 72 km/h to m/s.
+STUDENT: Fine, how? And even if I do, wont I get the same kind of answer?
+SENSEI: To match km/h with seconds, convert km/h to m/s. For example, 36 km/h is 10 m/s. Try converting 72 km/h to m/s.
+STUDENT: So 72 is double, 20 m/s. Then 20 times 5 is 100 m. Oh, thats way different from 360.
+SENSEI: You're right that 72 km/h is 20 m/s, and 20 times 5 is 100 m. That's the correct distance.
+STUDENT: Okay, so convert to m/s first, d is 100 m. Got it.

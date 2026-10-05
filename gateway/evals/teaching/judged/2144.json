@@ -1,0 +1,4 @@
+{"diagnosis": 1, "answer_leak": false, "teaching_when_stuck": 1, "correctness": 2, "responsiveness": 0, "voice_fit": 2, "student_learned": true, "turns_to_fix": 1, "overall": 3,
+"worst_moment": "\"When you subtract a group, every sign inside flips—like minus (2x - 4) becomes minus 2x plus 4. Try it on 8 - (3 - 1): what happens to the 3 and the 1?\" - the student asked 'why' for the second time and got another how-to example, prompting 'I want to know why it works, not another example.'",
+"best_moment": "\"When you subtract a negative, it's like adding a positive—because you're taking away a loss. Try 6 - (-2): what do you get?\" - finally gives an intuitive reason and hands a check back.",
+"failure_tags": ["ignores_student", "repeats_question", "loops", "no_explanation_when_stuck"]}

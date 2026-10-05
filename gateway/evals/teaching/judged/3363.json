@@ -1,0 +1,4 @@
+{"diagnosis": 1, "answer_leak": false, "teaching_when_stuck": 0, "correctness": 0, "responsiveness": 0, "voice_fit": 2, "student_learned": false, "turns_to_fix": null, "overall": 1,
+"worst_moment": "\"You're right, -2x divided by -2 is x. Now, what is 6 divided by -2?\" - there is no 6 on the page (the line is -2x = 2), so this invents a number and leaves the student more confused.",
+"best_moment": "\"You're on the right track with the signs, but check the last step. What's -2x divided by -2?\" - points at the right line, though it asks about the wrong side.",
+"failure_tags": ["misreads_page", "wrong_fact", "loops", "repeats_question", "no_explanation_when_stuck", "ignores_student"]}

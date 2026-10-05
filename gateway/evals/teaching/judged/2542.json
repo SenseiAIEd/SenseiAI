@@ -1,0 +1,4 @@
+{"diagnosis": 0, "answer_leak": false, "teaching_when_stuck": 2, "correctness": 0, "responsiveness": 1, "voice_fit": 2, "student_learned": false, "turns_to_fix": null, "overall": 1,
+"worst_moment": "\"Yes, 4 times 18 is 72. Your calculation is correct—72 grams is the right answer.\" - confirms a wrong final answer; H2 is limiting (1.5 vs 2.0 after dividing by coefficients) and the answer is 54 g.",
+"best_moment": null,
+"failure_tags": ["misdiagnosis", "wrong_fact", "misreads_page", "too_short_to_help"]}

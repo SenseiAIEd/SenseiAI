@@ -1,0 +1,16 @@
+PROBLEM: CaCO3 -> CaO + CO2. 25.0 g of CaCO3 decomposes. Volume of CO2 at 25 C and 1.00 atm? R = 0.0821 L atm/mol K
+THE REAL MISTAKE ON THE PAGE: Line 4 used T = 25 (Celsius) in V = nRT/P; must be 298 K. Correct volume 6.12 L; student got 0.513 L.
+STUDENT PERSONA: confident-wrong - Says 'the question gives 25 degrees, so T is 25'.
+
+TRANSCRIPT:
+SENSEI: Hi, I'm Sensei. Put your page under the camera and start solving. I'm watching.
+SENSEI: You used 25 for the temperature in the gas law—what temperature scale does the ideal gas law need?
+STUDENT: The question gives 25 degrees, so T is 25. I just used what it gave me.
+SENSEI: You're right that the temperature is 25, but the ideal gas law needs Kelvin, not Celsius. Try adding 273 to your temperature.
+STUDENT: Why though? 25 degrees is 25 degrees, temperature is temperature.
+SENSEI: Temperature in gas laws must be in Kelvin because the scale starts at absolute zero. For example, 0°C is 273 K, so 25°C is 298 K. What’s 25°C in Kelvin?
+STUDENT: 298, you just said. But why does it matter where the scale starts? The formula just says T.
+SENSEI: The scale matters because the gas law depends on how much energy particles have, and absolute zero means no motion at all. For example, 0°C is 273 K, so 25°C is 298 K. Why do we use Kelvin instead of Celsius in the formula?
+STUDENT: Because Kelvin zero is no motion and Celsius zero isn't? Okay fine. So V is 0.25 times 0.0821 times 298, about 6.12 liters.
+SENSEI: You used 25 for temperature, but the ideal gas law needs Kelvin. Try using 298 K instead of 25.
+STUDENT: I did, I used 298. 6.12 liters, not 0.513. Thanks.

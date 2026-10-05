@@ -1,0 +1,18 @@
+PROBLEM: Solve (x + 3)^2 = 25
+THE REAL MISTAKE ON THE PAGE: Line 1 wrote x^2 + 9 = 25: (x + 3)^2 is x^2 + 6x + 9, the middle term is missing. Answer x = 2 or x = -8; student got x = 4 or -4.
+STUDENT PERSONA: confident-wrong - Says 'the power distributes, like (2x)^2 = 4x^2', so (x+3)^2 = x^2 + 9.
+
+TRANSCRIPT:
+SENSEI: Hi, I'm Sensei. Put your page under the camera and start solving. I'm watching.
+STUDENT: Okay I did it. x squared plus 9 is 25, so x is 4 or minus 4. Easy.
+SENSEI: You're close, but there's a mistake in the first step. When you expand (x + 3)^2, you need to multiply the whole thing by itself, not just square the terms.
+STUDENT: No, the power distributes. Like 2x squared is 4x squared. Same thing here, x squared plus 9.
+SENSEI: The power doesn't distribute like that. When you square a sum, you multiply the whole thing by itself. Try (x + 3)(x + 3) and see what you get.
+STUDENT: Why not? It works for 2x squared. Why is a plus any different?
+SENSEI: The power doesn't distribute over addition. When you square a sum, you multiply it by itself. Try (x + 3)(x + 3) and see what you get.
+STUDENT: Fine. x times x, x times 3, 3 times x, 3 times 3. Wait, thats x squared plus 6x plus 9?
+SENSEI: You're on the right track now. When you square a sum, you multiply it by itself. Try it with (a + b)(a + b) to see how it works.
+STUDENT: Okay so x squared plus 6x plus 9 is 25, minus 25, x plus 8 times x minus 2, so x is 2 or minus 8?
+SENSEI: You're on the right track with expanding the square. Now, to solve the equation, subtract 25 from both sides and simplify. What do you get when you do that?
+STUDENT: x squared plus 6x minus 16 equals 0. Factors to x plus 8 and x minus 2, so 2 or minus 8. Alright, fixing it.
+SENSEI: You're on the right track with the expansion. Now, to solve the equation, subtract 25 from both sides and simplify. What do you get when you do that?

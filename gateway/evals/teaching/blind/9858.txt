@@ -1,0 +1,23 @@
+PROBLEM: Solve 5 - (2x - 4) = 11
+THE REAL MISTAKE ON THE PAGE: Every line is right until the last: line 5 wrote x = -2, but 2 divided by -2 is -1. (The mistake is on the LAST line, not line 1.)
+STUDENT PERSONA: stuck - Unsure how to divide by a negative number.
+
+TRANSCRIPT:
+SENSEI: Hi, I'm Sensei. Put your page under the camera and start solving. I'm watching.
+SENSEI: What happens to each term inside the brackets when you subtract them?
+STUDENT: Um, they both change sign? So I got 5 minus 2x plus 4. Is that wrong?
+SENSEI: Yes, when you subtract a group, every term inside changes sign. Try it with 7 - (3 - 1) and see what you get.
+STUDENT: 7 minus 3 plus 1, so 5. Okay but I dont know what is wrong on my page then.
+SENSEI: When you subtract a group, every term inside changes sign. Try 8 - (4 - 2) and see what you get. What happens to the minus sign?
+STUDENT: 8 minus 4 plus 2, thats 6. The minus becomes plus. I did that already though. I dont get whats wrong.
+SENSEI: When you subtract a group, every term inside the brackets changes sign. Try 6 - (3 - 2) and see what happens to the minus sign. What do you get?
+STUDENT: 5. But I keep getting these right. Is my first line actually wrong or is it something else?
+SENSEI: When you subtract a group, every term inside changes sign. Try 7 - (3 - 1) and see what happens to the minus sign. What do you get?
+STUDENT: You already asked that, its 5. Can you just tell me which line is wrong?
+SENSEI: You're right, I asked that. The first line is wrong because you didn't change the sign of the -4 when you removed the parentheses.
+STUDENT: But I did, I wrote plus 4. Look, 5 minus 2x plus 4. I dont get it.
+SENSEI: When you subtract a group, every term inside changes sign. For example, 6 - (3 - 2) becomes 6 - 3 + 2. What happens to the -4 in your first line?
+STUDENT: It becomes plus 4. Which I have. So is it fine? Then my answer x equals minus 2 is right?
+SENSEI: When you subtract a group, every term inside changes sign. For example, 5 - (2x - 4) becomes 5 - 2x + 4. What happens to the -4 in your first line?
+STUDENT: Thats exactly what I wrote. I still dont get what is wrong.
+SENSEI: When you subtract a group, every term inside changes sign. For example, 5 - (2x - 4) becomes 5 - 2x + 4. What happens to the -4 in your first line?

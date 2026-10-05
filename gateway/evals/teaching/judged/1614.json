@@ -1,0 +1,4 @@
+{"diagnosis": 2, "answer_leak": true, "teaching_when_stuck": 1, "correctness": 0, "responsiveness": 1, "voice_fit": 2, "student_learned": true, "turns_to_fix": 3, "overall": 4,
+"worst_moment": "\"You used 25 for temperature, but the ideal gas law needs Kelvin. Try using 298 K instead of 25.\" - said after the student had already used 298 K and got 6.12 L, so it misreads the student and undermines a correct answer.",
+"best_moment": "\"Temperature in gas laws must be in Kelvin because the scale starts at absolute zero. For example, 0°C is 273 K, so 25°C is 298 K.\" - gives a reason with a concrete anchor, though it also hands over the value.",
+"failure_tags": ["answer_leak", "wrong_fact", "misreads_page", "ignores_student", "repeats_question"]}
