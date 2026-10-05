@@ -441,6 +441,19 @@ class Brain:
         return cls(url, model, key, timeout_s=float(os.environ.get("SENSEI_CHAT_TIMEOUT", 60)),
                    max_tokens=int(os.environ.get("SENSEI_CHAT_MAX_TOKENS", 1024)))
 
+    @classmethod
+    def verify_from_env(cls) -> Optional["Brain"]:
+        """The careful model that confirms a suspected mistake before Sensei says anything about it
+        (SENSEI_VERIFY_URL / SENSEI_VERIFY_MODEL). The fast model flags most correct pages and blames
+        line 1 for late mistakes; this one is slower (~20 s a page) but reads the maths properly.
+        It also writes the private answer key. Unset = the fast model confirms its own reading."""
+        url, model = os.environ.get("SENSEI_VERIFY_URL"), os.environ.get("SENSEI_VERIFY_MODEL", "")
+        if not url or not model:
+            return None
+        return cls(url, model, os.environ.get("SENSEI_VERIFY_KEY", ""),
+                   timeout_s=float(os.environ.get("SENSEI_VERIFY_TIMEOUT", 90)),
+                   max_tokens=int(os.environ.get("SENSEI_VERIFY_MAX_TOKENS", 4096)))
+
     def _chat(self, messages: list, max_tokens: int) -> str:
         res = httpx.post(self.url, headers=self.headers, timeout=self.timeout_s, json={
             "model": self.model, "messages": messages, "max_tokens": max_tokens, "temperature": 0.2})
@@ -620,12 +633,13 @@ class Tutor:
     def __init__(self, brain: Optional[Brain], speak: Speak, notify: Notify, minutes: float = 10,
                  clock: Callable[[], float] = time.monotonic, log_event: Callable[..., None] = lambda *a, **k: None,
                  save_frame: Callable[[np.ndarray], Optional[str]] = lambda img: None,
-                 chat_brain: Optional[Brain] = None, decider=None,
+                 chat_brain: Optional[Brain] = None, decider=None, verify_brain: Optional[Brain] = None,
                  tap_only: Optional[bool] = None, teach: Optional[bool] = None):
         self.brain = brain
         # Teach mode: a stuck student gets a short spoken explanation, not only another question.
         self.teach = env_flag("SENSEI_TEACH_MODE") if teach is None else bool(teach)
         self.chat_brain = chat_brain or brain  # the quick one, for talking back
+        self.verify_brain = verify_brain  # the careful one: confirms suspected mistakes
         self.decider = decider                 # jev.Jev: fast typed decisions, used when .enabled
         self.other_problems: list[str] = []    # other problems the page showed at the last read
         self.speak_cb, self.notify_cb, self.log_event = speak, notify, log_event
@@ -660,7 +674,7 @@ class Tutor:
         # The private answer key for the mistake being taught (Brain.solve), made in the background
         # when a mistake is confirmed: {"problem", "mistake", "wrong_line", "correct_line", "answer", "check"}.
         self.answer_key: Optional[dict] = None
-        self.key_brain: Optional[Brain] = None  # the careful model for keys; defaults to self.brain
+        self.key_brain: Optional[Brain] = verify_brain  # the careful model for keys; defaults to self.brain
         self._background: set = set()    # tasks still running (the key), so a harness can wait for them
         self.last_focus_change = -1e9    # when the student last moved us to another problem
         self.mistakes_found: list[str] = []
@@ -1144,6 +1158,12 @@ class Tutor:
         # When a second, faster model is configured, conversation goes to it and the page to the
         # careful one. With only one model configured, both are the same brain.
         brain = self.chat_brain if request in ("talk", "look") else self.brain
+        # A background look that would confirm a suspected mistake goes to the careful model, whose
+        # verdict then stands: no mistake clears it, a different line replaces it.
+        verifying = request is None and self.candidate_mistake is not None and self.verify_brain is not None
+        candidate = self.candidate_mistake
+        if verifying:
+            brain = self.verify_brain
         self.thinking = True
         await self.notify()
         frame_file = self.save_frame(img) if img is not None else None
@@ -1151,7 +1171,16 @@ class Tutor:
         t0 = self.clock()
         system = CHAT_SYSTEM_PROMPT if request in ("talk", "look") else SYSTEM_PROMPT
         try:
-            a = await asyncio.to_thread(brain.assess, img, self._instructions(request, said) + (f"\n{extra}" if extra else ""), system)
+            try:
+                a = await asyncio.to_thread(brain.assess, img, self._instructions(request, said) + (f"\n{extra}" if extra else ""), system)
+            except Exception as e:
+                if not verifying:
+                    raise
+                # The careful model is a help, never a blocker: confirm with the fast one instead.
+                log.warning("verify failed: %s", e)
+                self.log_event("tutor_verify_failed", error=str(e)[:300])
+                verifying, brain = False, self.brain
+                a = await asyncio.to_thread(brain.assess, img, self._instructions(request, said) + (f"\n{extra}" if extra else ""), system)
             if request == "talk" and a.say and (twin := self._repeats(a.say)):
                 # Saying the same thing again doesn't teach; ask once more for a different approach.
                 self.log_event("tutor_repeat_retry", said=a.say, earlier=twin)
@@ -1187,7 +1216,11 @@ class Tutor:
             # The student asked something while this background look ran: their question comes first.
             self.log_event("tutor_superseded", page=a.page)
         else:
-            await self._react(a, request)
+            if verifying:
+                self.log_event("tutor_verified", candidate=candidate[0],
+                               verdict=a.mistake[0] if a.mistake else None,
+                               latency_s=round(self.clock() - t0, 2))
+            await self._react(a, request, verified=verifying)
         await self.notify()
         if self.pending_question and self.phase == "watching":
             text, img = self.pending_question
@@ -1202,7 +1235,7 @@ class Tutor:
         lines = "; ".join(a.steps[:6])
         return f"{kind}" + (f" ({a.problem})" if a.problem else "") + (f": {lines}" if lines else "")
 
-    async def _react(self, a: Assessment, request: Optional[str]):
+    async def _react(self, a: Assessment, request: Optional[str], verified: bool = False):
         now = self.clock()
         if request == "talk":  # the student spoke: answer them
             # "why" stays "reply" (the phone keys off it); the route is in tutor_assessment.about
@@ -1273,7 +1306,7 @@ class Tutor:
             return  # we already asked about this one three times; only a direct ask reopens it
         if mistake and mistake == self.mistake and request is None and now - self.last_spoke_at < self.HINT_WAIT_S:
             return  # same mistake, just hinted: let them find it themselves before asking again
-        if mistake and mistake != self.mistake and request is None:
+        if mistake and mistake != self.mistake and request is None and not verified:
             # A mistake we haven't raised yet. One look is not enough: read it again first.
             # A student who writes a wrong line and then sits still never changes the page, so
             # ask the watcher for another look at this same page rather than waiting for one.

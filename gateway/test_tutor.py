@@ -1071,3 +1071,34 @@ def test_a_near_repeat_is_asked_again_for_a_different_approach():
     h.run(h.tutor.hear("I still don't get it", PAGE))
     assert "tutor_repeat_retry" in h.events and h.said[-1][1].startswith("Try a small case")
     assert "repeats what you already said" in brain.instructions[-1]
+
+
+def verified(fast, careful):
+    h = Harness(fast)
+    h.tutor.verify_brain = h.tutor.key_brain = careful
+    return h
+
+
+def test_the_careful_model_clears_a_false_alarm_before_anyone_hears_it():
+    fast, careful = ScriptedBrain(MISTAKE), KeyedBrain(ON_TRACK)
+    h = verified(fast, careful)
+    confirmed_hint(h)
+    assert h.whys() == ["greeting"] and h.tutor.mistake is None and h.tutor.candidate_mistake is None
+    assert "tutor_verified" in h.events and len(careful.instructions) == 1
+
+
+def test_the_careful_model_confirms_in_one_look_and_its_line_wins():
+    late = Assessment(page="work", problem="5 - (2x - 4) = 11", steps=STEPS[:2], first_error=2,
+                      error_kind="arithmetic", say="Check your second line.")
+    fast, careful = ScriptedBrain(MISTAKE), KeyedBrain(late)
+    h = verified(fast, careful)
+    confirmed_hint(h)
+    assert h.whys()[-1] == "hint_1" and h.said[-1][1] == "Check your second line."
+    assert h.tutor.mistake[0] == 2 and "tutor_answer_key" in h.events
+
+
+def test_if_the_careful_model_fails_the_fast_one_confirms():
+    fast, careful = ScriptedBrain(MISTAKE, MISTAKE), KeyedBrain(TimeoutError("slow"))
+    h = verified(fast, careful)
+    confirmed_hint(h)
+    assert "tutor_verify_failed" in h.events and h.whys()[-1] == "hint_1"

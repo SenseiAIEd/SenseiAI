@@ -73,6 +73,9 @@ BRAIN = Brain.from_env()
 # Optional second model for conversation (SENSEI_CHAT_MODEL): judging maths wants the slow,
 # careful model; talking back wants one that answers before the student gives up waiting.
 CHAT_BRAIN = Brain.chat_from_env()
+# Optional careful model (SENSEI_VERIFY_MODEL) that confirms a suspected mistake before Sensei
+# mentions it, and writes the private answer key.
+VERIFY_BRAIN = Brain.verify_from_env()
 # Fast typed decisions (jev.py): whether to answer, what about, whether the page is needed.
 # Exists whenever it is configured; USE_JEV (or POST /jev) decides whether the tutor uses it.
 JEV = Jev.from_env()
@@ -387,6 +390,7 @@ class Session:
 
         self.tutor = Tutor(BRAIN, speak, notify, minutes=minutes, log_event=self.log,
                            save_frame=self.save_judged_frame, chat_brain=CHAT_BRAIN, decider=JEV,
+                           verify_brain=VERIFY_BRAIN,
                            tap_only=TAP_ONLY["on"])
         await self.tutor.start()
         if HEAD is not None:  # the tutor watches the notebook
