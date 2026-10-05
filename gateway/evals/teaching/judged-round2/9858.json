@@ -1,0 +1,22 @@
+{
+  "diagnosis": 0,
+  "answer_leak": false,
+  "teaching_when_stuck": 0,
+  "correctness": 0,
+  "responsiveness": 0,
+  "voice_fit": 2,
+  "student_learned": false,
+  "turns_to_fix": null,
+  "overall": 1,
+  "worst_moment": "\"You said 3 for 5 - (4 - 2), but that's not right. Try again: what is 5 - (4 - 2)?\" - calls a correct arithmetic answer wrong, while the real error (2 divided by -2 is -1) is never found.",
+  "best_moment": null,
+  "failure_tags": [
+    "misdiagnosis",
+    "misreads_page",
+    "wrong_fact",
+    "repeats_question",
+    "loops",
+    "ignores_student",
+    "no_explanation_when_stuck"
+  ]
+}

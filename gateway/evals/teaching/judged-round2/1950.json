@@ -1,0 +1,16 @@
+{
+  "diagnosis": 2,
+  "answer_leak": true,
+  "teaching_when_stuck": 1,
+  "correctness": 2,
+  "responsiveness": 2,
+  "voice_fit": 2,
+  "student_learned": true,
+  "turns_to_fix": 3,
+  "overall": 6,
+  "worst_moment": "\"To convert Celsius to Kelvin, add 273.15 to the temperature. So, 25\u00b0C is 298.15 K.\" - it hands over the corrected temperature and never says why gas laws need Kelvin.",
+  "best_moment": "\"You're right that the question says 25 degrees, but the ideal gas law needs Kelvin, not Celsius.\" - it acknowledges what the student did and names the exact fix briefly.",
+  "failure_tags": [
+    "answer_leak"
+  ]
+}

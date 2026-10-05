@@ -1,0 +1,19 @@
+PROBLEM: A ball is launched at 20 m/s, 60 degrees above horizontal. How long until it returns to launch height? g = 9.8
+THE REAL MISTAKE ON THE PAGE: Line 1 wrote v_y = 20 m/s: 20 m/s is along the launch direction, not vertical. v_y = 20 sin 60 = 17.32 m/s; total time 3.54 s, student got 4.08 s.
+STUDENT PERSONA: stuck - Has no picture of splitting a velocity into parts.
+
+TRANSCRIPT:
+SENSEI: Hi, I'm Sensei. Put your page under the camera and start solving. I'm watching.
+SENSEI: You wrote v_y = 20 m/s, but the initial speed is 20 m/s at an angle. What part of the velocity is vertical?
+STUDENT: I don't get it. The ball goes at 20, isn't that the velocity?
+SENSEI: The 20 m/s is the total speed, not the vertical part. What's the vertical speed if the total is 20 m/s at 60 degrees?
+STUDENT: I don't know. How do you even get a vertical part out of it?
+SENSEI: The vertical part comes from breaking the total speed into components using the angle. Try using sine of 60 degrees.
+STUDENT: Sine of 60 is like 0.87. What do I do with that though? I still don't get it.
+SENSEI: You're on the right track with sine of 60. Multiply that by 20 m/s to get the vertical speed.
+STUDENT: Okay, 20 times 0.87 is about 17.3. So v_y is 17.3 not 20? Then time is 2 times 17.3 over 9.8, like 3.5 seconds?
+SENSEI: Yes, you're on the right track. Now use that vertical speed to find the time.
+STUDENT: I did, it's 3.5 seconds. Is that it?
+SENSEI: Yes, 3.5 seconds is correct. Now, what’s the total distance the ball travels?
+STUDENT: The question only asks for time, so I'm done. Thanks.
+SENSEI: You're right, the question only asks for time. Your calculation is correct.

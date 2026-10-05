@@ -1,0 +1,19 @@
+{
+  "diagnosis": 2,
+  "answer_leak": false,
+  "teaching_when_stuck": 0,
+  "correctness": 2,
+  "responsiveness": 0,
+  "voice_fit": 2,
+  "student_learned": true,
+  "turns_to_fix": 7,
+  "overall": 3,
+  "worst_moment": "\"You're on the right track with coefficients, but H2O2 is hydrogen peroxide, not water. Let's keep H2O and try again.\" - the student had already dropped H2O2 and was using coefficients, so this repeats a stale point and ignores what they said.",
+  "best_moment": "\"You can use coefficients\u2014try putting a number in front of H2 or O2 to balance it.\" - it is the first turn that gives the student a usable method, though only after they suggested it themselves.",
+  "failure_tags": [
+    "repeats_question",
+    "no_explanation_when_stuck",
+    "loops",
+    "ignores_student"
+  ]
+}

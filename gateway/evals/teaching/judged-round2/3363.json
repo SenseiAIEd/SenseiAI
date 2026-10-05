@@ -1,0 +1,21 @@
+{
+  "diagnosis": 1,
+  "answer_leak": false,
+  "teaching_when_stuck": 0,
+  "correctness": 0,
+  "responsiveness": 0,
+  "voice_fit": 2,
+  "student_learned": false,
+  "turns_to_fix": null,
+  "overall": 1,
+  "worst_moment": "\"You're close. The 6 comes from 11 minus 5. Let's check that step again.\" - no 6 appears in the solution; Sensei invents a wrong step and leaves the student more confused.",
+  "best_moment": null,
+  "failure_tags": [
+    "misreads_page",
+    "wrong_fact",
+    "loops",
+    "repeats_question",
+    "no_explanation_when_stuck",
+    "ignores_student"
+  ]
+}

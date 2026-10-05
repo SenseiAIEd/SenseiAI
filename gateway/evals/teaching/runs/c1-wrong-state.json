@@ -1,0 +1,775 @@
+{
+ "id": "c1-wrong-state",
+ "page": "/home/perspectivity-dgx/SenseiAI/datasets/samples/chemistry/basic/easy/bad_1.png",
+ "variant": "state",
+ "now": 1128.0,
+ "transcript": [
+  {
+   "who": "sensei",
+   "why": "greeting",
+   "text": "Hi, I'm Sensei. Put your page under the camera and start solving. I'm watching."
+  },
+  {
+   "who": "sensei",
+   "why": "hint_1",
+   "text": "You changed the subscript in H2O to make H2O2\u2014what does that formula represent, and is it still water?"
+  },
+  {
+   "who": "student",
+   "text": "But it balances now. Two H and two O on each side, so it's fine."
+  },
+  {
+   "who": "sensei",
+   "why": "ack",
+   "text": "Okay, let me think."
+  },
+  {
+   "who": "sensei",
+   "why": "reply",
+   "text": "You're right that the numbers match, but H2O2 isn't water\u2014it's hydrogen peroxide. Let's fix the formula first."
+  },
+  {
+   "who": "student",
+   "text": "Okay but the question just says balance it. If I keep H2O the oxygens don't match, so what else can I do?"
+  },
+  {
+   "who": "sensei",
+   "why": "ack",
+   "text": "Good question. One moment."
+  },
+  {
+   "who": "sensei",
+   "why": "reply",
+   "text": "Changing H2O to H2O2 changes the substance\u2014it's no longer water. Let's keep the original formula and balance it correctly."
+  },
+  {
+   "who": "student",
+   "text": "You keep saying that, but how? The only way to get two O is H2O2."
+  },
+  {
+   "who": "sensei",
+   "why": "ack",
+   "text": "Let me see."
+  },
+  {
+   "who": "sensei",
+   "why": "reply",
+   "text": "You're close, but H2O2 is hydrogen peroxide, not water. Let's keep H2O and balance it properly."
+  },
+  {
+   "who": "student",
+   "text": "Properly how though? I don't see another way to get two oxygens on the right."
+  },
+  {
+   "who": "sensei",
+   "why": "ack",
+   "text": "Got it. Give me a second."
+  },
+  {
+   "who": "sensei",
+   "why": "reply",
+   "text": "You're trying to balance H2 + O2 -> H2O, but H2O2 is hydrogen peroxide, not water. Let's keep H2O and try again."
+  },
+  {
+   "who": "student",
+   "text": "This isn't helping. Can I put a number in front or something?"
+  },
+  {
+   "who": "sensei",
+   "why": "ack",
+   "text": "Okay, let me think."
+  },
+  {
+   "who": "sensei",
+   "why": "reply",
+   "text": "You can use coefficients\u2014try putting a number in front of H2 or O2 to balance it."
+  },
+  {
+   "who": "student",
+   "text": "So like 2 H2 plus O2 gives H2O? But then there's four H on the left."
+  },
+  {
+   "who": "sensei",
+   "why": "ack",
+   "text": "Good question. One moment."
+  },
+  {
+   "who": "sensei",
+   "why": "reply",
+   "text": "You're on the right track with coefficients, but H2O2 is hydrogen peroxide, not water. Let's keep H2O and try again."
+  },
+  {
+   "who": "student",
+   "text": "I did keep H2O. Do I put a 2 in front of the H2O too then?"
+  },
+  {
+   "who": "sensei",
+   "why": "ack",
+   "text": "Let me see."
+  },
+  {
+   "who": "sensei",
+   "why": "reply",
+   "text": "You're on the right track with coefficients, but putting a 2 in front of H2O would make it 2H2O\u2014let's see how that changes the atoms."
+  },
+  {
+   "who": "student",
+   "text": "Oh, 2 H2O is four H and two O. So 2 H2 plus O2 gives 2 H2O. Got it, thanks."
+  }
+ ],
+ "events": [
+  {
+   "event": "tutor_start",
+   "minutes": 15.0
+  },
+  {
+   "event": "tutor_say",
+   "text": "Hi, I'm Sensei. Put your page under the camera and start solving. I'm watching.",
+   "why": "greeting"
+  },
+  {
+   "event": "tutor_subject",
+   "was": null,
+   "now": "chemistry",
+   "topic": "balancing equations",
+   "set_by": "page"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": null,
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": [
+    1200,
+    445
+   ],
+   "page": "work",
+   "about": null,
+   "focus": null,
+   "problem": "Balance: H2 + O2 -> H2O",
+   "subject": "chemistry",
+   "topic": "balancing equations",
+   "other_problems": [],
+   "given": "Balance: H2 + O2 -> H2O",
+   "steps": [
+    "H2 + O2 -> H2O2",
+    "Check: H: 2 = 2, O: 2 = 2",
+    "Balanced."
+   ],
+   "first_error": 1,
+   "error_kind": "incorrect_formula",
+   "finished": true,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "You wrote H2O2 as the product\u2014what molecule is that, and how does it compare to water?"
+  },
+  {
+   "event": "tutor_focus",
+   "was": null,
+   "now": "Balance: H2 + O2 -> H2O",
+   "set_by": "page"
+  },
+  {
+   "event": "tutor_unconfirmed",
+   "step": 1,
+   "line": "H2 + O2 -> H2O2"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": null,
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": [
+    1200,
+    445
+   ],
+   "page": "work",
+   "about": null,
+   "focus": null,
+   "problem": "Balance: H2 + O2 -> H2O",
+   "subject": "chemistry",
+   "topic": "balancing equations",
+   "other_problems": [],
+   "given": "Balance: H2 + O2 -> H2O",
+   "steps": [
+    "H2 + O2 -> H2O2",
+    "Check: H: 2 = 2, O: 2 = 2",
+    "Balanced."
+   ],
+   "first_error": 1,
+   "error_kind": "subscript_changed",
+   "finished": true,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "You changed the subscript in H2O to make H2O2\u2014what does that formula represent, and is it still water?"
+  },
+  {
+   "event": "tutor_say",
+   "text": "You changed the subscript in H2O to make H2O2\u2014what does that formula represent, and is it still water?",
+   "why": "hint_1"
+  },
+  {
+   "event": "tutor_answer_key",
+   "problem": "Balance: H2 + O2 -> H2O",
+   "mistake": [
+    1,
+    "h2+o2->h2o2"
+   ],
+   "wrong_line": "H2 + O2 -> H2O2",
+   "correct_line": "H2 + O2 -> H2O",
+   "answer": "2H2 + O2 -> 2H2O",
+   "check": "Check that the number of H and O atoms are equal on both sides: H: 4 = 4, O: 2 = 2"
+  },
+  {
+   "event": "jev",
+   "on": "utterance",
+   "said": "But it balances now. Two H and two O on each side, so it's fine.",
+   "respond": 0.96,
+   "about": "subject",
+   "about_conf": 0.8,
+   "followup": 0.21,
+   "needs_page": 0.67,
+   "new_problem": 0.03,
+   "which_problem": null,
+   "which_conf": 0.0,
+   "latency_ms": 463
+  },
+  {
+   "event": "student_said",
+   "text": "But it balances now. Two H and two O on each side, so it's fine."
+  },
+  {
+   "event": "tutor_say",
+   "text": "Okay, let me think.",
+   "why": "ack"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": "talk",
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": [
+    1200,
+    445
+   ],
+   "page": "work",
+   "about": "subject",
+   "focus": "Balance: H2 + O2 -> H2O",
+   "problem": null,
+   "subject": null,
+   "topic": null,
+   "other_problems": [],
+   "given": null,
+   "steps": [],
+   "first_error": null,
+   "error_kind": null,
+   "finished": false,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "You're right that the numbers match, but H2O2 isn't water\u2014it's hydrogen peroxide. Let's fix the formula first."
+  },
+  {
+   "event": "tutor_about",
+   "about": "subject"
+  },
+  {
+   "event": "tutor_say",
+   "text": "You're right that the numbers match, but H2O2 isn't water\u2014it's hydrogen peroxide. Let's fix the formula first.",
+   "why": "reply"
+  },
+  {
+   "event": "jev",
+   "on": "utterance",
+   "said": "Okay but the question just says balance it. If I keep H2O the oxygens don't match, so what else can I do?",
+   "respond": 0.9,
+   "about": "subject",
+   "about_conf": 0.87,
+   "followup": 0.91,
+   "needs_page": 0.3,
+   "new_problem": 0.02,
+   "which_problem": null,
+   "which_conf": 0.0,
+   "latency_ms": 1448
+  },
+  {
+   "event": "student_said",
+   "text": "Okay but the question just says balance it. If I keep H2O the oxygens don't match, so what else can I do?"
+  },
+  {
+   "event": "tutor_say",
+   "text": "Good question. One moment.",
+   "why": "ack"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": "talk",
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": [
+    1200,
+    445
+   ],
+   "page": "work",
+   "about": "subject",
+   "focus": "Balance: H2 + O2 -> H2O",
+   "problem": null,
+   "subject": null,
+   "topic": null,
+   "other_problems": [],
+   "given": null,
+   "steps": [],
+   "first_error": null,
+   "error_kind": null,
+   "finished": false,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "Changing H2O to H2O2 changes the substance\u2014it's no longer water. Let's keep the original formula and balance it correctly."
+  },
+  {
+   "event": "tutor_about",
+   "about": "subject"
+  },
+  {
+   "event": "tutor_say",
+   "text": "Changing H2O to H2O2 changes the substance\u2014it's no longer water. Let's keep the original formula and balance it correctly.",
+   "why": "reply"
+  },
+  {
+   "event": "jev",
+   "on": "utterance",
+   "said": "You keep saying that, but how? The only way to get two O is H2O2.",
+   "respond": 0.92,
+   "about": "subject",
+   "about_conf": 0.88,
+   "followup": 0.94,
+   "needs_page": 0.3,
+   "new_problem": 0.01,
+   "which_problem": null,
+   "which_conf": 0.0,
+   "latency_ms": 497
+  },
+  {
+   "event": "student_said",
+   "text": "You keep saying that, but how? The only way to get two O is H2O2."
+  },
+  {
+   "event": "tutor_say",
+   "text": "Let me see.",
+   "why": "ack"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": "talk",
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": [
+    1200,
+    445
+   ],
+   "page": "work",
+   "about": "subject",
+   "focus": "Balance: H2 + O2 -> H2O",
+   "problem": null,
+   "subject": null,
+   "topic": null,
+   "other_problems": [],
+   "given": null,
+   "steps": [],
+   "first_error": null,
+   "error_kind": null,
+   "finished": false,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "You're close, but H2O2 is hydrogen peroxide, not water. Let's keep H2O and balance it properly."
+  },
+  {
+   "event": "tutor_about",
+   "about": "subject"
+  },
+  {
+   "event": "tutor_say",
+   "text": "You're close, but H2O2 is hydrogen peroxide, not water. Let's keep H2O and balance it properly.",
+   "why": "reply"
+  },
+  {
+   "event": "jev",
+   "on": "utterance",
+   "said": "Properly how though? I don't see another way to get two oxygens on the right.",
+   "respond": 0.96,
+   "about": "subject",
+   "about_conf": 0.92,
+   "followup": 0.97,
+   "needs_page": 0.19,
+   "new_problem": 0.01,
+   "which_problem": null,
+   "which_conf": 0.0,
+   "latency_ms": 514
+  },
+  {
+   "event": "student_said",
+   "text": "Properly how though? I don't see another way to get two oxygens on the right."
+  },
+  {
+   "event": "tutor_say",
+   "text": "Got it. Give me a second.",
+   "why": "ack"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": "talk",
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": [
+    1200,
+    445
+   ],
+   "page": "work",
+   "about": "subject",
+   "focus": "Balance: H2 + O2 -> H2O",
+   "problem": null,
+   "subject": null,
+   "topic": null,
+   "other_problems": [],
+   "given": null,
+   "steps": [],
+   "first_error": null,
+   "error_kind": null,
+   "finished": false,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "You're trying to balance H2 + O2 -> H2O, but H2O2 is hydrogen peroxide, not water. Let's keep H2O and try again."
+  },
+  {
+   "event": "tutor_about",
+   "about": "subject"
+  },
+  {
+   "event": "tutor_say",
+   "text": "You're trying to balance H2 + O2 -> H2O, but H2O2 is hydrogen peroxide, not water. Let's keep H2O and try again.",
+   "why": "reply"
+  },
+  {
+   "event": "jev",
+   "on": "utterance",
+   "said": "This isn't helping. Can I put a number in front or something?",
+   "respond": 0.96,
+   "about": "subject",
+   "about_conf": 0.87,
+   "followup": 0.85,
+   "needs_page": 0.14,
+   "new_problem": 0.01,
+   "which_problem": null,
+   "which_conf": 0.0,
+   "latency_ms": 512
+  },
+  {
+   "event": "student_said",
+   "text": "This isn't helping. Can I put a number in front or something?"
+  },
+  {
+   "event": "tutor_say",
+   "text": "Okay, let me think.",
+   "why": "ack"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": "talk",
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": null,
+   "page": "work",
+   "about": "subject",
+   "focus": "Balance: H2 + O2 -> H2O",
+   "problem": null,
+   "subject": null,
+   "topic": null,
+   "other_problems": [],
+   "given": null,
+   "steps": [],
+   "first_error": null,
+   "error_kind": null,
+   "finished": false,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "You can use coefficients\u2014try putting a number in front of H2 or O2 to balance it."
+  },
+  {
+   "event": "tutor_about",
+   "about": "subject"
+  },
+  {
+   "event": "tutor_say",
+   "text": "You can use coefficients\u2014try putting a number in front of H2 or O2 to balance it.",
+   "why": "reply"
+  },
+  {
+   "event": "jev",
+   "on": "utterance",
+   "said": "So like 2 H2 plus O2 gives H2O? But then there's four H on the left.",
+   "respond": 0.93,
+   "about": "subject",
+   "about_conf": 0.87,
+   "followup": 0.96,
+   "needs_page": 0.15,
+   "new_problem": 0.02,
+   "which_problem": null,
+   "which_conf": 0.0,
+   "latency_ms": 939
+  },
+  {
+   "event": "student_said",
+   "text": "So like 2 H2 plus O2 gives H2O? But then there's four H on the left."
+  },
+  {
+   "event": "tutor_say",
+   "text": "Good question. One moment.",
+   "why": "ack"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": "talk",
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": [
+    1200,
+    445
+   ],
+   "page": "work",
+   "about": "subject",
+   "focus": "Balance: H2 + O2 -> H2O",
+   "problem": null,
+   "subject": null,
+   "topic": null,
+   "other_problems": [],
+   "given": null,
+   "steps": [],
+   "first_error": null,
+   "error_kind": null,
+   "finished": false,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "You're on the right track with coefficients, but H2O2 is hydrogen peroxide, not water. Let's keep H2O and try again."
+  },
+  {
+   "event": "tutor_about",
+   "about": "subject"
+  },
+  {
+   "event": "tutor_say",
+   "text": "You're on the right track with coefficients, but H2O2 is hydrogen peroxide, not water. Let's keep H2O and try again.",
+   "why": "reply"
+  },
+  {
+   "event": "jev",
+   "on": "utterance",
+   "said": "I did keep H2O. Do I put a 2 in front of the H2O too then?",
+   "respond": 0.97,
+   "about": "subject",
+   "about_conf": 0.92,
+   "followup": 0.9,
+   "needs_page": 0.1,
+   "new_problem": 0.01,
+   "which_problem": null,
+   "which_conf": 0.0,
+   "latency_ms": 984
+  },
+  {
+   "event": "student_said",
+   "text": "I did keep H2O. Do I put a 2 in front of the H2O too then?"
+  },
+  {
+   "event": "tutor_say",
+   "text": "Let me see.",
+   "why": "ack"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": "talk",
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": null,
+   "page": "work",
+   "about": "subject",
+   "focus": "Balance: H2 + O2 -> H2O",
+   "problem": null,
+   "subject": null,
+   "topic": null,
+   "other_problems": [],
+   "given": null,
+   "steps": [],
+   "first_error": null,
+   "error_kind": null,
+   "finished": false,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "You're on the right track with coefficients, but putting a 2 in front of H2O would make it 2H2O\u2014let's see how that changes the atoms."
+  },
+  {
+   "event": "tutor_about",
+   "about": "subject"
+  },
+  {
+   "event": "tutor_say",
+   "text": "You're on the right track with coefficients, but putting a 2 in front of H2O would make it 2H2O\u2014let's see how that changes the atoms.",
+   "why": "reply"
+  },
+  {
+   "event": "jev",
+   "on": "utterance",
+   "said": "Oh, 2 H2O is four H and two O. So 2 H2 plus O2 gives 2 H2O. Got it, thanks.",
+   "respond": 0.15,
+   "about": "subject",
+   "about_conf": 0.8,
+   "followup": 0.94,
+   "needs_page": 0.64,
+   "new_problem": 0.02,
+   "which_problem": null,
+   "which_conf": 0.0,
+   "latency_ms": 1019
+  },
+  {
+   "event": "student_said",
+   "text": "Oh, 2 H2O is four H and two O. So 2 H2 plus O2 gives 2 H2O. Got it, thanks.",
+   "answered": false,
+   "by": "jev",
+   "respond": 0.15,
+   "floor": 0.3,
+   "followup": 0.94,
+   "awaiting": false
+  }
+ ],
+ "tutor": {
+  "conversation": [
+   {
+    "who": "sensei",
+    "text": "Hi, I'm Sensei. Put your page under the camera and start solving. I'm watching.",
+    "t": 0.0
+   },
+   {
+    "who": "sensei",
+    "text": "You changed the subscript in H2O to make H2O2\u2014what does that formula represent, and is it still water?",
+    "t": 8.0
+   },
+   {
+    "who": "student",
+    "text": "But it balances now. Two H and two O on each side, so it's fine.",
+    "t": 23.0
+   },
+   {
+    "who": "sensei",
+    "text": "You're right that the numbers match, but H2O2 isn't water\u2014it's hydrogen peroxide. Let's fix the formula first.",
+    "t": 23.0
+   },
+   {
+    "who": "student",
+    "text": "Okay but the question just says balance it. If I keep H2O the oxygens don't match, so what else can I do?",
+    "t": 38.0
+   },
+   {
+    "who": "sensei",
+    "text": "Changing H2O to H2O2 changes the substance\u2014it's no longer water. Let's keep the original formula and balance it correctly.",
+    "t": 38.0
+   },
+   {
+    "who": "student",
+    "text": "You keep saying that, but how? The only way to get two O is H2O2.",
+    "t": 53.0
+   },
+   {
+    "who": "sensei",
+    "text": "You're close, but H2O2 is hydrogen peroxide, not water. Let's keep H2O and balance it properly.",
+    "t": 53.0
+   },
+   {
+    "who": "student",
+    "text": "Properly how though? I don't see another way to get two oxygens on the right.",
+    "t": 68.0
+   },
+   {
+    "who": "sensei",
+    "text": "You're trying to balance H2 + O2 -> H2O, but H2O2 is hydrogen peroxide, not water. Let's keep H2O and try again.",
+    "t": 68.0
+   },
+   {
+    "who": "student",
+    "text": "This isn't helping. Can I put a number in front or something?",
+    "t": 83.0
+   },
+   {
+    "who": "sensei",
+    "text": "You can use coefficients\u2014try putting a number in front of H2 or O2 to balance it.",
+    "t": 83.0
+   },
+   {
+    "who": "student",
+    "text": "So like 2 H2 plus O2 gives H2O? But then there's four H on the left.",
+    "t": 98.0
+   },
+   {
+    "who": "sensei",
+    "text": "You're on the right track with coefficients, but H2O2 is hydrogen peroxide, not water. Let's keep H2O and try again.",
+    "t": 98.0
+   },
+   {
+    "who": "student",
+    "text": "I did keep H2O. Do I put a 2 in front of the H2O too then?",
+    "t": 113.0
+   },
+   {
+    "who": "sensei",
+    "text": "You're on the right track with coefficients, but putting a 2 in front of H2O would make it 2H2O\u2014let's see how that changes the atoms.",
+    "t": 113.0
+   }
+  ],
+  "problem": "Balance: H2 + O2 -> H2O",
+  "subject": "chemistry",
+  "topic": "balancing equations",
+  "mistake": [
+   1,
+   "h2+o2->h2o2"
+  ],
+  "candidate_mistake": null,
+  "hint_level": 1,
+  "hints_on_mistake": 1,
+  "hints_given": 1,
+  "mistakes_found": [
+   "step 1: H2 + O2 -> H2O2 (subscript_changed)"
+  ],
+  "mistakes_fixed": [],
+  "last_said": "You're on the right track with coefficients, but putting a 2 in front of H2O would make it 2H2O\u2014let's see how that changes the atoms.",
+  "last_why": "reply",
+  "last_spoke_at": 1113.0,
+  "last_seen": "student work",
+  "other_problems": [],
+  "steps_confirmed": 0,
+  "_finished_problem": null,
+  "let_go": [],
+  "started_at": 1000.0,
+  "ends_at": 1900.0,
+  "phase": "watching",
+  "_rechecks": 0,
+  "last_focus_change": -1000000000.0,
+  "last_activity": 1128.0,
+  "_heard_count": 7,
+  "answer_key": {
+   "problem": "Balance: H2 + O2 -> H2O",
+   "mistake": [
+    1,
+    "h2+o2->h2o2"
+   ],
+   "wrong_line": "H2 + O2 -> H2O2",
+   "correct_line": "H2 + O2 -> H2O",
+   "answer": "2H2 + O2 -> 2H2O",
+   "check": "Check that the number of H and O atoms are equal on both sides: H: 4 = 4, O: 2 = 2"
+  }
+ }
+}

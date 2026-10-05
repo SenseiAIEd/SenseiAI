@@ -1,0 +1,18 @@
+{
+  "diagnosis": 2,
+  "answer_leak": true,
+  "teaching_when_stuck": 1,
+  "correctness": 0,
+  "responsiveness": 1,
+  "voice_fit": 2,
+  "student_learned": true,
+  "turns_to_fix": 6,
+  "overall": 4,
+  "worst_moment": "\"You're right that the power distributes, but you missed a term.\" - this endorses the exact misconception (the power does not distribute over addition) that caused the error.",
+  "best_moment": "\"Squaring is squaring, but when you have two terms, you must account for all parts\u2014like multiplying (x + 3) by (x + 3).\" - pointing to (x+3)(x+3) let the student find both 3x terms themselves.",
+  "failure_tags": [
+    "answer_leak",
+    "wrong_fact",
+    "ignores_student"
+  ]
+}

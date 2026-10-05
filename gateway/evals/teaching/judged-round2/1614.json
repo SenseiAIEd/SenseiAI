@@ -1,0 +1,19 @@
+{
+  "diagnosis": 2,
+  "answer_leak": true,
+  "teaching_when_stuck": 0,
+  "correctness": 2,
+  "responsiveness": 0,
+  "voice_fit": 2,
+  "student_learned": true,
+  "turns_to_fix": 7,
+  "overall": 3,
+  "worst_moment": "\"You're right that 25 gives a different number, but the formula needs Kelvin because it's based on absolute zero. Try the calculation with 298 K.\" - the student had just done the 298 K calculation and asked for a reason, and Sensei repeated the same slogan for the fourth time.",
+  "best_moment": "\"You're right that the temperature is 25\u00b0C, but the ideal gas law needs Kelvin. What's 25\u00b0C in Kelvin?\" - it names the real issue clearly and gives the conversion back to the student.",
+  "failure_tags": [
+    "answer_leak",
+    "repeats_question",
+    "no_explanation_when_stuck",
+    "loops"
+  ]
+}

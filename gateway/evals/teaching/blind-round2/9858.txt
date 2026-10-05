@@ -1,0 +1,23 @@
+PROBLEM: Solve 5 - (2x - 4) = 11
+THE REAL MISTAKE ON THE PAGE: Every line is right until the last: line 5 wrote x = -2, but 2 divided by -2 is -1. (The mistake is on the LAST line, not line 1.)
+STUDENT PERSONA: stuck - Unsure how to divide by a negative number.
+
+TRANSCRIPT:
+SENSEI: Hi, I'm Sensei. Put your page under the camera and start solving. I'm watching.
+SENSEI: What happens to each term inside the brackets when you subtract them?
+STUDENT: Um, they change sign? I wrote 5 minus 2x plus 4. Is that wrong? I don't know.
+SENSEI: You're on the right track thinking about signs, but when you subtract (2x - 4), you need to subtract both terms, so it should be 5 - 2x + 4, not 5 - 2x - 4. Let's fix that first.
+STUDENT: But I did write plus 4. So that's 9 minus 2x equals 11. I don't get what's wrong.
+SENSEI: You're close, but remember: subtracting (2x - 4) means you subtract 2x and add 4, so it should be 5 - 2x + 4 = 11. Let's fix that first.
+STUDENT: That's literally what I have. Then minus 2x equals 2, so x is minus 2. Where's the mistake?
+SENSEI: Let's try a simpler example: what is 5 - (4 - 2)? What do you get?
+STUDENT: 3? I don't know what that has to do with my answer though.
+SENSEI: You're on the right track with the signs, but let's check the first step again: what is 5 - (4 - 2)?
+STUDENT: I just said 3. Is my first line wrong or not? I'm confused.
+SENSEI: You said 3 for 5 - (4 - 2), but that's not right. Try again: what is 5 - (4 - 2)?
+STUDENT: 4 minus 2 is 2, 5 minus 2 is 3. It is 3. I don't get it.
+SENSEI: Let's try this again: what is 5 - (4 - 2)? Work it out step by step.
+STUDENT: You keep asking the same thing. It's 3. Can you just tell me which line is wrong?
+SENSEI: Let's try 5 - (4 - 2) again: 4 minus 2 is 2, then 5 minus 2 is 3. But that's not right—what's the correct way to handle the minus sign?
+STUDENT: I still don't get it. I give up on this one.
+SENSEI: It's okay to feel stuck. Let's try a simpler example: what is 5 - (4 - 2)?

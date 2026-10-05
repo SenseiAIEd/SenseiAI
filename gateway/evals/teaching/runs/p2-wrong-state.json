@@ -1,0 +1,836 @@
+{
+ "id": "p2-wrong-state",
+ "page": "/home/perspectivity-dgx/SenseiAI/datasets/samples/physics/basic/medium/bad_1.png",
+ "variant": "state",
+ "now": 1128.0,
+ "transcript": [
+  {
+   "who": "sensei",
+   "why": "greeting",
+   "text": "Hi, I'm Sensei. Put your page under the camera and start solving. I'm watching."
+  },
+  {
+   "who": "sensei",
+   "why": "hint_1",
+   "text": "You wrote v_y = 20 m/s, but the initial speed is 20 m/s at an angle. What part of the velocity is vertical?"
+  },
+  {
+   "who": "student",
+   "text": "All of it? The ball is going up at 20 meters per second, it says so in the question."
+  },
+  {
+   "who": "sensei",
+   "why": "ack",
+   "text": "Okay, let me think."
+  },
+  {
+   "who": "sensei",
+   "why": "reply",
+   "text": "The ball's speed is 20 m/s at an angle, so only part of that is vertical. What's the vertical part?"
+  },
+  {
+   "who": "student",
+   "text": "But it's launched upward, so it's going up at 20. The angle just tells you it's tilted."
+  },
+  {
+   "who": "sensei",
+   "why": "ack",
+   "text": "Good question. One moment."
+  },
+  {
+   "who": "sensei",
+   "why": "reply",
+   "text": "Imagine a ball launched straight up at 20 m/s. How long until it returns? Then think how the angle changes that."
+  },
+  {
+   "who": "student",
+   "text": "Straight up would be 2 times 20 over 9.8, so 4.08. That's what I got. So the angle doesn't change anything."
+  },
+  {
+   "who": "sensei",
+   "why": "ack",
+   "text": "Let me see."
+  },
+  {
+   "who": "sensei",
+   "why": "reply",
+   "text": "You're thinking about the straight-up case, which is a good start. But the angle changes the vertical speed. Try again: what's the vertical part of 20 m/s at 60 degrees?"
+  },
+  {
+   "who": "student",
+   "text": "Why would it change though? It's still moving at 20 meters per second, just sideways a bit."
+  },
+  {
+   "who": "sensei",
+   "why": "ack",
+   "text": "Got it. Give me a second."
+  },
+  {
+   "who": "sensei",
+   "why": "reply",
+   "text": "The speed is 20 m/s, but only part of it is vertical. Try thinking about a 30-60-90 triangle to find the vertical part."
+  },
+  {
+   "who": "student",
+   "text": "You keep saying only part is vertical but I don't see why. If it moves 20 a second, it goes up 20 a second."
+  },
+  {
+   "who": "sensei",
+   "why": "ack",
+   "text": "Okay, let me think."
+  },
+  {
+   "who": "sensei",
+   "why": "reply",
+   "text": "The speed is 20 m/s, but only part of it goes up. Think of a 30-60-90 triangle: at 60 degrees, the vertical part is 20 times sin(60)."
+  },
+  {
+   "who": "student",
+   "text": "That's just a formula. Why would the ball be slower going up than the 20 it was launched at?"
+  },
+  {
+   "who": "sensei",
+   "why": "ack",
+   "text": "Good question. One moment."
+  },
+  {
+   "who": "sensei",
+   "why": "reply",
+   "text": "Imagine a ball thrown at 20 m/s straight up\u2014its vertical speed is 20 m/s. Now throw it at 60 degrees\u2014only part goes up. What\u2019s the vertical speed if it\u2019s 20 m/s at 60 degrees?"
+  },
+  {
+   "who": "student",
+   "text": "You keep asking the same thing. I still think it's 20, it says 20 in the question."
+  },
+  {
+   "who": "sensei",
+   "why": "ack",
+   "text": "Let me see."
+  },
+  {
+   "who": "sensei",
+   "why": "reply",
+   "text": "The speed is 20 m/s, but only part of it is going up. Try a smaller angle, like 30 degrees\u2014what\u2019s the vertical part then?"
+  },
+  {
+   "who": "student",
+   "text": "I dunno, I still don't get why it isn't just 20. I'm keeping 4.08."
+  },
+  {
+   "who": "sensei",
+   "why": "ack",
+   "text": "Got it. Give me a second."
+  },
+  {
+   "who": "sensei",
+   "why": "reply",
+   "text": "The vertical speed isn't 20 m/s because the ball is launched at an angle. Try a simpler case: if it were launched at 30 degrees, what would the vertical speed be?"
+  }
+ ],
+ "events": [
+  {
+   "event": "tutor_start",
+   "minutes": 15.0
+  },
+  {
+   "event": "tutor_say",
+   "text": "Hi, I'm Sensei. Put your page under the camera and start solving. I'm watching.",
+   "why": "greeting"
+  },
+  {
+   "event": "tutor_subject",
+   "was": null,
+   "now": "physics",
+   "topic": "projectile motion",
+   "set_by": "page"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": null,
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": [
+    1200,
+    496
+   ],
+   "page": "work",
+   "about": null,
+   "focus": null,
+   "problem": "How long until the ball returns to launch height?",
+   "subject": "physics",
+   "topic": "projectile motion",
+   "other_problems": [],
+   "given": "A ball is launched at 20 m/s, 60 degrees above the horizontal. How long until it returns to launch height? (g = 9.8 m/s^2)",
+   "steps": [
+    "v_y = 20 m/s",
+    "t_up = v_y / g = 20 / 9.8 = 2.04 s",
+    "t_total = 2 x 2.04 = 4.08 s"
+   ],
+   "first_error": 1,
+   "error_kind": "incorrect_initial_value",
+   "finished": true,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "You wrote v_y = 20 m/s\u2014what part of the launch speed is the vertical component?"
+  },
+  {
+   "event": "tutor_focus",
+   "was": null,
+   "now": "How long until the ball returns to launch height?",
+   "set_by": "page"
+  },
+  {
+   "event": "tutor_unconfirmed",
+   "step": 1,
+   "line": "v_y = 20 m/s"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": null,
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": [
+    1200,
+    496
+   ],
+   "page": "work",
+   "about": null,
+   "focus": null,
+   "problem": "How long until the ball returns to launch height?",
+   "subject": "physics",
+   "topic": "projectile motion",
+   "other_problems": [],
+   "given": "A ball is launched at 20 m/s, 60 degrees above the horizontal. How long until it returns to launch height? (g = 9.8 m/s^2)",
+   "steps": [
+    "v_y = 20 m/s",
+    "t_up = v_y / g = 20 / 9.8 = 2.04 s",
+    "t_total = 2 x 2.04 = 4.08 s"
+   ],
+   "first_error": 1,
+   "error_kind": "components",
+   "finished": true,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "You wrote v_y = 20 m/s, but the initial speed is 20 m/s at an angle. What part of the velocity is vertical?"
+  },
+  {
+   "event": "tutor_say",
+   "text": "You wrote v_y = 20 m/s, but the initial speed is 20 m/s at an angle. What part of the velocity is vertical?",
+   "why": "hint_1"
+  },
+  {
+   "event": "tutor_answer_key",
+   "problem": "How long until the ball returns to launch height?",
+   "mistake": [
+    1,
+    "v_y=20m/s"
+   ],
+   "wrong_line": "v_y = 20 m/s",
+   "correct_line": "v_y = 20 m/s",
+   "answer": "4.08 s",
+   "check": "The total time is twice the time to reach maximum height, which is calculated as v_y / g, so 2 * (20 / 9.8) = 4.08 s."
+  },
+  {
+   "event": "jev",
+   "on": "utterance",
+   "said": "All of it? The ball is going up at 20 meters per second, it says so in the question.",
+   "respond": 0.94,
+   "about": "subject",
+   "about_conf": 0.73,
+   "followup": 0.93,
+   "needs_page": 0.96,
+   "new_problem": 0.01,
+   "which_problem": null,
+   "which_conf": 0.0,
+   "latency_ms": 935
+  },
+  {
+   "event": "student_said",
+   "text": "All of it? The ball is going up at 20 meters per second, it says so in the question."
+  },
+  {
+   "event": "tutor_say",
+   "text": "Okay, let me think.",
+   "why": "ack"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": "talk",
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": [
+    1200,
+    496
+   ],
+   "page": "work",
+   "about": "subject",
+   "focus": "How long until the ball returns to launch height?",
+   "problem": null,
+   "subject": null,
+   "topic": null,
+   "other_problems": [],
+   "given": null,
+   "steps": [],
+   "first_error": null,
+   "error_kind": null,
+   "finished": false,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "The ball's speed is 20 m/s at an angle, so only part of that is vertical. What's the vertical part?"
+  },
+  {
+   "event": "tutor_about",
+   "about": "subject"
+  },
+  {
+   "event": "tutor_say",
+   "text": "The ball's speed is 20 m/s at an angle, so only part of that is vertical. What's the vertical part?",
+   "why": "reply"
+  },
+  {
+   "event": "jev",
+   "on": "utterance",
+   "said": "But it's launched upward, so it's going up at 20. The angle just tells you it's tilted.",
+   "respond": 0.94,
+   "about": "subject",
+   "about_conf": 0.81,
+   "followup": 0.82,
+   "needs_page": 0.96,
+   "new_problem": 0.0,
+   "which_problem": null,
+   "which_conf": 0.0,
+   "latency_ms": 764
+  },
+  {
+   "event": "student_said",
+   "text": "But it's launched upward, so it's going up at 20. The angle just tells you it's tilted."
+  },
+  {
+   "event": "tutor_say",
+   "text": "Good question. One moment.",
+   "why": "ack"
+  },
+  {
+   "event": "tutor_repeat_retry",
+   "said": "The ball's speed is 20 m/s at an angle, so only part of it is vertical. What part is vertical?",
+   "earlier": "The ball's speed is 20 m/s at an angle, so only part of that is vertical. What's the vertical part?"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": "talk",
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": [
+    1200,
+    496
+   ],
+   "page": "work",
+   "about": "subject",
+   "focus": "How long until the ball returns to launch height?",
+   "problem": null,
+   "subject": null,
+   "topic": null,
+   "other_problems": [],
+   "given": null,
+   "steps": [],
+   "first_error": null,
+   "error_kind": null,
+   "finished": false,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "Imagine a ball launched straight up at 20 m/s. How long until it returns? Then think how the angle changes that."
+  },
+  {
+   "event": "tutor_about",
+   "about": "subject"
+  },
+  {
+   "event": "tutor_say",
+   "text": "Imagine a ball launched straight up at 20 m/s. How long until it returns? Then think how the angle changes that.",
+   "why": "reply"
+  },
+  {
+   "event": "jev",
+   "on": "utterance",
+   "said": "Straight up would be 2 times 20 over 9.8, so 4.08. That's what I got. So the angle doesn't change anything.",
+   "respond": 0.95,
+   "about": "subject",
+   "about_conf": 0.83,
+   "followup": 0.81,
+   "needs_page": 0.57,
+   "new_problem": 0.02,
+   "which_problem": null,
+   "which_conf": 0.0,
+   "latency_ms": 582
+  },
+  {
+   "event": "student_said",
+   "text": "Straight up would be 2 times 20 over 9.8, so 4.08. That's what I got. So the angle doesn't change anything."
+  },
+  {
+   "event": "tutor_say",
+   "text": "Let me see.",
+   "why": "ack"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": "talk",
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": [
+    1200,
+    496
+   ],
+   "page": "work",
+   "about": "subject",
+   "focus": "How long until the ball returns to launch height?",
+   "problem": null,
+   "subject": null,
+   "topic": null,
+   "other_problems": [],
+   "given": null,
+   "steps": [],
+   "first_error": null,
+   "error_kind": null,
+   "finished": false,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "You're thinking about the straight-up case, which is a good start. But the angle changes the vertical speed. Try again: what's the vertical part of 20 m/s at 60 degrees?"
+  },
+  {
+   "event": "tutor_about",
+   "about": "subject"
+  },
+  {
+   "event": "tutor_say",
+   "text": "You're thinking about the straight-up case, which is a good start. But the angle changes the vertical speed. Try again: what's the vertical part of 20 m/s at 60 degrees?",
+   "why": "reply"
+  },
+  {
+   "event": "jev",
+   "on": "utterance",
+   "said": "Why would it change though? It's still moving at 20 meters per second, just sideways a bit.",
+   "respond": 0.93,
+   "about": "subject",
+   "about_conf": 0.89,
+   "followup": 0.92,
+   "needs_page": 0.06,
+   "new_problem": 0.01,
+   "which_problem": null,
+   "which_conf": 0.0,
+   "latency_ms": 671
+  },
+  {
+   "event": "student_said",
+   "text": "Why would it change though? It's still moving at 20 meters per second, just sideways a bit."
+  },
+  {
+   "event": "tutor_say",
+   "text": "Got it. Give me a second.",
+   "why": "ack"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": "talk",
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": null,
+   "page": "work",
+   "about": "subject",
+   "focus": "How long until the ball returns to launch height?",
+   "problem": null,
+   "subject": null,
+   "topic": null,
+   "other_problems": [],
+   "given": null,
+   "steps": [],
+   "first_error": null,
+   "error_kind": null,
+   "finished": false,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "The speed is 20 m/s, but only part of it is vertical. Try thinking about a 30-60-90 triangle to find the vertical part."
+  },
+  {
+   "event": "tutor_about",
+   "about": "subject"
+  },
+  {
+   "event": "tutor_say",
+   "text": "The speed is 20 m/s, but only part of it is vertical. Try thinking about a 30-60-90 triangle to find the vertical part.",
+   "why": "reply"
+  },
+  {
+   "event": "jev",
+   "on": "utterance",
+   "said": "You keep saying only part is vertical but I don't see why. If it moves 20 a second, it goes up 20 a second.",
+   "respond": 0.89,
+   "about": "subject",
+   "about_conf": 0.9,
+   "followup": 0.95,
+   "needs_page": 0.11,
+   "new_problem": 0.01,
+   "which_problem": null,
+   "which_conf": 0.0,
+   "latency_ms": 974
+  },
+  {
+   "event": "student_said",
+   "text": "You keep saying only part is vertical but I don't see why. If it moves 20 a second, it goes up 20 a second."
+  },
+  {
+   "event": "tutor_say",
+   "text": "Okay, let me think.",
+   "why": "ack"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": "talk",
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": null,
+   "page": "work",
+   "about": "subject",
+   "focus": "How long until the ball returns to launch height?",
+   "problem": null,
+   "subject": null,
+   "topic": null,
+   "other_problems": [],
+   "given": null,
+   "steps": [],
+   "first_error": null,
+   "error_kind": null,
+   "finished": false,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "The speed is 20 m/s, but only part of it goes up. Think of a 30-60-90 triangle: at 60 degrees, the vertical part is 20 times sin(60)."
+  },
+  {
+   "event": "tutor_about",
+   "about": "subject"
+  },
+  {
+   "event": "tutor_say",
+   "text": "The speed is 20 m/s, but only part of it goes up. Think of a 30-60-90 triangle: at 60 degrees, the vertical part is 20 times sin(60).",
+   "why": "reply"
+  },
+  {
+   "event": "jev",
+   "on": "utterance",
+   "said": "That's just a formula. Why would the ball be slower going up than the 20 it was launched at?",
+   "respond": 0.94,
+   "about": "subject",
+   "about_conf": 0.91,
+   "followup": 0.92,
+   "needs_page": 0.09,
+   "new_problem": 0.02,
+   "which_problem": null,
+   "which_conf": 0.0,
+   "latency_ms": 687
+  },
+  {
+   "event": "student_said",
+   "text": "That's just a formula. Why would the ball be slower going up than the 20 it was launched at?"
+  },
+  {
+   "event": "tutor_say",
+   "text": "Good question. One moment.",
+   "why": "ack"
+  },
+  {
+   "event": "tutor_repeat_retry",
+   "said": "The ball's speed is 20 m/s, but only part of it goes up. Think of a 30-60-90 triangle: at 60 degrees, the vertical part is 20 times sin(60).",
+   "earlier": "The speed is 20 m/s, but only part of it goes up. Think of a 30-60-90 triangle: at 60 degrees, the vertical part is 20 times sin(60)."
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": "talk",
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": null,
+   "page": "work",
+   "about": "subject",
+   "focus": "How long until the ball returns to launch height?",
+   "problem": null,
+   "subject": null,
+   "topic": null,
+   "other_problems": [],
+   "given": null,
+   "steps": [],
+   "first_error": null,
+   "error_kind": null,
+   "finished": false,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "Imagine a ball thrown at 20 m/s straight up\u2014its vertical speed is 20 m/s. Now throw it at 60 degrees\u2014only part goes up. What\u2019s the vertical speed if it\u2019s 20 m/s at 60 degrees?"
+  },
+  {
+   "event": "tutor_about",
+   "about": "subject"
+  },
+  {
+   "event": "tutor_say",
+   "text": "Imagine a ball thrown at 20 m/s straight up\u2014its vertical speed is 20 m/s. Now throw it at 60 degrees\u2014only part goes up. What\u2019s the vertical speed if it\u2019s 20 m/s at 60 degrees?",
+   "why": "reply"
+  },
+  {
+   "event": "jev",
+   "on": "utterance",
+   "said": "You keep asking the same thing. I still think it's 20, it says 20 in the question.",
+   "respond": 0.92,
+   "about": "subject",
+   "about_conf": 0.84,
+   "followup": 0.81,
+   "needs_page": 0.36,
+   "new_problem": 0.02,
+   "which_problem": null,
+   "which_conf": 0.0,
+   "latency_ms": 665
+  },
+  {
+   "event": "student_said",
+   "text": "You keep asking the same thing. I still think it's 20, it says 20 in the question."
+  },
+  {
+   "event": "tutor_say",
+   "text": "Let me see.",
+   "why": "ack"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": "talk",
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": [
+    1200,
+    496
+   ],
+   "page": "work",
+   "about": "subject",
+   "focus": "How long until the ball returns to launch height?",
+   "problem": null,
+   "subject": null,
+   "topic": null,
+   "other_problems": [],
+   "given": null,
+   "steps": [],
+   "first_error": null,
+   "error_kind": null,
+   "finished": false,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "The speed is 20 m/s, but only part of it is going up. Try a smaller angle, like 30 degrees\u2014what\u2019s the vertical part then?"
+  },
+  {
+   "event": "tutor_about",
+   "about": "subject"
+  },
+  {
+   "event": "tutor_say",
+   "text": "The speed is 20 m/s, but only part of it is going up. Try a smaller angle, like 30 degrees\u2014what\u2019s the vertical part then?",
+   "why": "reply"
+  },
+  {
+   "event": "jev",
+   "on": "utterance",
+   "said": "I dunno, I still don't get why it isn't just 20. I'm keeping 4.08.",
+   "respond": 0.93,
+   "about": "subject",
+   "about_conf": 0.83,
+   "followup": 0.85,
+   "needs_page": 0.65,
+   "new_problem": 0.01,
+   "which_problem": null,
+   "which_conf": 0.0,
+   "latency_ms": 1115
+  },
+  {
+   "event": "student_said",
+   "text": "I dunno, I still don't get why it isn't just 20. I'm keeping 4.08."
+  },
+  {
+   "event": "tutor_say",
+   "text": "Got it. Give me a second.",
+   "why": "ack"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": "talk",
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": [
+    1200,
+    496
+   ],
+   "page": "work",
+   "about": "subject",
+   "focus": "How long until the ball returns to launch height?",
+   "problem": null,
+   "subject": null,
+   "topic": null,
+   "other_problems": [],
+   "given": null,
+   "steps": [],
+   "first_error": null,
+   "error_kind": null,
+   "finished": false,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "The vertical speed isn't 20 m/s because the ball is launched at an angle. Try a simpler case: if it were launched at 30 degrees, what would the vertical speed be?"
+  },
+  {
+   "event": "tutor_about",
+   "about": "subject"
+  },
+  {
+   "event": "tutor_say",
+   "text": "The vertical speed isn't 20 m/s because the ball is launched at an angle. Try a simpler case: if it were launched at 30 degrees, what would the vertical speed be?",
+   "why": "reply"
+  }
+ ],
+ "tutor": {
+  "conversation": [
+   {
+    "who": "sensei",
+    "text": "Hi, I'm Sensei. Put your page under the camera and start solving. I'm watching.",
+    "t": 0.0
+   },
+   {
+    "who": "sensei",
+    "text": "You wrote v_y = 20 m/s, but the initial speed is 20 m/s at an angle. What part of the velocity is vertical?",
+    "t": 8.0
+   },
+   {
+    "who": "student",
+    "text": "All of it? The ball is going up at 20 meters per second, it says so in the question.",
+    "t": 23.0
+   },
+   {
+    "who": "sensei",
+    "text": "The ball's speed is 20 m/s at an angle, so only part of that is vertical. What's the vertical part?",
+    "t": 23.0
+   },
+   {
+    "who": "student",
+    "text": "But it's launched upward, so it's going up at 20. The angle just tells you it's tilted.",
+    "t": 38.0
+   },
+   {
+    "who": "sensei",
+    "text": "Imagine a ball launched straight up at 20 m/s. How long until it returns? Then think how the angle changes that.",
+    "t": 38.0
+   },
+   {
+    "who": "student",
+    "text": "Straight up would be 2 times 20 over 9.8, so 4.08. That's what I got. So the angle doesn't change anything.",
+    "t": 53.0
+   },
+   {
+    "who": "sensei",
+    "text": "You're thinking about the straight-up case, which is a good start. But the angle changes the vertical speed. Try again: what's the vertical part of 20 m/s at 60 degrees?",
+    "t": 53.0
+   },
+   {
+    "who": "student",
+    "text": "Why would it change though? It's still moving at 20 meters per second, just sideways a bit.",
+    "t": 68.0
+   },
+   {
+    "who": "sensei",
+    "text": "The speed is 20 m/s, but only part of it is vertical. Try thinking about a 30-60-90 triangle to find the vertical part.",
+    "t": 68.0
+   },
+   {
+    "who": "student",
+    "text": "You keep saying only part is vertical but I don't see why. If it moves 20 a second, it goes up 20 a second.",
+    "t": 83.0
+   },
+   {
+    "who": "sensei",
+    "text": "The speed is 20 m/s, but only part of it goes up. Think of a 30-60-90 triangle: at 60 degrees, the vertical part is 20 times sin(60).",
+    "t": 83.0
+   },
+   {
+    "who": "student",
+    "text": "That's just a formula. Why would the ball be slower going up than the 20 it was launched at?",
+    "t": 98.0
+   },
+   {
+    "who": "sensei",
+    "text": "Imagine a ball thrown at 20 m/s straight up\u2014its vertical speed is 20 m/s. Now throw it at 60 degrees\u2014only part goes up. What\u2019s the vertical speed if it\u2019s 20 m/s at 60 degrees?",
+    "t": 98.0
+   },
+   {
+    "who": "student",
+    "text": "You keep asking the same thing. I still think it's 20, it says 20 in the question.",
+    "t": 113.0
+   },
+   {
+    "who": "sensei",
+    "text": "The speed is 20 m/s, but only part of it is going up. Try a smaller angle, like 30 degrees\u2014what\u2019s the vertical part then?",
+    "t": 113.0
+   },
+   {
+    "who": "student",
+    "text": "I dunno, I still don't get why it isn't just 20. I'm keeping 4.08.",
+    "t": 128.0
+   },
+   {
+    "who": "sensei",
+    "text": "The vertical speed isn't 20 m/s because the ball is launched at an angle. Try a simpler case: if it were launched at 30 degrees, what would the vertical speed be?",
+    "t": 128.0
+   }
+  ],
+  "problem": "How long until the ball returns to launch height?",
+  "subject": "physics",
+  "topic": "projectile motion",
+  "mistake": [
+   1,
+   "v_y=20m/s"
+  ],
+  "candidate_mistake": null,
+  "hint_level": 1,
+  "hints_on_mistake": 1,
+  "hints_given": 1,
+  "mistakes_found": [
+   "step 1: v_y = 20 m/s (components)"
+  ],
+  "mistakes_fixed": [],
+  "last_said": "The vertical speed isn't 20 m/s because the ball is launched at an angle. Try a simpler case: if it were launched at 30 degrees, what would the vertical speed be?",
+  "last_why": "reply",
+  "last_spoke_at": 1128.0,
+  "last_seen": "student work",
+  "other_problems": [],
+  "steps_confirmed": 0,
+  "_finished_problem": null,
+  "let_go": [],
+  "started_at": 1000.0,
+  "ends_at": 1900.0,
+  "phase": "watching",
+  "_rechecks": 0,
+  "last_focus_change": -1000000000.0,
+  "last_activity": 1128.0,
+  "_heard_count": 8,
+  "answer_key": {
+   "problem": "How long until the ball returns to launch height?",
+   "mistake": [
+    1,
+    "v_y=20m/s"
+   ],
+   "wrong_line": "v_y = 20 m/s",
+   "correct_line": "v_y = 20 m/s",
+   "answer": "4.08 s",
+   "check": "The total time is twice the time to reach maximum height, which is calculated as v_y / g, so 2 * (20 / 9.8) = 4.08 s."
+  }
+ }
+}

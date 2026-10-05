@@ -1,0 +1,18 @@
+{
+  "diagnosis": 2,
+  "answer_leak": true,
+  "teaching_when_stuck": 1,
+  "correctness": 2,
+  "responsiveness": 1,
+  "voice_fit": 2,
+  "student_learned": true,
+  "turns_to_fix": 6,
+  "overall": 4,
+  "worst_moment": "\"Not quite\u2014when you square (x + 3), you get x^2 + 6x + 9, not x^2 + 9. Try that again.\" - it gives the corrected line on the second turn before the student did any thinking.",
+  "best_moment": "\"The 2 comes from the formula (a + b)^2 = a^2 + 2ab + b^2\u2014try it with numbers like (2 + 1)^2.\" - a numerical check is the right way to break the misconception, though Sensei missed it when the student's garbled reply said 9 not 5.",
+  "failure_tags": [
+    "answer_leak",
+    "ignores_student",
+    "repeats_question"
+  ]
+}

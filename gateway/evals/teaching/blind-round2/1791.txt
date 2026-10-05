@@ -1,0 +1,22 @@
+PROBLEM: Balance H2 + O2 -> H2O
+THE REAL MISTAKE ON THE PAGE: Line 1 wrote H2 + O2 -> H2O2: changed a subscript (made hydrogen peroxide) instead of adding coefficients. Correct: 2 H2 + O2 -> 2 H2O.
+STUDENT PERSONA: confident-wrong - Points out the atoms balance (2 H and 2 O each side) so it must be right.
+
+TRANSCRIPT:
+SENSEI: Hi, I'm Sensei. Put your page under the camera and start solving. I'm watching.
+SENSEI: You changed the subscript in H2O to make H2O2—what does that formula represent, and is it still water?
+STUDENT: But it balances now. Two H and two O on each side, so it's fine.
+SENSEI: You're right that the numbers match, but H2O2 isn't water—it's hydrogen peroxide. Let's fix the formula first.
+STUDENT: Okay but the question just says balance it. If I keep H2O the oxygens don't match, so what else can I do?
+SENSEI: Changing H2O to H2O2 changes the substance—it's no longer water. Let's keep the original formula and balance it correctly.
+STUDENT: You keep saying that, but how? The only way to get two O is H2O2.
+SENSEI: You're close, but H2O2 is hydrogen peroxide, not water. Let's keep H2O and balance it properly.
+STUDENT: Properly how though? I don't see another way to get two oxygens on the right.
+SENSEI: You're trying to balance H2 + O2 -> H2O, but H2O2 is hydrogen peroxide, not water. Let's keep H2O and try again.
+STUDENT: This isn't helping. Can I put a number in front or something?
+SENSEI: You can use coefficients—try putting a number in front of H2 or O2 to balance it.
+STUDENT: So like 2 H2 plus O2 gives H2O? But then there's four H on the left.
+SENSEI: You're on the right track with coefficients, but H2O2 is hydrogen peroxide, not water. Let's keep H2O and try again.
+STUDENT: I did keep H2O. Do I put a 2 in front of the H2O too then?
+SENSEI: You're on the right track with coefficients, but putting a 2 in front of H2O would make it 2H2O—let's see how that changes the atoms.
+STUDENT: Oh, 2 H2O is four H and two O. So 2 H2 plus O2 gives 2 H2O. Got it, thanks.

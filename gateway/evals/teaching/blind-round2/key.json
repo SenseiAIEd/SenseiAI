@@ -1,0 +1,194 @@
+{
+ "6305": {
+  "persona": "c1-stuck",
+  "variant": "current"
+ },
+ "3471": {
+  "persona": "c1-stuck",
+  "variant": "state"
+ },
+ "7468": {
+  "persona": "c1-wrong",
+  "variant": "current"
+ },
+ "1791": {
+  "persona": "c1-wrong",
+  "variant": "state"
+ },
+ "2186": {
+  "persona": "c2-stuck",
+  "variant": "current"
+ },
+ "9779": {
+  "persona": "c2-stuck",
+  "variant": "state"
+ },
+ "2542": {
+  "persona": "c2-why",
+  "variant": "current"
+ },
+ "6991": {
+  "persona": "c2-why",
+  "variant": "state"
+ },
+ "1950": {
+  "persona": "c3-stuck",
+  "variant": "current"
+ },
+ "9313": {
+  "persona": "c3-stuck",
+  "variant": "state"
+ },
+ "4517": {
+  "persona": "c3-wrong",
+  "variant": "current"
+ },
+ "1614": {
+  "persona": "c3-wrong",
+  "variant": "state"
+ },
+ "2408": {
+  "persona": "m1-stuck",
+  "variant": "current"
+ },
+ "8104": {
+  "persona": "m1-stuck",
+  "variant": "state"
+ },
+ "7851": {
+  "persona": "m1-why",
+  "variant": "current"
+ },
+ "2144": {
+  "persona": "m1-why",
+  "variant": "state"
+ },
+ "4943": {
+  "persona": "m1-wrong",
+  "variant": "current"
+ },
+ "2486": {
+  "persona": "m1-wrong",
+  "variant": "state"
+ },
+ "7955": {
+  "persona": "m2-noisy",
+  "variant": "current"
+ },
+ "1968": {
+  "persona": "m2-noisy",
+  "variant": "state"
+ },
+ "3028": {
+  "persona": "m2-stuck",
+  "variant": "current"
+ },
+ "4657": {
+  "persona": "m2-stuck",
+  "variant": "state"
+ },
+ "2013": {
+  "persona": "m2-why",
+  "variant": "current"
+ },
+ "7499": {
+  "persona": "m2-why",
+  "variant": "state"
+ },
+ "1812": {
+  "persona": "m2-wrong",
+  "variant": "current"
+ },
+ "4622": {
+  "persona": "m2-wrong",
+  "variant": "state"
+ },
+ "1763": {
+  "persona": "m3-stuck",
+  "variant": "current"
+ },
+ "3181": {
+  "persona": "m3-stuck",
+  "variant": "state"
+ },
+ "5744": {
+  "persona": "m3-why",
+  "variant": "current"
+ },
+ "7867": {
+  "persona": "m3-why",
+  "variant": "state"
+ },
+ "3363": {
+  "persona": "m4-stuck",
+  "variant": "current"
+ },
+ "9858": {
+  "persona": "m4-stuck",
+  "variant": "state"
+ },
+ "2929": {
+  "persona": "m4-wrong",
+  "variant": "current"
+ },
+ "6054": {
+  "persona": "m4-wrong",
+  "variant": "state"
+ },
+ "3961": {
+  "persona": "p1-stuck",
+  "variant": "current"
+ },
+ "2688": {
+  "persona": "p1-stuck",
+  "variant": "state"
+ },
+ "4078": {
+  "persona": "p1-why",
+  "variant": "current"
+ },
+ "7101": {
+  "persona": "p1-why",
+  "variant": "state"
+ },
+ "2596": {
+  "persona": "p1-wrong",
+  "variant": "current"
+ },
+ "9974": {
+  "persona": "p1-wrong",
+  "variant": "state"
+ },
+ "2028": {
+  "persona": "p2-stuck",
+  "variant": "current"
+ },
+ "1976": {
+  "persona": "p2-stuck",
+  "variant": "state"
+ },
+ "4374": {
+  "persona": "p2-wrong",
+  "variant": "current"
+ },
+ "9133": {
+  "persona": "p2-wrong",
+  "variant": "state"
+ },
+ "9711": {
+  "persona": "p3-stuck",
+  "variant": "current"
+ },
+ "8005": {
+  "persona": "p3-stuck",
+  "variant": "state"
+ },
+ "6146": {
+  "persona": "p3-why",
+  "variant": "current"
+ },
+ "8628": {
+  "persona": "p3-why",
+  "variant": "state"
+ }
+}

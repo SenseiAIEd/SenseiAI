@@ -1,0 +1,659 @@
+{
+ "id": "m1-stuck-state",
+ "page": "/home/perspectivity-dgx/SenseiAI/datasets/samples/math/basic/easy/bad_1.png",
+ "variant": "state",
+ "now": 1098.0,
+ "transcript": [
+  {
+   "who": "sensei",
+   "why": "greeting",
+   "text": "Hi, I'm Sensei. Put your page under the camera and start solving. I'm watching."
+  },
+  {
+   "who": "sensei",
+   "why": "hint_1",
+   "text": "What happens to each term inside the brackets when you subtract them?"
+  },
+  {
+   "who": "student",
+   "text": "Um, I don't really know. I just took the brackets off and the minus went on the 2x."
+  },
+  {
+   "who": "sensei",
+   "why": "ack",
+   "text": "Okay, let me think."
+  },
+  {
+   "who": "sensei",
+   "why": "reply",
+   "text": "When you subtract a group, you change the sign of each term inside the brackets. Try it with a simple example, like 5 - (3 - 2)."
+  },
+  {
+   "who": "student",
+   "text": "So 5 minus 3 minus 2? That's 0. I don't get what that shows though."
+  },
+  {
+   "who": "sensei",
+   "why": "ack",
+   "text": "Good question. One moment."
+  },
+  {
+   "who": "sensei",
+   "why": "reply",
+   "text": "You're on the right track with the example, but remember: subtracting (3 - 2) means you change both signs inside, so it becomes 5 - 3 + 2. Try that with your problem."
+  },
+  {
+   "who": "student",
+   "text": "Wait, 3 minus 2 is 1, so 5 minus 1 is 4, and 5 minus 3 plus 2 is also 4. So mine is 5 minus 2x plus 4?"
+  },
+  {
+   "who": "sensei",
+   "why": "ack",
+   "text": "Let me see."
+  },
+  {
+   "who": "sensei",
+   "why": "reply",
+   "text": "Yes, you got it! Subtracting (2x - 4) means you change both signs, so it becomes 5 - 2x + 4. Now write that down and solve for x."
+  },
+  {
+   "who": "student",
+   "text": "Okay so 9 minus 2x equals 11, minus 2x is 2, so x is negative 1. Thanks."
+  },
+  {
+   "who": "sensei",
+   "why": "ack",
+   "text": "Got it. Give me a second."
+  },
+  {
+   "who": "sensei",
+   "why": "reply",
+   "text": "You're close, but let's check the step where you wrote 1 - 2x = 11. What happened to the 5 and the -4?"
+  },
+  {
+   "who": "student",
+   "text": "That's my old line. I changed it, it's 5 plus 4 now, so 9 minus 2x is 11 and x is negative 1."
+  },
+  {
+   "who": "sensei",
+   "why": "ack",
+   "text": "Okay, let me think."
+  },
+  {
+   "who": "sensei",
+   "why": "reply",
+   "text": "You're close, but let's check: after changing signs, it's 5 - 2x + 4 = 11. What is 5 + 4?"
+  },
+  {
+   "who": "student",
+   "text": "9. That's what I said. 9 minus 2x equals 11, so x equals negative 1. I'm done."
+  },
+  {
+   "who": "sensei",
+   "why": "ack",
+   "text": "Good question. One moment."
+  },
+  {
+   "who": "sensei",
+   "why": "reply",
+   "text": "You're close, but let's check: 5 + 4 is 9, so the equation is 9 - 2x = 11. Now solve for x."
+  }
+ ],
+ "events": [
+  {
+   "event": "tutor_start",
+   "minutes": 15.0
+  },
+  {
+   "event": "tutor_say",
+   "text": "Hi, I'm Sensei. Put your page under the camera and start solving. I'm watching.",
+   "why": "greeting"
+  },
+  {
+   "event": "tutor_subject",
+   "was": null,
+   "now": "math",
+   "topic": "linear equations",
+   "set_by": "page"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": null,
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": [
+    1200,
+    519
+   ],
+   "page": "work",
+   "about": null,
+   "focus": null,
+   "problem": "Solve: 5 - (2x - 4) = 11",
+   "subject": "math",
+   "topic": "linear equations",
+   "other_problems": [],
+   "given": "Solve: 5 - (2x - 4) = 11",
+   "steps": [
+    "5 - 2x - 4 = 11",
+    "1 - 2x = 11",
+    "-2x = 10",
+    "x = -5"
+   ],
+   "first_error": 1,
+   "error_kind": "sign_error",
+   "finished": true,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "You wrote 5 - 2x - 4 = 11. What did you do with the minus sign in front of the parentheses?"
+  },
+  {
+   "event": "tutor_focus",
+   "was": null,
+   "now": "Solve: 5 - (2x - 4) = 11",
+   "set_by": "page"
+  },
+  {
+   "event": "tutor_unconfirmed",
+   "step": 1,
+   "line": "5 - 2x - 4 = 11"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": null,
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": [
+    1200,
+    519
+   ],
+   "page": "work",
+   "about": null,
+   "focus": null,
+   "problem": "Solve: 5 - (2x - 4) = 11",
+   "subject": "math",
+   "topic": "linear equations",
+   "other_problems": [],
+   "given": "Solve: 5 - (2x - 4) = 11",
+   "steps": [
+    "5 - 2x - 4 = 11",
+    "1 - 2x = 11",
+    "-2x = 10",
+    "x = -5"
+   ],
+   "first_error": 1,
+   "error_kind": "distribution",
+   "finished": true,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "What happens to each term inside the brackets when you subtract them?"
+  },
+  {
+   "event": "tutor_say",
+   "text": "What happens to each term inside the brackets when you subtract them?",
+   "why": "hint_1"
+  },
+  {
+   "event": "tutor_answer_key",
+   "problem": "Solve: 5 - (2x - 4) = 11",
+   "mistake": [
+    1,
+    "5-2x-4=11"
+   ],
+   "wrong_line": "5 - 2x - 4 = 11",
+   "correct_line": "5 - 2x + 4 = 11",
+   "answer": "-1",
+   "check": "Substitute x = -1 into the original equation: 5 - (2(-1) - 4) = 5 - (-2 - 4) = 5 - (-6) = 5 + 6 = 11, which matches the right-hand side."
+  },
+  {
+   "event": "jev",
+   "on": "utterance",
+   "said": "Um, I don't really know. I just took the brackets off and the minus went on the 2x.",
+   "respond": 0.96,
+   "about": "subject",
+   "about_conf": 0.84,
+   "followup": 0.91,
+   "needs_page": 0.44,
+   "new_problem": 0.01,
+   "which_problem": null,
+   "which_conf": 0.0,
+   "latency_ms": 578
+  },
+  {
+   "event": "student_said",
+   "text": "Um, I don't really know. I just took the brackets off and the minus went on the 2x."
+  },
+  {
+   "event": "tutor_say",
+   "text": "Okay, let me think.",
+   "why": "ack"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": "talk",
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": [
+    1200,
+    519
+   ],
+   "page": "work",
+   "about": "subject",
+   "focus": "Solve: 5 - (2x - 4) = 11",
+   "problem": null,
+   "subject": null,
+   "topic": null,
+   "other_problems": [],
+   "given": null,
+   "steps": [],
+   "first_error": null,
+   "error_kind": null,
+   "finished": false,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "When you subtract a group, you change the sign of each term inside the brackets. Try it with a simple example, like 5 - (3 - 2)."
+  },
+  {
+   "event": "tutor_about",
+   "about": "subject"
+  },
+  {
+   "event": "tutor_say",
+   "text": "When you subtract a group, you change the sign of each term inside the brackets. Try it with a simple example, like 5 - (3 - 2).",
+   "why": "reply"
+  },
+  {
+   "event": "jev",
+   "on": "utterance",
+   "said": "So 5 minus 3 minus 2? That's 0. I don't get what that shows though.",
+   "respond": 0.9,
+   "about": "subject",
+   "about_conf": 0.93,
+   "followup": 0.97,
+   "needs_page": 0.13,
+   "new_problem": 0.06,
+   "which_problem": null,
+   "which_conf": 0.0,
+   "latency_ms": 477
+  },
+  {
+   "event": "student_said",
+   "text": "So 5 minus 3 minus 2? That's 0. I don't get what that shows though."
+  },
+  {
+   "event": "tutor_say",
+   "text": "Good question. One moment.",
+   "why": "ack"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": "talk",
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": null,
+   "page": "work",
+   "about": "subject",
+   "focus": "Solve: 5 - (2x - 4) = 11",
+   "problem": null,
+   "subject": null,
+   "topic": null,
+   "other_problems": [],
+   "given": null,
+   "steps": [],
+   "first_error": null,
+   "error_kind": null,
+   "finished": false,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "You're on the right track with the example, but remember: subtracting (3 - 2) means you change both signs inside, so it becomes 5 - 3 + 2. Try that with your problem."
+  },
+  {
+   "event": "tutor_about",
+   "about": "subject"
+  },
+  {
+   "event": "tutor_say",
+   "text": "You're on the right track with the example, but remember: subtracting (3 - 2) means you change both signs inside, so it becomes 5 - 3 + 2. Try that with your problem.",
+   "why": "reply"
+  },
+  {
+   "event": "jev",
+   "on": "utterance",
+   "said": "Wait, 3 minus 2 is 1, so 5 minus 1 is 4, and 5 minus 3 plus 2 is also 4. So mine is 5 minus 2x plus 4?",
+   "respond": 0.86,
+   "about": "subject",
+   "about_conf": 0.93,
+   "followup": 0.97,
+   "needs_page": 0.05,
+   "new_problem": 0.02,
+   "which_problem": null,
+   "which_conf": 0.0,
+   "latency_ms": 1428
+  },
+  {
+   "event": "student_said",
+   "text": "Wait, 3 minus 2 is 1, so 5 minus 1 is 4, and 5 minus 3 plus 2 is also 4. So mine is 5 minus 2x plus 4?"
+  },
+  {
+   "event": "tutor_say",
+   "text": "Let me see.",
+   "why": "ack"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": "talk",
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": null,
+   "page": "work",
+   "about": "subject",
+   "focus": "Solve: 5 - (2x - 4) = 11",
+   "problem": null,
+   "subject": null,
+   "topic": null,
+   "other_problems": [],
+   "given": null,
+   "steps": [],
+   "first_error": null,
+   "error_kind": null,
+   "finished": false,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "Yes, you got it! Subtracting (2x - 4) means you change both signs, so it becomes 5 - 2x + 4. Now write that down and solve for x."
+  },
+  {
+   "event": "tutor_about",
+   "about": "subject"
+  },
+  {
+   "event": "tutor_fixed_by_voice",
+   "step": 1
+  },
+  {
+   "event": "tutor_say",
+   "text": "Yes, you got it! Subtracting (2x - 4) means you change both signs, so it becomes 5 - 2x + 4. Now write that down and solve for x.",
+   "why": "reply"
+  },
+  {
+   "event": "jev_error",
+   "error": "timed out"
+  },
+  {
+   "event": "student_said",
+   "text": "Okay so 9 minus 2x equals 11, minus 2x is 2, so x is negative 1. Thanks."
+  },
+  {
+   "event": "tutor_say",
+   "text": "Got it. Give me a second.",
+   "why": "ack"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": "talk",
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": [
+    1200,
+    519
+   ],
+   "page": "work",
+   "about": "view",
+   "focus": "Solve: 5 - (2x - 4) = 11",
+   "problem": null,
+   "subject": null,
+   "topic": null,
+   "other_problems": [],
+   "given": null,
+   "steps": [],
+   "first_error": null,
+   "error_kind": null,
+   "finished": false,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "You're close, but let's check the step where you wrote 1 - 2x = 11. What happened to the 5 and the -4?"
+  },
+  {
+   "event": "tutor_about",
+   "about": "view"
+  },
+  {
+   "event": "tutor_say",
+   "text": "You're close, but let's check the step where you wrote 1 - 2x = 11. What happened to the 5 and the -4?",
+   "why": "reply"
+  },
+  {
+   "event": "jev",
+   "on": "utterance",
+   "said": "That's my old line. I changed it, it's 5 plus 4 now, so 9 minus 2x is 11 and x is negative 1.",
+   "respond": 0.96,
+   "about": "subject",
+   "about_conf": 0.8,
+   "followup": 0.83,
+   "needs_page": 0.11,
+   "new_problem": 0.01,
+   "which_problem": null,
+   "which_conf": 0.0,
+   "latency_ms": 1186
+  },
+  {
+   "event": "student_said",
+   "text": "That's my old line. I changed it, it's 5 plus 4 now, so 9 minus 2x is 11 and x is negative 1."
+  },
+  {
+   "event": "tutor_say",
+   "text": "Okay, let me think.",
+   "why": "ack"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": "talk",
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": null,
+   "page": "work",
+   "about": "subject",
+   "focus": "Solve: 5 - (2x - 4) = 11",
+   "problem": null,
+   "subject": null,
+   "topic": null,
+   "other_problems": [],
+   "given": null,
+   "steps": [],
+   "first_error": null,
+   "error_kind": null,
+   "finished": false,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "You're close, but let's check: after changing signs, it's 5 - 2x + 4 = 11. What is 5 + 4?"
+  },
+  {
+   "event": "tutor_about",
+   "about": "subject"
+  },
+  {
+   "event": "tutor_say",
+   "text": "You're close, but let's check: after changing signs, it's 5 - 2x + 4 = 11. What is 5 + 4?",
+   "why": "reply"
+  },
+  {
+   "event": "jev",
+   "on": "utterance",
+   "said": "9. That's what I said. 9 minus 2x equals 11, so x equals negative 1. I'm done.",
+   "respond": 0.86,
+   "about": "subject",
+   "about_conf": 0.85,
+   "followup": 0.96,
+   "needs_page": 0.13,
+   "new_problem": 0.01,
+   "which_problem": null,
+   "which_conf": 0.0,
+   "latency_ms": 1279
+  },
+  {
+   "event": "student_said",
+   "text": "9. That's what I said. 9 minus 2x equals 11, so x equals negative 1. I'm done."
+  },
+  {
+   "event": "tutor_say",
+   "text": "Good question. One moment.",
+   "why": "ack"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": "talk",
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": null,
+   "page": "work",
+   "about": "subject",
+   "focus": "Solve: 5 - (2x - 4) = 11",
+   "problem": null,
+   "subject": null,
+   "topic": null,
+   "other_problems": [],
+   "given": null,
+   "steps": [],
+   "first_error": null,
+   "error_kind": null,
+   "finished": false,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "You're close, but let's check: 5 + 4 is 9, so the equation is 9 - 2x = 11. Now solve for x."
+  },
+  {
+   "event": "tutor_about",
+   "about": "subject"
+  },
+  {
+   "event": "tutor_say",
+   "text": "You're close, but let's check: 5 + 4 is 9, so the equation is 9 - 2x = 11. Now solve for x.",
+   "why": "reply"
+  }
+ ],
+ "tutor": {
+  "conversation": [
+   {
+    "who": "sensei",
+    "text": "Hi, I'm Sensei. Put your page under the camera and start solving. I'm watching.",
+    "t": 0.0
+   },
+   {
+    "who": "sensei",
+    "text": "What happens to each term inside the brackets when you subtract them?",
+    "t": 8.0
+   },
+   {
+    "who": "student",
+    "text": "Um, I don't really know. I just took the brackets off and the minus went on the 2x.",
+    "t": 23.0
+   },
+   {
+    "who": "sensei",
+    "text": "When you subtract a group, you change the sign of each term inside the brackets. Try it with a simple example, like 5 - (3 - 2).",
+    "t": 23.0
+   },
+   {
+    "who": "student",
+    "text": "So 5 minus 3 minus 2? That's 0. I don't get what that shows though.",
+    "t": 38.0
+   },
+   {
+    "who": "sensei",
+    "text": "You're on the right track with the example, but remember: subtracting (3 - 2) means you change both signs inside, so it becomes 5 - 3 + 2. Try that with your problem.",
+    "t": 38.0
+   },
+   {
+    "who": "student",
+    "text": "Wait, 3 minus 2 is 1, so 5 minus 1 is 4, and 5 minus 3 plus 2 is also 4. So mine is 5 minus 2x plus 4?",
+    "t": 53.0
+   },
+   {
+    "who": "sensei",
+    "text": "Yes, you got it! Subtracting (2x - 4) means you change both signs, so it becomes 5 - 2x + 4. Now write that down and solve for x.",
+    "t": 53.0
+   },
+   {
+    "who": "student",
+    "text": "Okay so 9 minus 2x equals 11, minus 2x is 2, so x is negative 1. Thanks.",
+    "t": 68.0
+   },
+   {
+    "who": "sensei",
+    "text": "You're close, but let's check the step where you wrote 1 - 2x = 11. What happened to the 5 and the -4?",
+    "t": 68.0
+   },
+   {
+    "who": "student",
+    "text": "That's my old line. I changed it, it's 5 plus 4 now, so 9 minus 2x is 11 and x is negative 1.",
+    "t": 83.0
+   },
+   {
+    "who": "sensei",
+    "text": "You're close, but let's check: after changing signs, it's 5 - 2x + 4 = 11. What is 5 + 4?",
+    "t": 83.0
+   },
+   {
+    "who": "student",
+    "text": "9. That's what I said. 9 minus 2x equals 11, so x equals negative 1. I'm done.",
+    "t": 98.0
+   },
+   {
+    "who": "sensei",
+    "text": "You're close, but let's check: 5 + 4 is 9, so the equation is 9 - 2x = 11. Now solve for x.",
+    "t": 98.0
+   }
+  ],
+  "problem": "Solve: 5 - (2x - 4) = 11",
+  "subject": "math",
+  "topic": "linear equations",
+  "mistake": null,
+  "candidate_mistake": null,
+  "hint_level": 0,
+  "hints_on_mistake": 0,
+  "hints_given": 1,
+  "mistakes_found": [
+   "step 1: 5 - 2x - 4 = 11 (distribution)"
+  ],
+  "mistakes_fixed": [
+   "step 1 (said aloud)"
+  ],
+  "last_said": "You're close, but let's check: 5 + 4 is 9, so the equation is 9 - 2x = 11. Now solve for x.",
+  "last_why": "reply",
+  "last_spoke_at": 1098.0,
+  "last_seen": "student work",
+  "other_problems": [],
+  "steps_confirmed": 0,
+  "_finished_problem": null,
+  "let_go": [
+   [
+    1,
+    "5-2x-4=11"
+   ]
+  ],
+  "started_at": 1000.0,
+  "ends_at": 1900.0,
+  "phase": "watching",
+  "_rechecks": 0,
+  "last_focus_change": -1000000000.0,
+  "last_activity": 1098.0,
+  "_heard_count": 6,
+  "answer_key": {
+   "problem": "Solve: 5 - (2x - 4) = 11",
+   "mistake": [
+    1,
+    "5-2x-4=11"
+   ],
+   "wrong_line": "5 - 2x - 4 = 11",
+   "correct_line": "5 - 2x + 4 = 11",
+   "answer": "-1",
+   "check": "Substitute x = -1 into the original equation: 5 - (2(-1) - 4) = 5 - (-2 - 4) = 5 - (-6) = 5 + 6 = 11, which matches the right-hand side."
+  }
+ }
+}

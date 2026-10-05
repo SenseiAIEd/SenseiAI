@@ -1,0 +1,23 @@
+PROBLEM: 2 H2 + O2 -> 2 H2O. 6.0 g of H2 reacts with 64 g of O2. What mass of water forms?
+THE REAL MISTAKE ON THE PAGE: Line 3 said 'O2 is limiting (fewer moles)': moles must be divided by coefficients first (H2 3.0/2 = 1.5, O2 2.0/1 = 2.0), so H2 is limiting; water = 54 g, student got 72 g.
+STUDENT PERSONA: wants-why - Accepts dividing by coefficients after a hint, then asks why you divide by the coefficient.
+
+TRANSCRIPT:
+SENSEI: Hi, I'm Sensei. Put your page under the camera and start solving. I'm watching.
+SENSEI: You said O2 is limiting because it has fewer moles—what rule do we use to find the limiting reagent when we have moles of reactants?
+STUDENT: The one with fewer moles runs out first, right? O2 is 2 and H2 is 3.
+SENSEI: You're right that O2 has fewer moles, but we can't just pick the one with fewer moles—let's check the ratio from the balanced equation.
+STUDENT: The ratio is 2 H2 to 1 O2. What do I do with that?
+SENSEI: You're on the right track with the ratio—now use it to find how much water each reactant can make.
+STUDENT: Okay, 3 moles H2 makes 3 water, and 2 moles O2 makes 4 water. So H2 is limiting, 54 grams?
+SENSEI: You're close—let's double-check the water from H2. How many moles of water can 3.0 mol H2 make?
+STUDENT: 2 H2 makes 2 water, so 3 makes 3. Isn't that right?
+SENSEI: You're right that 2 H2 makes 2 water, so 3 makes 3—let's check that with the balanced equation.
+STUDENT: I did check it. So H2 is limiting and it's 54 grams. But why does fewer moles not work? Why the ratio?
+SENSEI: You're asking why fewer moles doesn't always mean limiting—let's try a simple example: if you have 2 mol H2 and 100 mol O2, which runs out first? Think about the ratio.
+STUDENT: H2 obviously, but it also has fewer moles there. That doesn't show why fewer moles is wrong.
+SENSEI: Let's try a simpler case: if you have 2 mol H2 and 100 mol O2, how much water can H2 make? Use the ratio.
+STUDENT: 2 mol water. But you're just repeating. I want to know why the coefficients matter at all.
+SENSEI: You're asking why coefficients matter—let's try a simple case: 2 mol H2 and 100 mol O2. How much water can H2 make?
+STUDENT: Same question again. I fixed it to 54 grams but I still don't get why the ratio matters. Whatever.
+SENSEI: Let's try this: if you have 1 mol H2 and 1 mol O2, how much water can form? Use the ratio from the equation.

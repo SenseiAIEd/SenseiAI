@@ -1,0 +1,23 @@
+PROBLEM: A ball is launched at 20 m/s, 60 degrees above horizontal. How long until it returns to launch height? g = 9.8
+THE REAL MISTAKE ON THE PAGE: Line 1 wrote v_y = 20 m/s: 20 m/s is along the launch direction, not vertical. v_y = 20 sin 60 = 17.32 m/s; total time 3.54 s, student got 4.08 s.
+STUDENT PERSONA: confident-wrong - Argues 'the ball is going up at 20 m/s, it says so in the question'.
+
+TRANSCRIPT:
+SENSEI: Hi, I'm Sensei. Put your page under the camera and start solving. I'm watching.
+SENSEI: You wrote v_y = 20 m/s, but the initial speed is 20 m/s at an angle. What part of the velocity is vertical?
+STUDENT: All of it. The ball's going up at 20 meters per second, it says so in the question.
+SENSEI: Not quite. The 20 m/s is the total speed, not just the vertical part. What's the vertical component?
+STUDENT: But it's launched upward at 20. Going up at 20 means vertical speed is 20, right?
+SENSEI: No, the vertical speed isn't 20 m/s. The 20 m/s is the total speed at 60 degrees. What's the vertical component?
+STUDENT: You keep saying that but why? It's moving up at 20. Why would it be less?
+SENSEI: The 20 m/s is the total speed, not the vertical speed. Think about how to split the total speed into vertical and horizontal parts.
+STUDENT: Why split it though? It's one speed. I think 20 is fine.
+SENSEI: The 20 m/s is the total speed, not the vertical speed. We split it to find the vertical part.
+STUDENT: That's just saying the same thing again. Give me an actual reason.
+SENSEI: The 20 m/s is the total speed, not the vertical speed. We split it to find the vertical part.
+STUDENT: Okay but if it's not 20 going up, then what is it going up at?
+SENSEI: You're right, I misread it. The question says 20 m/s at 60 degrees, so the vertical speed is not 20 m/s.
+STUDENT: Wait, so am I right or not? You said I'm right.
+SENSEI: You're not right. The vertical speed is not 20 m/s. Try again with the correct vertical component.
+STUDENT: I still don't get why it's not 20. I'm keeping my answer.
+SENSEI: You're right, I misread it. The vertical speed is not 20 m/s. Try again with the correct vertical component.

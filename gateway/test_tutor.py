@@ -61,7 +61,13 @@ class Harness:
                            tap_only=tap_only)
 
     def run(self, coro):
-        return asyncio.run(coro)
+        async def step():
+            result = await coro
+            # Background work (the answer key) runs on the gateway's long-lived loop; each test step
+            # gets its own loop, so let it finish before the step ends.
+            await asyncio.gather(*list(self.tutor._background))
+            return result
+        return asyncio.run(step())
 
     def settle(self, img):
         """Show the same frame until the watcher judges it (hand lifted, page still)."""
@@ -1016,3 +1022,83 @@ def test_teach_mode_only_changes_the_instructions_when_on():
         h.run(h.tutor.hear("I don't understand why", PAGE))
     assert "TEACH MODE" not in off.tutor.brain.instructions[-1]
     assert "TEACH MODE" in on.tutor.brain.instructions[-1]
+
+
+# --- teaching state: answer key, fixes said out loud, no repeats ---------------------------
+class KeyedBrain(ScriptedBrain):
+    def solve(self, problem, steps, wrong_step):
+        return {"correct_line": "5 - 2x + 4 = 11", "answer": "x = -1", "check": "put -1 back in"}
+
+
+def confirmed_hint(h):
+    h.run(h.tutor.start())
+    h.settle(page_with("a"))
+    h.settle(page_with("ab"))   # a mistake is hinted only after two looks agree
+
+
+def test_the_answer_key_is_made_once_a_mistake_is_confirmed_and_used_privately():
+    brain = KeyedBrain(MISTAKE, MISTAKE, Assessment(page="work", about="subject", say="Look again at the minus."))
+    h = Harness(brain)
+    confirmed_hint(h)
+    assert h.whys()[-1] == "hint_1" and "tutor_answer_key" in h.events
+    assert h.tutor.answer_key["correct_line"] == "5 - 2x + 4 = 11"
+    h.run(h.tutor.hear("is it minus four?", PAGE))
+    assert "PRIVATE ANSWER KEY" in brain.instructions[-1] and "5 - 2x + 4 = 11" in brain.instructions[-1]
+
+
+def test_a_fix_said_out_loud_counts_and_the_page_does_not_re_hint_it():
+    fixed = Assessment(page="work", about="subject", say="Yes! Plus four. Write that down and carry on.",
+                       student_fixed=True)
+    brain = KeyedBrain(MISTAKE, MISTAKE, fixed, MISTAKE)
+    h = Harness(brain)
+    confirmed_hint(h)
+    h.run(h.tutor.hear("oh, it should be plus four", PAGE))
+    assert h.tutor.mistake is None and "tutor_fixed_by_voice" in h.events
+    assert h.tutor.mistakes_fixed and h.whys()[-1] == "reply"
+    h.now += 30
+    h.settle(page_with("abc"))  # the old line is still on the page: no new hint about it
+    assert h.whys()[-1] == "reply"
+
+
+def test_a_near_repeat_is_asked_again_for_a_different_approach():
+    same = Assessment(page="work", about="subject", say="What happens to each term inside the brackets?")
+    different = Assessment(page="work", about="subject", say="Try a small case: what is 7 minus (3 minus 2)?")
+    brain = KeyedBrain(Assessment(page="work", about="subject", say="What happens to each term inside the brackets?"),
+                       same, different)
+    h = Harness(brain)
+    h.run(h.tutor.start())
+    h.run(h.tutor.hear("I don't get it", PAGE))
+    h.run(h.tutor.hear("I still don't get it", PAGE))
+    assert "tutor_repeat_retry" in h.events and h.said[-1][1].startswith("Try a small case")
+    assert "repeats what you already said" in brain.instructions[-1]
+
+
+def verified(fast, careful):
+    h = Harness(fast)
+    h.tutor.verify_brain = h.tutor.key_brain = careful
+    return h
+
+
+def test_the_careful_model_clears_a_false_alarm_before_anyone_hears_it():
+    fast, careful = ScriptedBrain(MISTAKE), KeyedBrain(ON_TRACK)
+    h = verified(fast, careful)
+    confirmed_hint(h)
+    assert h.whys() == ["greeting"] and h.tutor.mistake is None and h.tutor.candidate_mistake is None
+    assert "tutor_verified" in h.events and len(careful.instructions) == 1
+
+
+def test_the_careful_model_confirms_in_one_look_and_its_line_wins():
+    late = Assessment(page="work", problem="5 - (2x - 4) = 11", steps=STEPS[:2], first_error=2,
+                      error_kind="arithmetic", say="Check your second line.")
+    fast, careful = ScriptedBrain(MISTAKE), KeyedBrain(late)
+    h = verified(fast, careful)
+    confirmed_hint(h)
+    assert h.whys()[-1] == "hint_1" and h.said[-1][1] == "Check your second line."
+    assert h.tutor.mistake[0] == 2 and "tutor_answer_key" in h.events
+
+
+def test_if_the_careful_model_fails_the_fast_one_confirms():
+    fast, careful = ScriptedBrain(MISTAKE, MISTAKE), KeyedBrain(TimeoutError("slow"))
+    h = verified(fast, careful)
+    confirmed_hint(h)
+    assert "tutor_verify_failed" in h.events and h.whys()[-1] == "hint_1"

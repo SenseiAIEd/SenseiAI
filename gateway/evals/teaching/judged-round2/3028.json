@@ -1,0 +1,17 @@
+{
+  "diagnosis": 2,
+  "answer_leak": false,
+  "teaching_when_stuck": 0,
+  "correctness": 1,
+  "responsiveness": 1,
+  "voice_fit": 2,
+  "student_learned": true,
+  "turns_to_fix": 3,
+  "overall": 4,
+  "worst_moment": "\"The 2ab comes from the formula (a + b)^2 = a^2 + 2ab + b^2. Here, a is x and b is 3.\" - the student asked where 2ab comes from, and Sensei just restated the formula.",
+  "best_moment": "\"Here, a is x and b is 3.\" - matching the formula to this problem gave the student enough to get 6x.",
+  "failure_tags": [
+    "no_explanation_when_stuck",
+    "repeats_question"
+  ]
+}

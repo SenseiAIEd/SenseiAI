@@ -1,0 +1,20 @@
+{
+  "diagnosis": 2,
+  "answer_leak": true,
+  "teaching_when_stuck": 1,
+  "correctness": 0,
+  "responsiveness": 0,
+  "voice_fit": 2,
+  "student_learned": true,
+  "turns_to_fix": 5,
+  "overall": 3,
+  "worst_moment": "\"You're close, but you missed a step. After expanding, you need to subtract 25 from both sides before factoring.\" - insists the student's correct answer (x = 2 or -8) is wrong, after they said they subtracted 25.",
+  "best_moment": "\"The middle term comes from multiplying the two terms in the binomial, so it's 2 times x times 3.\" - explains where the middle term comes from, though it gives it away.",
+  "failure_tags": [
+    "answer_leak",
+    "wrong_fact",
+    "ignores_student",
+    "loops",
+    "misreads_page"
+  ]
+}

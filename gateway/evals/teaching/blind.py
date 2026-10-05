@@ -1,7 +1,8 @@
 """Blind the finished conversations for judging, and tally the judges' verdicts.
 
-  python evals/teaching/blind.py export   # runs/*.json -> blind/<code>.txt + blind/key.json
-  python evals/teaching/blind.py report   # judged/<code>.json + key -> results per variant
+  python evals/teaching/blind.py export                       # current + teach -> blind/, judged/
+  python evals/teaching/blind.py export current state round2  # chosen variants -> blind-round2/
+  python evals/teaching/blind.py report [round2]              # judged[-round2]/ + key -> results
 """
 import json
 import random
@@ -13,10 +14,10 @@ HERE = Path(__file__).resolve().parent
 PERSONAS = {json.loads(l)["id"]: json.loads(l) for l in (HERE / "personas.jsonl").read_text().splitlines() if l.strip()}
 
 
-def export():
-    out = HERE / "blind"
+def export(variants=("current", "teach"), name=""):
+    out = HERE / f"blind{'-' + name if name else ''}"
     out.mkdir(exist_ok=True)
-    runs = sorted(p for p in (HERE / "runs").glob("*.json") if p.stem.rsplit("-", 1)[-1] in ("current", "teach"))
+    runs = sorted(p for p in (HERE / "runs").glob("*.json") if p.stem.rsplit("-", 1)[-1] in variants)
     rng = random.Random(7)
     codes = rng.sample(range(1000, 9999), len(runs))
     key = {}
@@ -37,11 +38,12 @@ def export():
     print(f"exported {len(runs)} conversations to {out}")
 
 
-def report():
-    key = json.loads((HERE / "blind" / "key.json").read_text())
+def report(name=""):
+    sfx = f"-{name}" if name else ""
+    key = json.loads((HERE / f"blind{sfx}" / "key.json").read_text())
     by = defaultdict(list)
     for code, meta in key.items():
-        f = HERE / "judged" / f"{code}.json"
+        f = HERE / f"judged{sfx}" / f"{code}.json"
         if f.exists():
             by[meta["variant"]].append({**json.loads(f.read_text()), **meta})
     num = ["diagnosis", "teaching_when_stuck", "correctness", "responsiveness", "voice_fit", "overall"]
@@ -62,10 +64,13 @@ def report():
     for v in by:
         for r in by[v]:
             per[r["persona"]][v] = r["overall"]
-    print("\nper student (current -> teach):")
+    print(f"\nper student ({' -> '.join(sorted(by))}):")
     for pid in sorted(per):
-        print(f"  {pid:12} {per[pid].get('current', '-')} -> {per[pid].get('teach', '-')}")
+        print(f"  {pid:12} " + " -> ".join(str(per[pid].get(v, '-')) for v in sorted(by)))
 
 
 if __name__ == "__main__":
-    {"export": export, "report": report}[sys.argv[1]]()
+    if sys.argv[1] == "export":
+        export(tuple(sys.argv[2:-1]) or ("current", "teach"), sys.argv[-1] if len(sys.argv) > 3 else "")
+    else:
+        report(sys.argv[2] if len(sys.argv) > 2 else "")

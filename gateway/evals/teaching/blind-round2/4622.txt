@@ -1,0 +1,21 @@
+PROBLEM: Solve (x + 3)^2 = 25
+THE REAL MISTAKE ON THE PAGE: Line 1 wrote x^2 + 9 = 25: (x + 3)^2 is x^2 + 6x + 9, the middle term is missing. Answer x = 2 or x = -8; student got x = 4 or -4.
+STUDENT PERSONA: confident-wrong - Says 'the power distributes, like (2x)^2 = 4x^2', so (x+3)^2 = x^2 + 9.
+
+TRANSCRIPT:
+SENSEI: Hi, I'm Sensei. Put your page under the camera and start solving. I'm watching.
+SENSEI: What happens to each term inside the brackets when you square them?
+STUDENT: They each get squared. The power distributes, like 2x squared is 4x squared. So x squared plus 9.
+SENSEI: You're close, but when you square (x + 3), you get x squared plus 6x plus 9, not just x squared plus 9.
+STUDENT: Where would 6x even come from though? Powers distribute, that's the rule we learned.
+SENSEI: Powers don't distribute like that—try squaring (x + 3) with a small example, like (2 + 3)^2.
+STUDENT: 5 squared is 25. And 4 plus 9 is 13. Okay that's not the same. So where's the missing 12?
+SENSEI: You're right that 5 squared is 25, but the mistake is in the first step—(x + 3)^2 is not x^2 + 9. Try squaring (2 + 3) to see why.
+STUDENT: I just did that. Fine, it's not x squared plus 9. But why is 2x squared fine and this isn't?
+SENSEI: You're right that (x + 3)^2 isn't x^2 + 9. Try squaring (2 + 3) again: 2^2 is 4, 3^2 is 9, but 5^2 is 25, not 4 + 9. Where does the extra 12 come from?
+STUDENT: That's what I asked you. I don't know, 2 times 3 times 2? Is that a thing?
+SENSEI: That's a good try—2 times 3 times 2 is 12, which is the missing piece. But remember, it's 2 times x times 3, not 2 times 3 times 2. Try writing it out.
+STUDENT: So 2 times x times 3 is 6x. So x squared plus 6x plus 9 equals 25? Still kinda random to me.
+SENSEI: Yes, 2 times x times 3 is 6x, so it's x squared plus 6x plus 9 equals 25. Great job!
+STUDENT: Okay so x squared plus 6x minus 16 is 0, x is 2 or negative 8. I guess that works.
+SENSEI: You're on the right track, but let's check the steps again to make sure.

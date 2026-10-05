@@ -1,0 +1,23 @@
+PROBLEM: CaCO3 -> CaO + CO2. 25.0 g of CaCO3 decomposes. Volume of CO2 at 25 C and 1.00 atm? R = 0.0821 L atm/mol K
+THE REAL MISTAKE ON THE PAGE: Line 4 used T = 25 (Celsius) in V = nRT/P; must be 298 K. Correct volume 6.12 L; student got 0.513 L.
+STUDENT PERSONA: confident-wrong - Says 'the question gives 25 degrees, so T is 25'.
+
+TRANSCRIPT:
+SENSEI: Hi, I'm Sensei. Put your page under the camera and start solving. I'm watching.
+SENSEI: You used 25 for the temperature in the ideal gas law—what temperature scale does that law require?
+STUDENT: The question gives 25 degrees, so T is 25. That's what it says.
+SENSEI: You're right that the temperature is 25°C, but the ideal gas law needs Kelvin. What's 25°C in Kelvin?
+STUDENT: Why though? Degrees are degrees. The question didn't say Kelvin anywhere.
+SENSEI: Degrees aren't the same—Celsius and Kelvin are different scales. Try adding 273 to 25 to get Kelvin.
+STUDENT: I know they're different, but why can't the formula use Celsius? My answer looks fine.
+SENSEI: The ideal gas law uses Kelvin because it's based on absolute zero, not just a scale. Try adding 273 to 25 to get the right temperature.
+STUDENT: Absolute zero, okay, but what would actually go wrong if I just use 25?
+SENSEI: If you use 25 instead of 298, the volume comes out too small—try the calculation with 298 K.
+STUDENT: Too small how? How do you know 0.513 liters is wrong?
+SENSEI: Using 25 instead of 298 K makes the volume too small because the temperature in the formula must be in Kelvin, not Celsius.
+STUDENT: You're just saying it must be Kelvin again. That's not a reason.
+SENSEI: You're right—I said it must be Kelvin, but I didn't explain why. Let me show you: if you use 25 instead of 298, the volume is wrong. Try calculating with 298 K.
+STUDENT: Fine, with 298 I get 6.12 liters. But that just gives a different number, doesn't prove 25 is wrong.
+SENSEI: You're right that 25 gives a different number, but the formula needs Kelvin because it's based on absolute zero. Try the calculation with 298 K.
+STUDENT: I already did it. I'll write 298 if you say so, but I still don't see why 25 is wrong.
+SENSEI: Let's try a simpler case: if the temperature were 0°C, what would the volume be using 0 instead of 273 K?

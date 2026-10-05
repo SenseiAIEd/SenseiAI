@@ -1,0 +1,19 @@
+PROBLEM: Solve 5 - (2x - 4) = 11
+THE REAL MISTAKE ON THE PAGE: Line 1 wrote 5 - 2x - 4 = 11: the minus was not distributed to the -4 (should be 5 - 2x + 4 = 11). Answer should be x = -1; student got x = -5.
+STUDENT PERSONA: wants-why - Forgot the rule but will fix it after a hint; then asks why subtracting a negative makes a plus.
+
+TRANSCRIPT:
+SENSEI: Hi, I'm Sensei. Put your page under the camera and start solving. I'm watching.
+SENSEI: What happens to each term inside the brackets when you subtract them?
+STUDENT: Oh, they both change sign? So it's 5 minus 2x plus 4, not minus 4.
+SENSEI: Yes, when you subtract a bracket, both terms inside change sign. Write that corrected line and keep going.
+STUDENT: Okay, so 9 minus 2x is 11, x is negative 1. But why does minus a minus 4 become plus 4?
+SENSEI: When you subtract a negative, it's like adding. So minus negative 4 becomes plus 4. Try it with 5 - (-4).
+STUDENT: I know that's the rule, 5 minus negative 4 is 9. But why is taking away a negative the same as adding?
+SENSEI: Because subtracting a negative is like adding a positive. Try 5 - (-4) and see what you get.
+STUDENT: You just said the same thing again. I get 9, but I want to know why it works.
+SENSEI: Let's try a simpler case: 5 - (-4). What do you get?
+STUDENT: 9. I already said 9. Why though, like what does taking away a negative actually mean?
+SENSEI: Taking away a negative means you're removing a debt, so it's like gaining. Try 5 - (-4) and see what happens.
+STUDENT: Oh, so if someone takes away 4 pounds I owe, I'm 4 better off. That makes sense. So x is negative 1, thanks.
+SENSEI: You're right about the idea, but the final answer is wrong. Try solving 1 - 2x = 11 again.

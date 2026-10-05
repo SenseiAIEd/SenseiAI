@@ -1,0 +1,16 @@
+{
+  "diagnosis": 2,
+  "answer_leak": true,
+  "teaching_when_stuck": 1,
+  "correctness": 2,
+  "responsiveness": 2,
+  "voice_fit": 2,
+  "student_learned": true,
+  "turns_to_fix": 3,
+  "overall": 6,
+  "worst_moment": "\"To convert Celsius to Kelvin, add 273. So 25\u00b0C is 25 + 273 = 298 K. Try that in the formula now.\" - does the conversion for the student instead of giving the rule and letting them compute 298.",
+  "best_moment": "\"You're right that the question says 25\u00b0C, but the ideal gas law needs Kelvin, not Celsius. What's 25\u00b0C in Kelvin?\" - acknowledges the student and points precisely at the error.",
+  "failure_tags": [
+    "answer_leak"
+  ]
+}

@@ -31,7 +31,8 @@ RUNS = HERE / "runs"
 KEEP = ["conversation", "problem", "subject", "topic", "mistake", "candidate_mistake", "hint_level",
         "hints_on_mistake", "hints_given", "mistakes_found", "mistakes_fixed", "last_said", "last_why",
         "last_spoke_at", "last_seen", "other_problems", "steps_confirmed", "_finished_problem", "let_go",
-        "started_at", "ends_at", "phase", "_rechecks", "last_focus_change", "last_activity", "_heard_count"]
+        "started_at", "ends_at", "phase", "_rechecks", "last_focus_change", "last_activity", "_heard_count",
+        "answer_key"]
 TURN_S = 15.0  # simulated seconds between student turns
 
 
@@ -88,6 +89,7 @@ async def start(args):
         state["now"] += 4
         t.watcher.mark_judged()
         await t._judge(img, request=None)
+    await asyncio.gather(*list(t._background))  # the answer key is made in the background
     record(state, "sensei", said)
     state["tutor"] = snapshot(t)
     save(state)
@@ -102,6 +104,7 @@ async def say(args):
     t = make_tutor(state, said)
     state["transcript"].append({"who": "student", "text": args.text})
     await t.hear(args.text, cv2.imread(state["page"]))
+    await asyncio.gather(*list(t._background))
     record(state, "sensei", said)
     state["tutor"] = snapshot(t)
     save(state)
@@ -124,7 +127,7 @@ def main():
     a = sub.add_parser("start")
     a.add_argument("--id", required=True)
     a.add_argument("--page", required=True)
-    a.add_argument("--variant", choices=["current", "teach"], default="current")
+    a.add_argument("--variant", choices=["current", "teach", "state"], default="current")
     b = sub.add_parser("say")
     b.add_argument("--id", required=True)
     b.add_argument("--text", required=True)

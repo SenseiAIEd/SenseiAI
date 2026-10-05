@@ -1,0 +1,376 @@
+{
+ "id": "m2-why-state",
+ "page": "/home/perspectivity-dgx/SenseiAI/datasets/samples/math/basic/medium/bad_1.png",
+ "variant": "state",
+ "now": 1053.0,
+ "transcript": [
+  {
+   "who": "sensei",
+   "why": "greeting",
+   "text": "Hi, I'm Sensei. Put your page under the camera and start solving. I'm watching."
+  },
+  {
+   "who": "sensei",
+   "why": "hint_1",
+   "text": "What happens to each term inside the brackets when you square them?"
+  },
+  {
+   "who": "student",
+   "text": "Oh wait, squaring means times itself. So x plus 3 times x plus 3, that's x squared plus 6x plus 9?"
+  },
+  {
+   "who": "sensei",
+   "why": "ack",
+   "text": "Okay, let me think."
+  },
+  {
+   "who": "sensei",
+   "why": "reply",
+   "text": "Yes, that's exactly right: (x + 3)^2 is (x + 3)(x + 3), which gives x squared plus 6x plus 9. Now write that down and solve."
+  },
+  {
+   "who": "student",
+   "text": "Okay, so x is 2 or negative 8. But where does the 6x actually come from? Why isn't it just x squared plus 9?"
+  },
+  {
+   "who": "sensei",
+   "why": "ack",
+   "text": "Good question. One moment."
+  },
+  {
+   "who": "sensei",
+   "why": "reply",
+   "text": "Great question! The 6x comes from adding x times 3 and 3 times x when you expand (x + 3)(x + 3). Try it with numbers: what is (2 + 3)^2?"
+  },
+  {
+   "who": "student",
+   "text": "25, and 4 plus 9 is only 13, so the 12 is the two cross bits, 2 times 3 twice. Makes sense now, thanks."
+  }
+ ],
+ "events": [
+  {
+   "event": "tutor_start",
+   "minutes": 15.0
+  },
+  {
+   "event": "tutor_say",
+   "text": "Hi, I'm Sensei. Put your page under the camera and start solving. I'm watching.",
+   "why": "greeting"
+  },
+  {
+   "event": "tutor_subject",
+   "was": null,
+   "now": "math",
+   "topic": "quadratic equations",
+   "set_by": "page"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": null,
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": [
+    1200,
+    445
+   ],
+   "page": "work",
+   "about": null,
+   "focus": null,
+   "problem": "Solve: (x + 3)^2 = 25",
+   "subject": "math",
+   "topic": "quadratic equations",
+   "other_problems": [],
+   "given": "Solve: (x + 3)^2 = 25",
+   "steps": [
+    "x^2 + 9 = 25",
+    "x^2 = 16",
+    "x = 4 or x = -4"
+   ],
+   "first_error": 1,
+   "error_kind": "misapplied_formula",
+   "finished": true,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "What did you do to expand (x + 3)^2?"
+  },
+  {
+   "event": "tutor_focus",
+   "was": null,
+   "now": "Solve: (x + 3)^2 = 25",
+   "set_by": "page"
+  },
+  {
+   "event": "tutor_unconfirmed",
+   "step": 1,
+   "line": "x^2 + 9 = 25"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": null,
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": [
+    1200,
+    445
+   ],
+   "page": "work",
+   "about": null,
+   "focus": null,
+   "problem": "Solve: (x + 3)^2 = 25",
+   "subject": "math",
+   "topic": "quadratic equations",
+   "other_problems": [],
+   "given": "Solve: (x + 3)^2 = 25",
+   "steps": [
+    "x^2 + 9 = 25",
+    "x^2 = 16",
+    "x = 4 or x = -4"
+   ],
+   "first_error": 1,
+   "error_kind": "false_linearity",
+   "finished": true,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "What happens to each term inside the brackets when you square them?"
+  },
+  {
+   "event": "tutor_say",
+   "text": "What happens to each term inside the brackets when you square them?",
+   "why": "hint_1"
+  },
+  {
+   "event": "tutor_answer_key",
+   "problem": "Solve: (x + 3)^2 = 25",
+   "mistake": [
+    1,
+    "x^2+9=25"
+   ],
+   "wrong_line": "x^2 + 9 = 25",
+   "correct_line": "x^2 + 6x + 9 = 25",
+   "answer": "x = 2 or x = -8",
+   "check": "Substitute x = 2 and x = -8 into the original equation to verify both satisfy (x + 3)^2 = 25."
+  },
+  {
+   "event": "jev",
+   "on": "utterance",
+   "said": "Oh wait, squaring means times itself. So x plus 3 times x plus 3, that's x squared plus 6x plus 9?",
+   "respond": 0.91,
+   "about": "subject",
+   "about_conf": 0.94,
+   "followup": 0.95,
+   "needs_page": 0.18,
+   "new_problem": 0.02,
+   "which_problem": null,
+   "which_conf": 0.0,
+   "latency_ms": 777
+  },
+  {
+   "event": "student_said",
+   "text": "Oh wait, squaring means times itself. So x plus 3 times x plus 3, that's x squared plus 6x plus 9?"
+  },
+  {
+   "event": "tutor_say",
+   "text": "Okay, let me think.",
+   "why": "ack"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": "talk",
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": [
+    1200,
+    445
+   ],
+   "page": "work",
+   "about": "subject",
+   "focus": "Solve: (x + 3)^2 = 25",
+   "problem": null,
+   "subject": null,
+   "topic": null,
+   "other_problems": [],
+   "given": null,
+   "steps": [],
+   "first_error": null,
+   "error_kind": null,
+   "finished": false,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "Yes, that's exactly right: (x + 3)^2 is (x + 3)(x + 3), which gives x squared plus 6x plus 9. Now write that down and solve."
+  },
+  {
+   "event": "tutor_about",
+   "about": "subject"
+  },
+  {
+   "event": "tutor_fixed_by_voice",
+   "step": 1
+  },
+  {
+   "event": "tutor_say",
+   "text": "Yes, that's exactly right: (x + 3)^2 is (x + 3)(x + 3), which gives x squared plus 6x plus 9. Now write that down and solve.",
+   "why": "reply"
+  },
+  {
+   "event": "jev",
+   "on": "utterance",
+   "said": "Okay, so x is 2 or negative 8. But where does the 6x actually come from? Why isn't it just x squared plus 9?",
+   "respond": 0.92,
+   "about": "subject",
+   "about_conf": 0.95,
+   "followup": 0.79,
+   "needs_page": 0.06,
+   "new_problem": 0.03,
+   "which_problem": null,
+   "which_conf": 0.0,
+   "latency_ms": 1101
+  },
+  {
+   "event": "student_said",
+   "text": "Okay, so x is 2 or negative 8. But where does the 6x actually come from? Why isn't it just x squared plus 9?"
+  },
+  {
+   "event": "tutor_say",
+   "text": "Good question. One moment.",
+   "why": "ack"
+  },
+  {
+   "event": "tutor_assessment",
+   "latency_s": 0.0,
+   "request": "talk",
+   "model": "qwen3-vl-30b-a3b-gguf",
+   "frame": null,
+   "frame_size": null,
+   "page": "work",
+   "about": "subject",
+   "focus": "Solve: (x + 3)^2 = 25",
+   "problem": null,
+   "subject": null,
+   "topic": null,
+   "other_problems": [],
+   "given": null,
+   "steps": [],
+   "first_error": null,
+   "error_kind": null,
+   "finished": false,
+   "hand_over_page": false,
+   "rotated": false,
+   "say": "Great question! The 6x comes from adding x times 3 and 3 times x when you expand (x + 3)(x + 3). Try it with numbers: what is (2 + 3)^2?"
+  },
+  {
+   "event": "tutor_about",
+   "about": "subject"
+  },
+  {
+   "event": "tutor_say",
+   "text": "Great question! The 6x comes from adding x times 3 and 3 times x when you expand (x + 3)(x + 3). Try it with numbers: what is (2 + 3)^2?",
+   "why": "reply"
+  },
+  {
+   "event": "jev",
+   "on": "utterance",
+   "said": "25, and 4 plus 9 is only 13, so the 12 is the two cross bits, 2 times 3 twice. Makes sense now, thanks.",
+   "respond": 0.25,
+   "about": "subject",
+   "about_conf": 0.89,
+   "followup": 0.95,
+   "needs_page": 0.1,
+   "new_problem": 0.02,
+   "which_problem": null,
+   "which_conf": 0.0,
+   "latency_ms": 644
+  },
+  {
+   "event": "student_said",
+   "text": "25, and 4 plus 9 is only 13, so the 12 is the two cross bits, 2 times 3 twice. Makes sense now, thanks.",
+   "answered": false,
+   "by": "jev",
+   "respond": 0.25,
+   "floor": 0.3,
+   "followup": 0.95,
+   "awaiting": true
+  }
+ ],
+ "tutor": {
+  "conversation": [
+   {
+    "who": "sensei",
+    "text": "Hi, I'm Sensei. Put your page under the camera and start solving. I'm watching.",
+    "t": 0.0
+   },
+   {
+    "who": "sensei",
+    "text": "What happens to each term inside the brackets when you square them?",
+    "t": 8.0
+   },
+   {
+    "who": "student",
+    "text": "Oh wait, squaring means times itself. So x plus 3 times x plus 3, that's x squared plus 6x plus 9?",
+    "t": 23.0
+   },
+   {
+    "who": "sensei",
+    "text": "Yes, that's exactly right: (x + 3)^2 is (x + 3)(x + 3), which gives x squared plus 6x plus 9. Now write that down and solve.",
+    "t": 23.0
+   },
+   {
+    "who": "student",
+    "text": "Okay, so x is 2 or negative 8. But where does the 6x actually come from? Why isn't it just x squared plus 9?",
+    "t": 38.0
+   },
+   {
+    "who": "sensei",
+    "text": "Great question! The 6x comes from adding x times 3 and 3 times x when you expand (x + 3)(x + 3). Try it with numbers: what is (2 + 3)^2?",
+    "t": 38.0
+   }
+  ],
+  "problem": "Solve: (x + 3)^2 = 25",
+  "subject": "math",
+  "topic": "quadratic equations",
+  "mistake": null,
+  "candidate_mistake": null,
+  "hint_level": 0,
+  "hints_on_mistake": 0,
+  "hints_given": 1,
+  "mistakes_found": [
+   "step 1: x^2 + 9 = 25 (false_linearity)"
+  ],
+  "mistakes_fixed": [
+   "step 1 (said aloud)"
+  ],
+  "last_said": "Great question! The 6x comes from adding x times 3 and 3 times x when you expand (x + 3)(x + 3). Try it with numbers: what is (2 + 3)^2?",
+  "last_why": "reply",
+  "last_spoke_at": 1038.0,
+  "last_seen": "student work",
+  "other_problems": [],
+  "steps_confirmed": 0,
+  "_finished_problem": null,
+  "let_go": [
+   [
+    1,
+    "x^2+9=25"
+   ]
+  ],
+  "started_at": 1000.0,
+  "ends_at": 1900.0,
+  "phase": "watching",
+  "_rechecks": 0,
+  "last_focus_change": -1000000000.0,
+  "last_activity": 1053.0,
+  "_heard_count": 2,
+  "answer_key": {
+   "problem": "Solve: (x + 3)^2 = 25",
+   "mistake": [
+    1,
+    "x^2+9=25"
+   ],
+   "wrong_line": "x^2 + 9 = 25",
+   "correct_line": "x^2 + 6x + 9 = 25",
+   "answer": "x = 2 or x = -8",
+   "check": "Substitute x = 2 and x = -8 into the original equation to verify both satisfy (x + 3)^2 = 25."
+  }
+ }
+}
